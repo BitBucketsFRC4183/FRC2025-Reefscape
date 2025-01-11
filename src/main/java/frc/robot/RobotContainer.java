@@ -20,12 +20,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIO;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
-import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.DriveSubsystem.Drive;
+import frc.robot.subsystems.DriveSubsystem.GyroIO;
+import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
+import frc.robot.subsystems.DriveSubsystem.ModuleIO;
+import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
+import frc.robot.subsystems.DriveSubsystem.ModuleIOSparkMax;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
