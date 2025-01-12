@@ -37,6 +37,7 @@ public class RobotContainer {
   // private final Flywheel flywheel;
   public final OperatorInput operatorInput;
 
+  private final 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -126,8 +127,9 @@ public class RobotContainer {
    */
   void loadCommands() {
     operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand());
-    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand());
-    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand());
+    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(2));
+    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(3));
+
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
             drive,
