@@ -11,7 +11,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot;
+package frc.robot.constants;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -23,24 +23,22 @@ package frc.robot;
  */
 public final class Constants {
   public static final Mode currentMode = Mode.SIM;
-  public static Constants.ElevatorConstants ElevatorConstants;
 
   public static enum Mode {
-    /** Running on a real robot. */
+    /**
+     * Running on a real robot.
+     */
     REAL,
 
-    /** Running a physics simulator. */
+    /**
+     * Running a physics simulator.
+     */
     SIM,
 
-    /** Replaying from a log file. */
+    /**
+     * Replaying from a log file.
+     */
     REPLAY
-  }
-  public static class ElevatorConstants {
-    /** ALLOWS FOR MOTOR PORT CONNECTION */
-    /** ALLOWS FOR THE PLUGGING IN OF VOLTAGE CONSTANTS*/
-    /** ALLOWS FOR THE PLUGGING IN OF THE PID CONSTANTS KP, KI, KD*/
-    public static final double kSVolts = 5;
-    public static final double kVVoltSecondsPerRotation = 5;
-    public static final double kP = 5;
+
   }
 }

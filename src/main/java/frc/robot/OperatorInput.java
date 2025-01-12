@@ -19,7 +19,9 @@ public class OperatorInput {
 
   final Trigger resetGyroPress = driver.start();
 
-  final Trigger elevatorup = driver.x();
+  final Trigger elevatorsetpoint1 = driver.x();
+  final Trigger elevatorsetpoint2 = driver.y();
+  final Trigger elevatorsetpoint3 = driver.b();
 
   final Trigger xNotDesired =
       driver

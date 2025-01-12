@@ -13,7 +13,7 @@
 
 package frc.robot.subsystems.DriveSubsystem;
 
-import static frc.robot.subsystems.DriveSubsystem.DriveConstants.*;
+import static frc.robot.constants.DriveConstants.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
