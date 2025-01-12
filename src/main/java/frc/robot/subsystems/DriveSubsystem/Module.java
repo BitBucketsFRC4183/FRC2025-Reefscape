@@ -68,7 +68,7 @@ public class Module {
   }
 
   public void updateInputs() {
-    io.updateInputs(inputs);
+    io.up dateInputs(inputs);
   }
 
   public void periodic() {

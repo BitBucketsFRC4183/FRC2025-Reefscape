@@ -23,6 +23,7 @@ package frc.robot;
  */
 public final class Constants {
   public static final Mode currentMode = Mode.SIM;
+  public static Constants.ElevatorConstants ElevatorConstants;
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -33,5 +34,13 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
+  }
+  public static class ElevatorConstants {
+    /** ALLOWS FOR MOTOR PORT CONNECTION */
+    /** ALLOWS FOR THE PLUGGING IN OF VOLTAGE CONSTANTS*/
+    /** ALLOWS FOR THE PLUGGING IN OF THE PID CONSTANTS KP, KI, KD*/
+    public static final double kSVolts = 5;
+    public static final double kVVoltSecondsPerRotation = 5;
+    public static final double kP = 5;
   }
 }

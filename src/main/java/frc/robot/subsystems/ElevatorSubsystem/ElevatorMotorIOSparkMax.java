@@ -1,4 +1,4 @@
 package frc.robot.subsystems.ElevatorSubsystem;
 
-public class ElevatorGoesDown {
+public class ElevatorMotorIOSparkMax {
 }
