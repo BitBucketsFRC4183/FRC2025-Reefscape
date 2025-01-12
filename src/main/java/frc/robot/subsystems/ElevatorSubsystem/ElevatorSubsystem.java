@@ -18,9 +18,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final Encoder elevatorEncoder = new Encoder(ElevatorConstants.kEncoderPorts[0], ElevatorConstants.kEncoderPorts[1],ElevatorConstants.kEncoderReversed);
 
     public ElevatorSubsystem() {
-        elevatorFeedback.setTolerance(Constants.elevatorConstants.kShooterToleranceRPS);
-        elevatorEncoder.setDistancePerPulse(elevatorConstants.kEncoderDistancePerPulse);
->>>>>>> Stashed changes
+        elevatorFeedback.setTolerance(ElevatorConstants.kShooterToleranceRPS);
+        elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
 
         setDefaultCommand(runOnce(() ->{
             elevatorMotor.disable();
