@@ -8,21 +8,12 @@ import edu.wpi.first.math.geometry.*;
 //calculate the positions
 
 import java.io.IOException;
-import java.util.HashSet; //don't allow replicated values
-import java.util.LinkedList; //value storage
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 // above, data analysis
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 
 //subsystem setup
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -85,17 +76,16 @@ public class VisionSubsystem extends SubsystemBase {
                     fieldToCamera.plus(cameraToRobot.inverse());
             Pose3d robotMultiPose =
                     new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());
-        }
-    }
-    for stopEtimat == 0 );
-    PhotonPoseEstimator PoseEstimator =
-            new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS, PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY,  cameraToRobot);
-    Optional<EstimatedRobotPose> getEstimatedGlobalPose;(Pose2d prevEstimatedRobotPose) {
-        PoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return PoseEstimator.update();
-        if PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS ,
-            stopEtimator == 0
 
-}
+
+            PhotonPoseEstimator photonPoseEstimator =
+                    new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS, cameraToRobot);
+        }
+        Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose)
+        {
+            photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+            return photonPoseEstimator.update();
+        }
+        
 
 
