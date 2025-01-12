@@ -20,6 +20,7 @@ public class OperatorInput {
   final Trigger resetGyroPress = driver.start();
 
   final Trigger elevatorup = driver.x();
+  final Trigger elevatordown = driver.y();
 
   final Trigger xNotDesired =
       driver
