@@ -6,10 +6,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Encoder;
-<<<<<<< Updated upstream
-import frc.robot.constants.ElevatorConstants
-=======
-import frc.robot.Constants;
+import frc.robot.constants.ElevatorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
     private static final double maxRotationalSpeed = Units.feetToMeters(0);
