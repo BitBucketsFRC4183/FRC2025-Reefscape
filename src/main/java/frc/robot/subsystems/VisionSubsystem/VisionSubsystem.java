@@ -29,19 +29,21 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class VisionSubsystem extends SubsystemBase {
     // Creates a new ExampleSubsystem
     public AprilTagFieldLayout aprilTagFieldLayout;
+    public final String cameraName = "BitbucketCamera";
     public final PhotonCamera camera;
-
-    public VisionSubsystem() throws IOException {
-        camera = new PhotonCamera("BitbucketCamera");
-        aprilTagFieldLayout =
-                new AprilTagFieldLayout(AprilTagFields.kDefaultField.m_resourceFile);
-    }
-
+    public final PhotonPoseEstimator photonPoseEstimator;
     public final Transform3d cameraToRobot =
             new Transform3d();
     public final Transform3d fieldToCamera =
             new Transform3d();
 
+    public VisionSubsystem() throws IOException {
+        camera = new PhotonCamera(cameraName);
+        aprilTagFieldLayout =
+                new AprilTagFieldLayout(AprilTagFields.kDefaultField.m_resourceFile);
+        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraToRobot);
+
+    }
 
 
     @Override
@@ -52,40 +54,22 @@ public class VisionSubsystem extends SubsystemBase {
 
         List<PhotonTrackedTarget> targets =
                 result.getTargets();
-        PhotonTrackedTarget target =
-                result.getBestTarget();
 
-        //apriltag
-        int targetID = target.getFiducialId();
-        double poseAmbiguity = target.getPoseAmbiguity();
-        Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-        Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
+        if (!targets.isEmpty()) {
+            PhotonTrackedTarget target =
+                    result.getBestTarget();
 
-
-        if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
-            Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), cameraToRobot);
-            // data Pose3d robotPose
+            //apriltag
+            int targetID = target.getFiducialId();
+            double poseAmbiguity = target.getPoseAmbiguity();
+            Transform3d bestCameraToTarget = target.getBestCameraToTarget();
+            Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
         }
-        ;
-        if (result.multitagResult.isPresent()) {
-            var multiTagResult =
-                    result.multitagResult.get();
-            Transform3d robotPose =
-                    multiTagResult.estimatedPose.best;
-            Transform3d fieldToRobot =
-                    fieldToCamera.plus(cameraToRobot.inverse());
-            Pose3d robotMultiPose =
-                    new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());
 
 
-            PhotonPoseEstimator photonPoseEstimator =
-                    new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS, cameraToRobot);
-        }
-        Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose)
-        {
-            photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-            return photonPoseEstimator.update();
-        }
+        Optional<EstimatedRobotPose> estimatedRobotPose = photonPoseEstimator.update(result);
+    }
+}
         
 
 
