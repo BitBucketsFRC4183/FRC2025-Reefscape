@@ -8,6 +8,10 @@ public class ElevatorIOTalonFX implements ElevatorIO{
     private final TalonFX getElevatorTalon2;
     private final RelativeEncoder elevatorEncoder;
 
+    public ElevatorIOTalonFX(TalonFX talon1, TalonFX talon2, RelativeEncoder encoder) {
+        elevatorTalon1 = talon1;
+        getElevatorTalon2 = talon2;
+        elevatorEncoder = encoder;
     }
-}
-}
+
+    }
