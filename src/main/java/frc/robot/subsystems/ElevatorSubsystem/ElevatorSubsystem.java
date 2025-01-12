@@ -29,5 +29,4 @@ public class ElevatorSubsystem extends SubsystemBase {
             elevatorMotor.disable();
         }).andThen(run(() -> {})).withName("Idle"));;
     }
-    );
 }
