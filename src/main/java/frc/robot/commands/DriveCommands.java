@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.DriveSubsystem.Drive;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
+
 import java.util.function.DoubleSupplier;
 
 public class DriveCommands {
@@ -35,7 +37,7 @@ public class DriveCommands {
    * Field relative drive command using two joysticks (controlling linear and angular velocities).
    */
   public static Command BaseDriveCommand(
-      Drive drive,
+      DriveSubsystem drive,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier) {
