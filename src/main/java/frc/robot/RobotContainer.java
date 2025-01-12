@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.DriveSubsystem.*;
 import frc.robot.commands.Elevator.ElevatorUpCmd;
 import frc.robot.commands.ElevatorSetPointCommand;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
@@ -53,12 +54,12 @@ public class RobotContainer {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         drive =
-            new Drive(
+            new DriveSubsystem(
                 new GyroIOPigeon2(false),
-                new ModuleIOSparkMax(0),
-                new ModuleIOSparkMax(1),
-                new ModuleIOSparkMax(2),
-                new ModuleIOSparkMax(3));
+                new ModuleIOSpark(0),
+                new ModuleIOSpark(1),
+                new ModuleIOSpark(2),
+                new ModuleIOSpark(3));
         // flywheel = new Flywheel(new FlywheelIOSparkMax());
         // drive = new DriveSubsystem(
         // new GyroIOPigeon2(true),
@@ -72,7 +73,7 @@ public class RobotContainer {
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive =
-            new Drive(
+            new DriveSubsystem(
                 new GyroIO() {},
                 new ModuleIOSim(),
                 new ModuleIOSim(),
@@ -84,7 +85,7 @@ public class RobotContainer {
       default:
         // Replayed robot, disable IO implementations
         drive =
-            new Drive(
+            new DriveSubsystem(
                 new GyroIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {},
