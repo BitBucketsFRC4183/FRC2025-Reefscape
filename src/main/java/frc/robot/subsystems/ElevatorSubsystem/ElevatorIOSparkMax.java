@@ -41,8 +41,8 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 .voltageCompensation(12.0);
         elevatorConfig
                 .encoder
-                .positionConversionFactor(elevatorEncoderPositionFactor)
-                .velocityConversionFactor(elevatorEncoderVelocityFactor)
+                .positionConversionFactor(elevatorSparkEncoderPositionFactor)
+                .velocityConversionFactor(elevatorSparkEncoderVelocityFactor)
                 .uvwMeasurementPeriod(10)
                 .uvwAverageDepth(2);
         elevatorConfig
