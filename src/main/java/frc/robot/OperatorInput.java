@@ -19,6 +19,8 @@ public class OperatorInput {
 
   final Trigger resetGyroPress = driver.start();
 
+  final Trigger elevatorup = driver.x();
+
   final Trigger xNotDesired =
       driver
           .axisGreaterThan(XboxController.Axis.kLeftX.value, 0.1)
