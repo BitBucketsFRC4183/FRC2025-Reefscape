@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.Elevator.ElevatorDownCmd;
 import frc.robot.commands.Elevator.ElevatorUpCmd;
+import frc.robot.commands.ElevatorSetPointCommand;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
@@ -124,8 +124,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   void loadCommands() {
-    operatorInput.elevatorup.onTrue(new ElevatorUpCmd());
-    operatorInput.elevatordown.onTrue(new ElevatorDownCmd());
+    operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand());
+    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand());
+    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand());
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
             drive,
