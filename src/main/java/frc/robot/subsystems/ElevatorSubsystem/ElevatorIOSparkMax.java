@@ -8,10 +8,13 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.filter.Debouncer;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.DriveSubsystem.SparkOdometryThread;
 
 import java.util.Queue;
 import java.util.function.DoubleSupplier;
+
+import static frc.robot.constants.DriveConstants.odometryFrequency;
 import static frc.robot.util.SparkUtil.*;
 
 public class ElevatorIOSparkMax implements ElevatorIO {
@@ -37,20 +40,20 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         var elevatorConfig = new SparkFlexConfig();
         elevatorConfig
                 .idleMode(SparkBaseConfig.IdleMode.kBrake)
-                .smartCurrentLimit(elevatorMotorCurrentLimit)
+                .smartCurrentLimit(ElevatorConstants.elevatorSparkMotorCurrentLimit)
                 .voltageCompensation(12.0);
         elevatorConfig
                 .encoder
-                .positionConversionFactor(elevatorSparkEncoderPositionFactor)
-                .velocityConversionFactor(elevatorSparkEncoderVelocityFactor)
+                .positionConversionFactor(ElevatorConstants.elevatorSparkEncoderPositionFactor)
+                .velocityConversionFactor(ElevatorConstants.elevatorSparkEncoderVelocityFactor)
                 .uvwMeasurementPeriod(10)
                 .uvwAverageDepth(2);
         elevatorConfig
                 .closedLoop
                 .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
                 .pidf(
-                        elevatorKp, 0.0,
-                        elevatorKd, 0.0);
+                        ElevatorConstants.SparkkP, 0.0,
+                        ElevatorConstants.SparkkD, 0.0);
         elevatorConfig
                 .signals
                 .primaryEncoderPositionAlwaysOn(true)
@@ -68,7 +71,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                                 elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
         tryUntilOk(elevatorSpark1, 5, () -> elevatorEncoder.setPosition(0.0));
         tryUntilOk(
-                elevatorSpark2,
+                elevatorSpark2, h
                 5,
                 () ->
                         elevatorSpark2.configure(
@@ -76,7 +79,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         tryUntilOk(elevatorSpark2, 5, () -> elevatorEncoder.setPosition(0.0));
     }
     timestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
-    elevatorPositionQueue = SparkOdometryThread.getInstance().registerSignal(elevatorSpark, elevatorEncoder::getPosition);
+    elevatorPositionQueue = SparkOdometryThread.getInstance().registerSignal(elevatorSpark1, elevatorEncoder::getPosition);
 
     @Override
     public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
