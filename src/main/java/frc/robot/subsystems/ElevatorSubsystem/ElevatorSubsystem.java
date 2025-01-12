@@ -23,6 +23,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         setDefaultCommand(runOnce(() ->{
             elevatorMotor.disable();
-        }).andThen(run(() -> {})).withName("Idle"));;
+        }).andThen(run(() -> {})).withName("Idle"));
+
+    }
+    public void MoveElevator(int setpoint) {
+        System.out.println();
     }
 }
