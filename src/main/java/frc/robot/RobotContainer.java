@@ -181,9 +181,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   void loadCommands() {
-    operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand());
-    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(2));
-    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(3));
+    operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 1));
+    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 2));
+    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 3));
 
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
