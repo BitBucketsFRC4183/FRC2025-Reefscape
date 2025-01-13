@@ -5,7 +5,9 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface VisionIO {
@@ -13,7 +15,7 @@ public interface VisionIO {
     class VisionIOInputs {
         public boolean connected = false;
         public Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
-        public int[] PhotonTrackedTarget = new int[0];
+        public List<PhotonTrackedTarget> PhotonTrackedTarget;
         public boolean hasEstimate = false;
     }
 

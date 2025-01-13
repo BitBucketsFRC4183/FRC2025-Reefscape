@@ -32,16 +32,15 @@ public class VisionSubsystem extends SubsystemBase {
     public static Optional<EstimatedRobotPose> etimatedRobotPose;
     // Creates a new ExampleSubsystem
     public AprilTagFieldLayout aprilTagFieldLayout;
-    public final String cameraName = "BitbucketCamera";
-    public final PhotonCamera camera;
-    public final PhotonPoseEstimator photonPoseEstimator;
     public final Transform3d cameraToRobot =
             new Transform3d();
     public final Transform3d fieldToCamera =
             new Transform3d();
 
-    public VisionSubsystem() {
-        camera = new PhotonCamera(cameraName);
+    private final VisionIO visionIO;
+    private final VisionIOInputsAutoLogged visionInputs = new VisionIOInputsAutoLogged();
+    public VisionSubsystem(VisionIO visionIO) {
+        this.visionIO = visionIO;
         try {
             aprilTagFieldLayout =
                     new AprilTagFieldLayout(AprilTagFields.kDefaultField.m_resourceFile);
@@ -49,33 +48,17 @@ public class VisionSubsystem extends SubsystemBase {
             throw new RuntimeException(e);
         }
 
-        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraToRobot);
 
     }
 
 
     @Override
     public void periodic() {
-        // get result
-        var visionResult =
-                camera.getLatestResult();
-        boolean hasTargets =
-                visionResult.hasTargets();
+        visionIO.updateInputs(visionInputs);
+    }
 
-        List<PhotonTrackedTarget> targets =
-                visionResult.getTargets();
-
-        if (!targets.isEmpty()) {
-            PhotonTrackedTarget target =
-                    visionResult.getBestTarget();
-
-            //apriltag
-            int targetID = target.getFiducialId();
-            Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-            Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
-        }
-
-        Optional<EstimatedRobotPose> estimatedRobotPose = photonPoseEstimator.update(visionResult);
+    public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
+        return visionInputs.estimatedRobotPose();
     }
 }
 
