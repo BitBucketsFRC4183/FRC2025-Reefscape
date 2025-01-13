@@ -20,6 +20,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 //aprilTag
 
+import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import org.photonvision.*;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -49,27 +50,26 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // get result
-        var result = camera.getLatestResult();
-        boolean hasTargets = result.hasTargets();
+        var visionResult =
+                camera.getLatestResult();
+        boolean hasTargets =
+                visionResult.hasTargets();
 
         List<PhotonTrackedTarget> targets =
-                result.getTargets();
+                visionResult.getTargets();
 
         if (!targets.isEmpty()) {
             PhotonTrackedTarget target =
-                    result.getBestTarget();
+                    visionResult.getBestTarget();
 
             //apriltag
             int targetID = target.getFiducialId();
-            double poseAmbiguity = target.getPoseAmbiguity();
             Transform3d bestCameraToTarget = target.getBestCameraToTarget();
             Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
         }
 
-
-        Optional<EstimatedRobotPose> estimatedRobotPose = photonPoseEstimator.update(result);
+        Optional<EstimatedRobotPose> estimatedRobotPose = photonPoseEstimator.update(visionResult);
     }
 }
-        
 
 
