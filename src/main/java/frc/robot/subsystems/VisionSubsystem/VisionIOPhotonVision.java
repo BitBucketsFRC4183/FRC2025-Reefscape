@@ -38,7 +38,7 @@ public class VisionIOPhotonVision implements VisionIO {
         this.camera =
                 new PhotonCamera(VisionConstants.cameraName);
         photonPoseEstimator =
-                new PhotonPoseEstimator(VisionConstants.aprilTagLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraToRobot);
+                new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraToRobot);
 
     }
 
@@ -60,14 +60,18 @@ public class VisionIOPhotonVision implements VisionIO {
             Transform3d bestCameraToTarget = target.getBestCameraToTarget();
             Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
 
+            inputs.latestTargetObservation = new TargetObservation(Rotation2d.fromDegrees(target.getYaw()), Rotation2d.fromDegrees(target.getPitch()));
+
         }
 
-        inputs.estimatedPose = photonPoseEstimator.update(visionResult);
+        var optionalPose = photonPoseEstimator.update(visionResult);
+        optionalPose.ifPresent(estimatedRobotPose -> inputs.estimatedRobotPose = estimatedRobotPose.estimatedPose);
+        optionalPose.ifPresent(estimatedRobotPose -> inputs.timestampSeconds = estimatedRobotPose.timestampSeconds);
+
         inputs.connected =
                 camera.isConnected();
-
-        inputs.PhotonTrackedTarget = targets;
         inputs.hasEstimate =
-                inputs.estimatedPose.isPresent();
+                optionalPose.isPresent();
+
     }
 }

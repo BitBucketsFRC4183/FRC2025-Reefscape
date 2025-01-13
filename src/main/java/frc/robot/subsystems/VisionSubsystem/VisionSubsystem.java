@@ -38,13 +38,6 @@ public class VisionSubsystem extends SubsystemBase {
     private final VisionIOInputsAutoLogged visionInputs = new VisionIOInputsAutoLogged();
     public VisionSubsystem(VisionIO visionIO) {
         this.visionIO = visionIO;
-        try {
-            VisionConstants.aprilTagLayout;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
     }
 
 
@@ -54,7 +47,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
-        return visionInputs.EstimatedRobotPose;
+        return visionInputs.estimatedRobotPose;
     }
 }
 
