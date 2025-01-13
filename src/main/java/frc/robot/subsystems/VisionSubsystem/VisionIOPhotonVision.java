@@ -12,15 +12,10 @@ import java.util.List;
 import edu.wpi.first.math.geometry.*;
 //calculate the positions
 
-import java.io.IOException;
-import java.util.*;
 // above, data analysis
 
 //subsystem setup
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 //aprilTag
 
 import org.photonvision.*;
@@ -34,7 +29,7 @@ public class VisionIOPhotonVision implements VisionIO {
     public final PhotonCamera camera;
     public final PhotonPoseEstimator photonPoseEstimator;
 
-    public VisionIOPhotonVision() {
+    public VisionIOPhotonVision(String cameraName, Transform3d cameraToRobot) {
         this.camera =
                 new PhotonCamera(VisionConstants.cameraName);
         photonPoseEstimator =

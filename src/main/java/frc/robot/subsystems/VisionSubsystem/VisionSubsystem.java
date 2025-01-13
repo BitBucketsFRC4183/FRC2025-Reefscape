@@ -20,7 +20,6 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 //aprilTag
 
-import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import org.photonvision.*;
 import org.photonvision.targeting.PhotonPipelineResult;
