@@ -14,6 +14,7 @@ public interface ElevatorIO {
         public double[] odometryElevatorPositionsRad = new double[] {};
 
 
+        public boolean elevatorConnected;
     }
 
     public default void setInverted(boolean b) {};

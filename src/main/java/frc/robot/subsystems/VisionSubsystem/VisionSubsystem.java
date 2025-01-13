@@ -38,10 +38,15 @@ public class VisionSubsystem extends SubsystemBase {
     public final Transform3d fieldToCamera =
             new Transform3d();
 
-    public VisionSubsystem() throws IOException {
+    public VisionSubsystem() {
         camera = new PhotonCamera(cameraName);
-        aprilTagFieldLayout =
-                new AprilTagFieldLayout(AprilTagFields.kDefaultField.m_resourceFile);
+        try {
+            aprilTagFieldLayout =
+                    new AprilTagFieldLayout(AprilTagFields.kDefaultField.m_resourceFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraToRobot);
 
     }
