@@ -11,10 +11,12 @@ import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.DriveSubsystem.SparkOdometryThread;
 
+import java.util.Map;
 import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
 import static frc.robot.constants.DriveConstants.odometryFrequency;
+import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 import static frc.robot.util.SparkUtil.*;
 
 public class ElevatorIOSparkMax implements ElevatorIO {
@@ -94,6 +96,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 (values) -> inputs.elevatorAppliedVolts = values[0] * values[1]);
         ifOk(elevatorSpark1, elevatorSpark1::getOutputCurrent, (value) -> inputs.elevatorCurrentAmps = new double[]{value});
         inputs.elevatorConnected = elevatorConnectedDebounce.calculate(!sparkStickyFault);
+        inputs.loadHeight = (2 * Math.PI * pulleyRadius) / ((inputs.lastEncoderPosition -elevatorEncoder.getPosition()) * ElevatorConstants.gearingRatio);
 
         inputs.odometryTimestamps =
                 timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
@@ -101,6 +104,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 elevatorPositionQueue.stream().mapToDouble((Double value) -> value).toArray();
         timestampQueue.clear();
         elevatorPositionQueue.clear();
+        inputs.lastEncoderPosition = elevatorEncoder.getPosition();
     }
     @Override
     public void setBothElevatorMotorVoltages(double volts){

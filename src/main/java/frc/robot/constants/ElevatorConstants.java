@@ -20,5 +20,7 @@ public class ElevatorConstants {
     public static int elevatorSparkMotorCurrentLimit;
     public static double elevatorSparkEncoderPositionFactor;
     public static double elevatorSparkEncoderVelocityFactor;
+    public static double gearingRatio;
+    public static double pulleyRadius;
 
 }

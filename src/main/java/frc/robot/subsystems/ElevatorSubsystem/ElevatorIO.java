@@ -12,6 +12,8 @@ public interface ElevatorIO {
         public double[] elevatorCurrentAmps = new double[] {};
         public double[] odometryTimestamps = new double[] {};
         public double[] odometryElevatorPositionsRad = new double[] {};
+        public double gearingRatio = 0.0;
+        public double lastEncoderPosition = 0.0;
 
 
         public boolean elevatorConnected;
