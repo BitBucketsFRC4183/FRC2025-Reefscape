@@ -1,5 +1,6 @@
 package frc.robot.subsystems.VisionSubsystem;
 
+import frc.robot.constants.VisionConstants;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import java.util.List;
@@ -36,7 +37,8 @@ public class VisionIOPhotonVision implements VisionIO {
     public VisionIOPhotonVision() {
         this.camera =
                 new PhotonCamera(VisionConstants.cameraName);
-        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraToRobot);
+        photonPoseEstimator =
+                new PhotonPoseEstimator(VisionConstants.aprilTagLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraToRobot);
 
     }
 
@@ -57,6 +59,7 @@ public class VisionIOPhotonVision implements VisionIO {
             int targetID = target.getFiducialId();
             Transform3d bestCameraToTarget = target.getBestCameraToTarget();
             Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
+
         }
 
         inputs.estimatedPose = photonPoseEstimator.update(visionResult);
@@ -65,6 +68,6 @@ public class VisionIOPhotonVision implements VisionIO {
 
         inputs.PhotonTrackedTarget = targets;
         inputs.hasEstimate =
-                VisionSubsystem.etimatedRobotPose.isPresent();
+                inputs.estimatedPose.isPresent();
     }
 }

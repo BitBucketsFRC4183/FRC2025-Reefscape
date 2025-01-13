@@ -20,6 +20,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 //aprilTag
 
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import org.photonvision.*;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -28,13 +29,9 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 
 public class VisionSubsystem extends SubsystemBase {
-    public static PhotonPipelineResult visionResult;
-    public static Optional<EstimatedRobotPose> etimatedRobotPose;
     // Creates a new ExampleSubsystem
     public AprilTagFieldLayout aprilTagFieldLayout;
     public final Transform3d cameraToRobot =
-            new Transform3d();
-    public final Transform3d fieldToCamera =
             new Transform3d();
 
     private final VisionIO visionIO;
@@ -42,8 +39,7 @@ public class VisionSubsystem extends SubsystemBase {
     public VisionSubsystem(VisionIO visionIO) {
         this.visionIO = visionIO;
         try {
-            aprilTagFieldLayout =
-                    new AprilTagFieldLayout(AprilTagFields.kDefaultField.m_resourceFile);
+            VisionConstants.aprilTagLayout;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,7 +54,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
-        return visionInputs.estimatedRobotPose();
+        return visionInputs.EstimatedRobotPose;
     }
 }
 
