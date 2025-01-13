@@ -71,7 +71,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                                 elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
         tryUntilOk(elevatorSpark1, 5, () -> elevatorEncoder.setPosition(0.0));
         tryUntilOk(
-                elevatorSpark2, h
+                elevatorSpark2,
                 5,
                 () ->
                         elevatorSpark2.configure(
