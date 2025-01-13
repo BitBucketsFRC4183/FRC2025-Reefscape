@@ -17,7 +17,7 @@ public class OperatorInput {
   public final Trigger slowModeHold = driver.leftTrigger();
   public final Trigger turboModeHold = driver.rightTrigger();
 
-  final Trigger resetGyroPress = driver.start();
+  final Trigger resetEncoder = driver.start();
 
   final Trigger elevatorsetpoint1 = driver.x();
   final Trigger elevatorsetpoint2 = driver.y();

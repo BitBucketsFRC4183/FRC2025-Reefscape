@@ -31,6 +31,7 @@ import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorIOSparkMax;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
@@ -87,6 +88,8 @@ public class RobotContainer {
         // flywheel = new Flywheel(new FlywheelIOTalonFX());
         elevatorSubsystem =
                 new ElevatorSubsystem(); //TODO
+        elevatorIOSparkMax =
+                new ElevatorIOSparkMax();
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
@@ -186,6 +189,8 @@ public class RobotContainer {
     operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 1));
     operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 2));
     operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 3));
+
+    operatorInput.resetEncoder.onTrue(new )
 
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(

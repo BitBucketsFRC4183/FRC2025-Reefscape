@@ -11,10 +11,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.ElevatorConstants;
 
+
 public class ElevatorSubsystem extends SubsystemBase {
     private static final double maxRotationalSpeed = Units.feetToMeters(0);
     private final ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0,0,0,0);
-    private final PIDController elevatorFeedback = new PIDController(ElevatorConstants.kP, 0.0, 0.0);
+    public final PIDController elevatorFeedback = new PIDController(ElevatorConstants.kP, 0.0, 0.0);
     private Double speedSetpoint = null;
 
     private final SparkMax elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort, new SparkLowLevel.MotorType(0, SparkLowLevel.MotorType.kBrushless));

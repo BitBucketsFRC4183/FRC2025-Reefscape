@@ -96,7 +96,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 (values) -> inputs.elevatorAppliedVolts = values[0] * values[1]);
         ifOk(elevatorSpark1, elevatorSpark1::getOutputCurrent, (value) -> inputs.elevatorCurrentAmps = new double[]{value});
         inputs.elevatorConnected = elevatorConnectedDebounce.calculate(!sparkStickyFault);
-        inputs.loadHeight = (2 * Math.PI * pulleyRadius) / ((inputs.lastEncoderPosition -elevatorEncoder.getPosition()) * ElevatorConstants.gearingRatio);
+        inputs.loadHeight = (2 * Math.PI * pulleyRadius) / ((elevatorEncoder.getPosition() - inputs.lastEncoderPosition) * ElevatorConstants.gearingRatio);
 
         inputs.odometryTimestamps =
                 timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
