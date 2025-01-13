@@ -28,6 +28,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 
 public class VisionSubsystem extends SubsystemBase {
+    public static PhotonPipelineResult visionResult;
+    public static Optional<EstimatedRobotPose> etimatedRobotPose;
     // Creates a new ExampleSubsystem
     public AprilTagFieldLayout aprilTagFieldLayout;
     public final String cameraName = "BitbucketCamera";
