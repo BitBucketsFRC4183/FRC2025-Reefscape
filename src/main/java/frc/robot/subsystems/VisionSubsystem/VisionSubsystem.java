@@ -20,6 +20,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 //aprilTag
 
+import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import org.photonvision.*;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -27,49 +28,38 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 
 public class VisionSubsystem extends SubsystemBase {
+    public static PhotonPipelineResult visionResult;
+    public static Optional<EstimatedRobotPose> etimatedRobotPose;
     // Creates a new ExampleSubsystem
     public AprilTagFieldLayout aprilTagFieldLayout;
-    public final String cameraName = "BitbucketCamera";
-    public final PhotonCamera camera;
-    public final PhotonPoseEstimator photonPoseEstimator;
     public final Transform3d cameraToRobot =
             new Transform3d();
     public final Transform3d fieldToCamera =
             new Transform3d();
 
-    public VisionSubsystem() throws IOException {
-        camera = new PhotonCamera(cameraName);
-        aprilTagFieldLayout =
-                new AprilTagFieldLayout(AprilTagFields.kDefaultField.m_resourceFile);
-        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraToRobot);
+    private final VisionIO visionIO;
+    private final VisionIOInputsAutoLogged visionInputs = new VisionIOInputsAutoLogged();
+    public VisionSubsystem(VisionIO visionIO) {
+        this.visionIO = visionIO;
+        try {
+            aprilTagFieldLayout =
+                    new AprilTagFieldLayout(AprilTagFields.kDefaultField.m_resourceFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 
 
     @Override
     public void periodic() {
-        // get result
-        var result = camera.getLatestResult();
-        boolean hasTargets = result.hasTargets();
+        visionIO.updateInputs(visionInputs);
+    }
 
-        List<PhotonTrackedTarget> targets =
-                result.getTargets();
-
-        if (!targets.isEmpty()) {
-            PhotonTrackedTarget target =
-                    result.getBestTarget();
-
-            //apriltag
-            int targetID = target.getFiducialId();
-            double poseAmbiguity = target.getPoseAmbiguity();
-            Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-            Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
-        }
-
-
-        Optional<EstimatedRobotPose> estimatedRobotPose = photonPoseEstimator.update(result);
+    public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
+        return visionInputs.estimatedRobotPose();
     }
 }
-        
 
 

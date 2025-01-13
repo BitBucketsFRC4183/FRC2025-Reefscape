@@ -16,11 +16,14 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
+import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.*;
 import frc.robot.commands.ElevatorSetPointCommand;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
@@ -28,6 +31,11 @@ import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
+import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
+import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
+import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
+import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -36,8 +44,13 @@ public class RobotContainer {
   private final DriveSubsystem drive;
   // private final Flywheel flywheel;
   public final OperatorInput operatorInput;
-
-  private final 
+  private final ElevatorSubsystem elevatorSubsystem;
+  private final AlgaeManagementSubsystem algaeManagementSubsystem;
+  private final ClawSubsystem clawSubsystem;
+  private final GroundIntakeSubsystem groundIntakeSubsystem;
+  private final LEDSubsystem ledSubsystem;
+  private final SingleJointedArmSubsystem singleJointedArmSubsystem;
+  private final VisionSubsystem visionSubsystem;
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -69,6 +82,20 @@ public class RobotContainer {
         // new ModuleIOTalonFX(2),
         // new ModuleIOTalonFX(3));
         // flywheel = new Flywheel(new FlywheelIOTalonFX());
+        elevatorSubsystem =
+                new ElevatorSubsystem(); //TODO
+        algaeManagementSubsystem =
+                new AlgaeManagementSubsystem(); //TODO
+        clawSubsystem =
+                new ClawSubsystem(); //TODO
+        groundIntakeSubsystem =
+                new GroundIntakeSubsystem(); //TODO
+        ledSubsystem =
+                new LEDSubsystem(); //TODO
+        singleJointedArmSubsystem =
+                new SingleJointedArmSubsystem(); //TODO
+        visionSubsystem =
+                new VisionSubsystem(); //TODO
         break;
 
       case SIM:
@@ -81,6 +108,20 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim());
         // flywheel = new Flywheel(new FlywheelIOSim());
+        elevatorSubsystem =
+                new ElevatorSubsystem(); //TODO
+        algaeManagementSubsystem =
+                new AlgaeManagementSubsystem(); //TODO
+        clawSubsystem =
+                new ClawSubsystem(); //TODO
+        groundIntakeSubsystem =
+                new GroundIntakeSubsystem(); //TODO
+        ledSubsystem =
+                new LEDSubsystem(); //TODO
+        singleJointedArmSubsystem =
+                new SingleJointedArmSubsystem(); //TODO
+        visionSubsystem =
+                new VisionSubsystem(); //TODO
         break;
 
       default:
@@ -93,6 +134,20 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
         // flywheel = new Flywheel(new FlywheelIO() {});
+        elevatorSubsystem =
+                new ElevatorSubsystem(); //TODO
+        algaeManagementSubsystem =
+                new AlgaeManagementSubsystem(); //TODO
+        clawSubsystem =
+                new ClawSubsystem(); //TODO
+        groundIntakeSubsystem =
+                new GroundIntakeSubsystem(); //TODO
+        ledSubsystem =
+                new LEDSubsystem(); //TODO
+        singleJointedArmSubsystem =
+                new SingleJointedArmSubsystem(); //TODO
+        visionSubsystem =
+                new VisionSubsystem(); //TODO
         break;
     }
 
@@ -126,9 +181,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   void loadCommands() {
-    operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand());
-    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(2));
-    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(3));
+    operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 1));
+    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 2));
+    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 3));
 
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
