@@ -77,9 +77,12 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                         elevatorSpark2.configure(
                                 elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
         tryUntilOk(elevatorSpark2, 5, () -> elevatorEncoder.setPosition(0.0));
+        timestampQueue = SparkOdometryThread.getInstance().
+                makeTimestampQueue();
+        elevatorPositionQueue = SparkOdometryThread.getInstance().
+                registerSignal(elevatorSpark1, elevatorEncoder::getPosition);
+
     }
-    timestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
-    elevatorPositionQueue = SparkOdometryThread.getInstance().registerSignal(elevatorSpark1, elevatorEncoder::getPosition);
 
     @Override
     public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
@@ -90,7 +93,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 new DoubleSupplier[]{elevatorSpark1::getAppliedOutput, elevatorSpark1::getBusVoltage},
                 (values) -> inputs.elevatorAppliedVolts = values[0] * values[1]);
         ifOk(elevatorSpark1, elevatorSpark1::getOutputCurrent, (value) -> inputs.elevatorCurrentAmps = new double[]{value});
-        inputs.elevatorAppliedVolts = elevatorConnectedDebounce.calculate(!sparkStickyFault);
+        inputs.elevatorConnected = elevatorConnectedDebounce.calculate(!sparkStickyFault);
 
         inputs.odometryTimestamps =
                 timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
