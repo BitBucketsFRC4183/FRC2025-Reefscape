@@ -29,7 +29,7 @@ public class VisionIOPhotonVision implements VisionIO {
     public final PhotonCamera camera;
     public final PhotonPoseEstimator photonPoseEstimator;
 
-    public VisionIOPhotonVision(String cameraName, Transform3d cameraToRobot) {
+    public VisionIOPhotonVision() {
         this.camera =
                 new PhotonCamera(VisionConstants.cameraName);
         photonPoseEstimator =

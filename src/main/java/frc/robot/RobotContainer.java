@@ -37,13 +37,14 @@ import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
+import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 public class RobotContainer {
   // Subsystems
-  private final DriveSubsystem drive;
+  public final DriveSubsystem drive;
   // private final Flywheel flywheel;
   public final OperatorInput operatorInput;
   private final ElevatorSubsystem elevatorSubsystem;
@@ -123,7 +124,7 @@ public class RobotContainer {
         singleJointedArmSubsystem =
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
-                new VisionSubsystem(new VisionIO()); //TODO
+                new VisionSubsystem(new VisionIOPhotonVisionSim(drive.getPose2dSupplier())); //TODO
         break;
       default:
         // Replayed robot, disable IO implementations
@@ -148,7 +149,7 @@ public class RobotContainer {
         singleJointedArmSubsystem =
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
-                new VisionSubsystem(); //TODO
+                new VisionSubsystem(new VisionIO() {}); //TODO
         break;
     }
 

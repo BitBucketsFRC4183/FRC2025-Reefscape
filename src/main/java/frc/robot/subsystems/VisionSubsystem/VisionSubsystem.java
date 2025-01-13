@@ -20,6 +20,9 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 //aprilTag
 
+import frc.robot.RobotContainer;
+import frc.robot.constants.Constants;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import org.photonvision.*;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -35,8 +38,11 @@ public class VisionSubsystem extends SubsystemBase {
 
     private final VisionIO visionIO;
     private final VisionIOInputsAutoLogged visionInputs = new VisionIOInputsAutoLogged();
+
+
     public VisionSubsystem(VisionIO visionIO) {
         this.visionIO = visionIO;
+
     }
 
 
@@ -45,7 +51,7 @@ public class VisionSubsystem extends SubsystemBase {
         visionIO.updateInputs(visionInputs);
     }
 
-    public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
+    public Pose3d getEstimatedRobotPose() {
         return visionInputs.estimatedRobotPose;
     }
 }
