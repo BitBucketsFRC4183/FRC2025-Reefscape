@@ -58,20 +58,21 @@ public class VisionSubsystem extends SubsystemBase {
         if (!visionInputs.connected) {
             new Alert("Vision camera " + VisionConstants.cameraName +
                     "is disconnected.", Alert.AlertType.kWarning);
+
+            Pose3d tagPose;
+            tagPose = visionInputs.tagPose;
+
+
         }
 
-        var tagPose =
-                VisionConstants.aprilTagFieldLayout.getTagPose(visionInputs.targetID);
-        if (tagPose.isPresent()) {
-            tagPoses.add(tagPose.get());
-        }
-        inputs.tagPose =
-                tagPose;
+
+        ;
     }
 
-    public Pose3d getEstimatedRobotPose() {
+    public Pose3d getEstimatedRobotPose () {
         return visionInputs.estimatedRobotPose;
     }
+
 }
 
 
