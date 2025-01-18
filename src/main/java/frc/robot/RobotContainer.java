@@ -14,6 +14,9 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -23,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ResetEncoderCommand;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.*;
@@ -41,6 +45,9 @@ import frc.robot.subsystems.VisionSubsystem.VisionIO;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -56,7 +63,7 @@ public class RobotContainer {
   private final LEDSubsystem ledSubsystem;
   private final SingleJointedArmSubsystem singleJointedArmSubsystem;
   private final VisionSubsystem visionSubsystem;
-
+  private SwerveDriveSimulation driveSimulation = null;
 
 
   // Controller
@@ -108,13 +115,15 @@ public class RobotContainer {
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
+        this.driveSimulation = new SwerveDriveSimulation(DriveConstants.mapleSimConfig, new Pose2d());
+        SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
         drive =
             new DriveSubsystem(
-                new GyroIO() {},
-                new ModuleIOSim(),
-                new ModuleIOSim(),
-                new ModuleIOSim(),
-                new ModuleIOSim());
+                    new GyroIOSim(driveSimulation.getGyroSimulation()),
+                    new ModuleIOSim(driveSimulation.getModules()[0]),
+                    new ModuleIOSim(driveSimulation.getModules()[1]),
+                    new ModuleIOSim(driveSimulation.getModules()[2]),
+                    new ModuleIOSim(driveSimulation.getModules()[3]));
         // flywheel = new Flywheel(new FlywheelIOSim());
         elevatorSubsystem =
                 new ElevatorSubsystem(); //TODO
@@ -129,7 +138,7 @@ public class RobotContainer {
         singleJointedArmSubsystem =
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
-                new VisionSubsystem(new VisionIOPhotonVisionSim(drive.getPose2dSupplier())); //TODO
+                new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
         break;
       default:
         // Replayed robot, disable IO implementations
@@ -209,5 +218,18 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  public void resetSimulationField() {
+    if (Constants.currentMode != Constants.Mode.SIM) return;
+
+    driveSimulation.setSimulationWorldPose(new Pose2d(3, 3, new Rotation2d()));
+    SimulatedArena.getInstance().resetFieldForAuto();
+  }
+
+  public void displaySimFieldToAdvantageScope() {
+    if (Constants.currentMode != Constants.Mode.SIM) return;
+
+    Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
   }
 }
