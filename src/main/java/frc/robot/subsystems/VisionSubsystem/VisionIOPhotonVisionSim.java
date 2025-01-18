@@ -94,7 +94,7 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
         cameraSim.enableProcessedStream(true);
         cameraSim.enableDrawWireframe(true);
 
-        
+
     }
 
 }
