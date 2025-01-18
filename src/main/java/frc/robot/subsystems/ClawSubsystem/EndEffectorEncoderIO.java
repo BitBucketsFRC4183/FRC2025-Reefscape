@@ -10,4 +10,8 @@ public interface EndEffectorEncoderIO {
         return 0.0;
     }
 
+    public default boolean getStopped() {
+        return true;
+    }
+
 }

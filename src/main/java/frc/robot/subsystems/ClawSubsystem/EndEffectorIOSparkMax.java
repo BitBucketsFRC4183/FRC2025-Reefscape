@@ -4,35 +4,32 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
     private final SparkMax motorController;
-    private final PIDController pid;
     private final EndEffectorEncoderIO encoder;
 
-    public EndEffectorIOSparkMax(SparkMax motorController, PIDController pid, EndEffectorEncoderIO encoder) {
+    public EndEffectorIOSparkMax(SparkMax motorController, EndEffectorEncoderIO encoder) {
         this.motorController = motorController;
-        this.pid = pid;
         this.encoder = encoder;
-        pid.setTolerance(3, 5);
-        pid.setIntegratorRange(-0.5, 0.5);
+        setupPID();
     }
 
     public void open() {
         double openPoint = 1.0;
-        motorController.set(pid.calculate(encoder.getDistance(), openPoint));
-        if (pid.atSetpoint()) {
-            motorController.set(0);
+        setVelocity(pidCalculate(encoder, openPoint));
+        if (atSetpoint()) {
+            setVelocity(0);
         }
     }
 
     public void close() {
         double closePoint = -1.0;
-        motorController.set(pid.calculate(encoder.getDistance(), closePoint));
-        if (pid.atSetpoint()) {
-            motorController.set(0);
+        setVelocity(pidCalculate(encoder, closePoint));
+        if (encoder.getStopped()) {
+            setVelocity(0);
         }
     }
 
     @Override
-    public void set(double velocity) {
+    public void setVelocity(double velocity) {
         motorController.set(velocity);
     }
 
