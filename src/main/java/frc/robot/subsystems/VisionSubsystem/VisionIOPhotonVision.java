@@ -27,7 +27,7 @@ import org.photonvision.*;
 
 public class VisionIOPhotonVision implements VisionIO {
     public final PhotonCamera camera;
-    public final PhotonPoseEstimator photonPoseEstimator;
+    public PhotonPoseEstimator photonPoseEstimator;
 
     public VisionIOPhotonVision() {
         this.camera =
