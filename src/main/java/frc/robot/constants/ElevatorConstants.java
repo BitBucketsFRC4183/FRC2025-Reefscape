@@ -7,7 +7,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 public class ElevatorConstants {
     public static double kP;
     public static int kElevatorMotorPort;
-    public static int[] kEncoderPorts;
+    public static int[] kEncoderPorts = new int[1];
     public static boolean kEncoderReversed;
     public static double kShooterToleranceRPS;
     public static double kEncoderDistancePerPulse;
