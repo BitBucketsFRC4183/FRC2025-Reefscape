@@ -22,8 +22,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class SingleJointedArmSubsystem extends SubsystemBase{
-
+    private final CANSparkMax armMotor;
+    private static final double kP = 0;
+    private static final double kD = 0;
+    private static final double kI = 0;
+    private static final double MAX_ANGLE = 90.0;
+    private static final double MIN_ANGLE = 0.0;
 }
 
