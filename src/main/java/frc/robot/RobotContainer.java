@@ -31,17 +31,21 @@ import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorIOSparkMax;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
+import frc.robot.subsystems.VisionSubsystem.VisionIO;
+import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
+import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 public class RobotContainer {
   // Subsystems
-  private final DriveSubsystem drive;
+  public final DriveSubsystem drive;
   // private final Flywheel flywheel;
   public final OperatorInput operatorInput;
 <<<<<<< Updated upstream
@@ -88,6 +92,8 @@ public class RobotContainer {
         // flywheel = new Flywheel(new FlywheelIOTalonFX());
         elevatorSubsystem =
                 new ElevatorSubsystem(); //TODO
+        elevatorIOSparkMax =
+                new ElevatorIOSparkMax();
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
@@ -99,7 +105,7 @@ public class RobotContainer {
         singleJointedArmSubsystem =
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
-                new VisionSubsystem(); //TODO
+                new VisionSubsystem(new VisionIOPhotonVision()); //TODO
         break;
 
       case SIM:
@@ -125,9 +131,8 @@ public class RobotContainer {
         singleJointedArmSubsystem =
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
-                new VisionSubsystem(); //TODO
+                new VisionSubsystem(new VisionIOPhotonVisionSim(drive.getPose2dSupplier())); //TODO
         break;
-
       default:
         // Replayed robot, disable IO implementations
         drive =
@@ -151,7 +156,7 @@ public class RobotContainer {
         singleJointedArmSubsystem =
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
-                new VisionSubsystem(); //TODO
+                new VisionSubsystem(new VisionIO() {}); //TODO
         break;
     }
 
@@ -190,11 +195,8 @@ public class RobotContainer {
     operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 2));
     operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 3));
 
-=======
-    operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand());
-    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand());
-    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand());
->>>>>>> Stashed changes
+    operatorInput.resetEncoder.onTrue(new )
+
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
             drive,

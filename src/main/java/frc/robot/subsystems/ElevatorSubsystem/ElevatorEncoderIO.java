@@ -1,15 +1,15 @@
 package frc.robot.subsystems.ElevatorSubsystem;
 
 import org.littletonrobotics.junction.AutoLog;
+import com.revrobotics.RelativeEncoder;
 
 public interface ElevatorEncoderIO {
     @AutoLog
     class ElevatorEncoderInputs {
-        double baseHeight = 0.0;
+        double elevatorPosition = 0.0;
         double voltageSupply = 0.0;
         int channelA = 0;
         int channelB = 0;
     }
-    default void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {}
-    default void getRotationsPerMinute() {}
+    public default void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {}
 }

@@ -53,6 +53,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -67,23 +69,7 @@ public class DriveSubsystem extends SubsystemBase {
                   Math.max(
                           Math.hypot(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
                           Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
-  // PathPlanner config constants
-  private static final double ROBOT_MASS_KG = 74.088;
-  private static final double ROBOT_MOI = 6.883;
-  private static final double WHEEL_COF = 1.2;
-  private static final RobotConfig PP_CONFIG =
-          new RobotConfig(
-                  ROBOT_MASS_KG,
-                  ROBOT_MOI,
-                  new ModuleConfig(
-                          TunerConstants.FrontLeft.WheelRadius,
-                          TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
-                          WHEEL_COF,
-                          DCMotor.getKrakenX60Foc(1)
-                                  .withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
-                          TunerConstants.FrontLeft.SlipCurrent,
-                          1),
-                  getModuleTranslations());
+
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
@@ -364,5 +350,9 @@ public class DriveSubsystem extends SubsystemBase {
             new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
             new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  public Supplier<Pose2d> getPose2dSupplier() {
+    return this::getPose;
   }
 }

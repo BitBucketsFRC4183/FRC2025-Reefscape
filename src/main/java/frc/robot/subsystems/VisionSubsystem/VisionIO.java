@@ -14,11 +14,13 @@ public interface VisionIO {
     @AutoLog
     class VisionIOInputs {
         public boolean connected = false;
-        public Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
-        public List<PhotonTrackedTarget> PhotonTrackedTarget;
+        public Pose3d estimatedRobotPose;
         public boolean hasEstimate = false;
+        public double timestampSeconds;
+        public TargetObservation latestTargetObservation = new TargetObservation(new Rotation2d(), new Rotation2d());
     }
 
+    public static record TargetObservation(Rotation2d tx, Rotation2d ty) {}
     public default void updateInputs(VisionIOInputs inputs) {}
 }
 

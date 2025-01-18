@@ -1,5 +1,6 @@
 package frc.robot.subsystems.VisionSubsystem;
 
+import frc.robot.constants.VisionConstants;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import java.util.List;
@@ -11,15 +12,10 @@ import java.util.List;
 import edu.wpi.first.math.geometry.*;
 //calculate the positions
 
-import java.io.IOException;
-import java.util.*;
 // above, data analysis
 
 //subsystem setup
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 //aprilTag
 
 import org.photonvision.*;
@@ -36,7 +32,8 @@ public class VisionIOPhotonVision implements VisionIO {
     public VisionIOPhotonVision() {
         this.camera =
                 new PhotonCamera(VisionConstants.cameraName);
-        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraToRobot);
+        photonPoseEstimator =
+                new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraToRobot);
 
     }
 
@@ -57,14 +54,19 @@ public class VisionIOPhotonVision implements VisionIO {
             int targetID = target.getFiducialId();
             Transform3d bestCameraToTarget = target.getBestCameraToTarget();
             Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
+
+            inputs.latestTargetObservation = new TargetObservation(Rotation2d.fromDegrees(target.getYaw()), Rotation2d.fromDegrees(target.getPitch()));
+
         }
 
-        inputs.estimatedPose = photonPoseEstimator.update(visionResult);
+        var optionalPose = photonPoseEstimator.update(visionResult);
+        optionalPose.ifPresent(estimatedRobotPose -> inputs.estimatedRobotPose = estimatedRobotPose.estimatedPose);
+        optionalPose.ifPresent(estimatedRobotPose -> inputs.timestampSeconds = estimatedRobotPose.timestampSeconds);
+
         inputs.connected =
                 camera.isConnected();
-
-        inputs.PhotonTrackedTarget = targets;
         inputs.hasEstimate =
-                VisionSubsystem.etimatedRobotPose.isPresent();
+                optionalPose.isPresent();
+
     }
 }
