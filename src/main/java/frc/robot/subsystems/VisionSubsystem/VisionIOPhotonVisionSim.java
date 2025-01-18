@@ -87,5 +87,6 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
                 camera.isConnected();
         inputs.hasEstimate =
                 optionalPose.isPresent();
+
     }
 }

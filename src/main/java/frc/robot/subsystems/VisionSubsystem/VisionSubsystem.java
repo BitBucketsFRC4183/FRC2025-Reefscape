@@ -45,6 +45,15 @@ public class VisionSubsystem extends SubsystemBase {
     public VisionSubsystem(VisionIO visionIO) {
         this.visionIO = visionIO;
 
+        try {
+            aprilTagFieldLayout =
+                    new AprilTagFieldLayout(AprilTagFields.kDefaultField.m_resourceFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
     }
 
     List<Pose3d> tagPoses = new LinkedList<>();
