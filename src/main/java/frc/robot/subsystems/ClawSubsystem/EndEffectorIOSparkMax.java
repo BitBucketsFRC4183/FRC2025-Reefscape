@@ -4,26 +4,31 @@ import com.revrobotics.spark.SparkMax;
 //todo: make small wheels touching object rotate inwards for better hold
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
-    private final SparkMax motorController;
+    //private final SparkMax left;
+    //private final SparkMax right;
+    private final SparkMax center;
     private final EndEffectorEncoderIO encoder;
 
-    public EndEffectorIOSparkMax(SparkMax motorController, EndEffectorEncoderIO encoder) {
-        this.motorController = motorController;
+    public EndEffectorIOSparkMax(SparkMax center, EndEffectorEncoderIO encoder) {
+        this.center = center;
         this.encoder = encoder;
         setupPID();
     }
 
-    public void open() {
-        double openPoint = 1.0;
-        setVelocity(pidCalculate(encoder, openPoint));
+    public void goToSetpoint(double setpoint) {
+        setVelocity(pidCalculate(encoder, setpoint));
         if (atSetpoint()) {
             setVelocity(0);
         }
     }
 
+    public void open() {
+        double openPoint = 1.0;
+        goToSetpoint(openPoint);
+    }
+
     public void close() {
         double closePoint = -1.0;
-        setVelocity(pidCalculate(encoder, closePoint));
         if (encoder.getStopped()) {
             setVelocity(0);
         }
@@ -31,12 +36,12 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
 
     @Override
     public void setVelocity(double velocity) {
-        motorController.set(velocity);
+        center.set(velocity);
     }
 
     @Override
     public void setVoltage(double volts) {
-        motorController.setVoltage(volts);
+        center.setVoltage(volts);
     }
 
     @Override

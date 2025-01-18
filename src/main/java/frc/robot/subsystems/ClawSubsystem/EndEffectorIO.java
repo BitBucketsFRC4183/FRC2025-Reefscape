@@ -4,7 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 
 public interface EndEffectorIO {
 
-    public final PIDController pid = new PIDController(0, 0, 0);
+    final PIDController pid = new PIDController(0, 0, 0);
 
     public static class EndEffectorInputs {
         public double position = 0.0;
@@ -14,6 +14,8 @@ public interface EndEffectorIO {
     public default void updateInputs(EndEffectorInputs inputs) {}
 
     public default void setVelocity(double velocity) {}
+
+    public default void setVoltage(double volts) {}
 
     public default void setupPID() {
         pid.setTolerance(3, 5);
@@ -26,9 +28,6 @@ public interface EndEffectorIO {
 
     public default boolean atSetpoint() {
         return pid.atSetpoint();
-    }
-
-    public default void setVoltage(double volts) {
     }
 
 
