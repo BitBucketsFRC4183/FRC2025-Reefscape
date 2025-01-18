@@ -8,7 +8,7 @@ import frc.robot.subsystems.ElevatorSubsystem.ElevatorEncoderIO;
 public class ElevatorSetPointCommand  extends Command {
     private final double setpoint;
     private final ElevatorSubsystem elevator;
-    private final ElevatorIOSparkMax sparkMaxencoder;
+    // private final ElevatorIOSparkMax sparkMaxencoder;
     // Constructor with parameters
     public ElevatorSetPointCommand(ElevatorSubsystem elevator, double setpoint) {
         this.setpoint = setpoint;
@@ -21,8 +21,8 @@ public class ElevatorSetPointCommand  extends Command {
     }
 
     public void execute(){
-        double power = elevator.elevatorFeedback.calculateOutput(elevator.);
-        elevator.moveElevator(power);
+        // double power = elevator.elevatorFeedback.calculateOutput(elevator.);
+        // elevator.moveElevator(power);
     }
 
     public boolean isFinished() {
