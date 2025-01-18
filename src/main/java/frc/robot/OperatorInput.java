@@ -23,6 +23,8 @@ public class OperatorInput {
   final Trigger elevatorsetpoint2 = driver.y();
   final Trigger elevatorsetpoint3 = driver.b();
 
+  final Trigger IntakeOn = driver.a();
+
   final Trigger xNotDesired =
       driver
           .axisGreaterThan(XboxController.Axis.kLeftX.value, 0.1)

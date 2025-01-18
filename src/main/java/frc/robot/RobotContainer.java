@@ -44,6 +44,7 @@ public class RobotContainer {
   private final DriveSubsystem drive;
   // private final Flywheel flywheel;
   public final OperatorInput operatorInput;
+<<<<<<< Updated upstream
   private final ElevatorSubsystem elevatorSubsystem;
   private final AlgaeManagementSubsystem algaeManagementSubsystem;
   private final ClawSubsystem clawSubsystem;
@@ -51,6 +52,9 @@ public class RobotContainer {
   private final LEDSubsystem ledSubsystem;
   private final SingleJointedArmSubsystem singleJointedArmSubsystem;
   private final VisionSubsystem visionSubsystem;
+=======
+
+>>>>>>> Stashed changes
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -181,10 +185,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   void loadCommands() {
+<<<<<<< Updated upstream
     operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 1));
     operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 2));
     operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 3));
 
+=======
+    operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand());
+    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand());
+    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand());
+>>>>>>> Stashed changes
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
             drive,
