@@ -28,5 +28,8 @@ public interface EndEffectorIO {
         return pid.atSetpoint();
     }
 
+    public default void setVoltage(double volts) {
+    }
+
 
 }

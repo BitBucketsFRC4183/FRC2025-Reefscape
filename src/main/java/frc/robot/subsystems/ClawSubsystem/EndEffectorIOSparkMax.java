@@ -1,6 +1,7 @@
 package frc.robot.subsystems.ClawSubsystem;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.math.controller.PIDController;
+
+//todo: make small wheels touching object rotate inwards for better hold
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
     private final SparkMax motorController;
@@ -31,6 +32,11 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     @Override
     public void setVelocity(double velocity) {
         motorController.set(velocity);
+    }
+
+    @Override
+    public void setVoltage(double volts) {
+        motorController.setVoltage(volts);
     }
 
     @Override
