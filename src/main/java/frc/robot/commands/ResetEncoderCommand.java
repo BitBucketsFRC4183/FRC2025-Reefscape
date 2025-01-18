@@ -12,7 +12,7 @@ public class ResetEncoderCommand  extends Command implements ElevatorEncoderIO {
     }
 
     public void execute(){
-        elevator.elevatorEncoder
+
     }
 
 }
