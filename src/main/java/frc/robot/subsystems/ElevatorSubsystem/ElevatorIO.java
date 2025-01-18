@@ -20,11 +20,11 @@ public interface ElevatorIO {
     }
 
     public default void setInverted(boolean b) {};
-    public default void disable() {};
+    public static void disable() {};
     public default void stopMotor() {};
 
     public default void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {}
 
-    public default void setBothElevatorMotorVoltages(double volts) {
+    public static void setBothElevatorMotorVoltages(double volts) {
     }
 }
