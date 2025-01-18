@@ -18,7 +18,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public final PIDController elevatorFeedback = new PIDController(ElevatorConstants.kP, 0.0, 0.0);
     private Double speedSetpoint = null;
 
-    private final SparkMax elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort, new SparkLowLevel.MotorType(0, SparkLowLevel.MotorType.kBrushless));
+    private final SparkMax elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort, SparkLowLevel.MotorType.kBrushless);
     private final Encoder elevatorEncoder = new Encoder(ElevatorConstants.kEncoderPorts[0], ElevatorConstants.kEncoderPorts[1],ElevatorConstants.kEncoderReversed);
 
     public ElevatorSubsystem() {
