@@ -20,14 +20,14 @@ import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 import static frc.robot.util.SparkUtil.*;
 
 public class ElevatorIOSparkMax implements ElevatorIO {
-    private final SparkBase elevatorSpark1;
-    private final SparkBase elevatorSpark2;
+    private SparkBase elevatorSpark1 = ElevatorConstants.elevatorSpark1;
+    private SparkBase elevatorSpark2 = ElevatorConstants.elevatorSpark2;
     private final RelativeEncoder elevatorEncoder;
 
     private final SparkClosedLoopController elevatorController;
 
-    private final Queue<Double> timestampQueue;
-    private final Queue<Double> elevatorPositionQueue;
+    public static Queue<Double> timestampQueue;
+    public static Queue<Double> elevatorPositionQueue;
 
     private final Debouncer elevatorConnectedDebounce = new Debouncer(0.5);
 
@@ -106,7 +106,6 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         elevatorPositionQueue.clear();
         inputs.lastEncoderPosition = elevatorEncoder.getPosition();
     }
-    @Override
     public void setBothElevatorMotorVoltages(double volts){
         elevatorSpark1.setVoltage(volts);
         elevatorSpark2.setVoltage(volts);
