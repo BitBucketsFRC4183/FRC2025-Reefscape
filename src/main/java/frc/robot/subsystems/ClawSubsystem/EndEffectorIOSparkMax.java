@@ -23,7 +23,7 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
         }
     }
 
-    public void rotatebig() { //rotate big wheels
+    public void rotateSmall() { //rotate small wheels
         double velocity = 0.1;
         small.set(velocity);
         try {
