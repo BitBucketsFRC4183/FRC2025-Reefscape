@@ -97,10 +97,6 @@ public class Robot extends LoggedRobot {
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
   }
-
-//Choreao Command Need
-public class Robot1 extends TimedRobot {
-  // Loads a swerve trajectory, alternatively use DifferentialSample if the robot is tank drive
   private final Timer timer = new Timer();
 
   @Override
@@ -139,7 +135,6 @@ public class Robot1 extends TimedRobot {
 
   private boolean isRedAlliance() {
     return DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue).equals(DriverStation.Alliance.Red);
-  }
   }
 
 
