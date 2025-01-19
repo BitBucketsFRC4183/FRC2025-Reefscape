@@ -22,18 +22,6 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
         }
     }
 
-    public void open() {
-        double openPoint = 1.0;
-        goToSetpoint(openPoint);
-    }
-
-    public void close() {
-        double closePoint = -1.0;
-        if (encoder.getStopped()) {
-            setVelocity(0);
-        }
-    }
-
     @Override
     public void setVelocity(double velocity) {
         center.set(velocity);
