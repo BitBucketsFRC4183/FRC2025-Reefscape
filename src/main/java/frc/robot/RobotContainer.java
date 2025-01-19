@@ -120,6 +120,12 @@ public class RobotContainer {
                     new ModuleIOSim(driveSimulation.getModules()[1]),
                     new ModuleIOSim(driveSimulation.getModules()[2]),
                     new ModuleIOSim(driveSimulation.getModules()[3]));
+//        new DriveSubsystem(
+//                new GyroIOSim(driveSimulation.getGyroSimulation()),
+//                new ModuleIOHybridSim(0, TunerConstants.FrontLeft, driveSimulation.getModules()[0]),
+//                new ModuleIOHybridSim(1, TunerConstants.FrontRight,driveSimulation.getModules()[1]),
+//                new ModuleIOHybridSim(2, TunerConstants.BackLeft,driveSimulation.getModules()[2]),
+//                new ModuleIOHybridSim(3, TunerConstants.BackRight,driveSimulation.getModules()[3]));
         // flywheel = new Flywheel(new FlywheelIOSim());
         elevatorSubsystem =
                 new ElevatorSubsystem(); //TODO

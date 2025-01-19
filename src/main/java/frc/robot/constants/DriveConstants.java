@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.robot.generated.TunerConstants;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
@@ -66,10 +67,9 @@ public class DriveConstants {
 
     // Drive motor configuration
     public static final int driveMotorCurrentLimit = 50;
-    public static final double wheelRadiusMeters = Units.inchesToMeters(1.5);
-    public static final double driveMotorReduction =
-            (45.0 * 22.0) / (14.0 * 15.0); // MAXSwerve with 14 pinion teeth and 22 spur teeth
-    public static final DCMotor driveGearbox = DCMotor.getNEO(1);
+    public static final double wheelRadiusMeters = TunerConstants.FrontLeft.WheelRadius;
+    public static final double driveMotorReduction = TunerConstants.FrontLeft.DriveMotorGearRatio;
+    public static final DCMotor driveGearbox = DCMotor.getKrakenX60(1);
 
     // Drive encoder configuration
     public static final double driveEncoderPositionFactor =
@@ -77,7 +77,7 @@ public class DriveConstants {
     public static final double driveEncoderVelocityFactor =
             (2 * Math.PI) / 60.0 / driveMotorReduction; // Rotor RPM -> Wheel Rad/Sec
 
-    // Drive PID configuration
+    // Drive Velocity firmware PID gains
     public static final double driveKp = 0.0;
     public static final double driveKd = 0.0;
     public static final double driveKs = 0.0;
@@ -91,7 +91,7 @@ public class DriveConstants {
     public static final boolean turnInverted = false;
     public static final int turnMotorCurrentLimit = 20;
     public static final double turnMotorReduction = 9424.0 / 203.0;
-    public static final DCMotor turnGearbox = DCMotor.getNeo550(1);
+    public static final DCMotor turnGearbox = DCMotor.getNEO(1);
 
     // Turn encoder configuration
     public static final boolean turnEncoderInverted = true;

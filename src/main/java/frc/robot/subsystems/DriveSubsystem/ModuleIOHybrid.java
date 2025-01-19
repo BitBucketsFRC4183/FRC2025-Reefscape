@@ -59,7 +59,7 @@ public class ModuleIOHybrid implements ModuleIO {
             TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
             constants;
     // Hardware objects
-    private final TalonFX driveTalon;
+    protected final TalonFX driveTalon;
     private final SparkBase turnSpark;
     private final CANcoder cancoder;
     private final AbsoluteEncoder turnEncoder;
