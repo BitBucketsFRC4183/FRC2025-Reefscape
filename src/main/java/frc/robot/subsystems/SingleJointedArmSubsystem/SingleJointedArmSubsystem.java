@@ -18,7 +18,7 @@ public class SingleJointedArmSubsystem extends SubsystemBase {
     private final PIDController armFeedback = new PIDController(SingleJointedArmConstants.kP, SingleJointedArmConstants.kD, SingleJointedArmConstants.kI);
 
     public SingleJointedArmSubsystem() {
-        armFeedback.setTolerance(SingleJointedArmConstants.kShooterToleranceRPS);
+        armFeedback.setTolerance(SingleJointedArmConstants.kArmToleranceRPS);
         armEncoder.setDistancePerPulse(SingleJointedArmConstants.kEncoderDistancePerPulse);
         setDefaultCommand(runOnce(() -> {
             armMotor.disable();
