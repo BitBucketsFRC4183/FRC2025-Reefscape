@@ -11,34 +11,24 @@ import frc.robot.subsystems.ElevatorSubsystem.ElevatorIOSparkMax;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorEncoderIO;
 
 public class ElevatorSetPointCommand  extends Command {
-    private final double setpoint = 0;
-    private final ElevatorIOSparkMax elevatorIOSparkMax = new ElevatorIOSparkMax(ElevatorConstants.elevatorSpark1,ElevatorConstants.elevatorSpark2,  ElevatorIOSparkMax.timestampQueue,ElevatorIOSparkMax.elevatorPositionQueue) ;
-    public ElevatorSubsystem elevator = new ElevatorSubsystem(elevatorIOSparkMax);
-    // private final ElevatorIOSparkMax sparkMaxencoder;
-    // Constructor with parameters
-    public ElevatorSetPointCommand(ElevatorSubsystem elevator, int setpointnumber) {
-        this.elevator = elevator;
-        addRequirements(elevator);
-        if (setpointnumber == 1) {
-            elevator.profileGoal = new TrapezoidProfile.State(ElevatorConstants.L1, 0);
-            elevator.profileSetPoint = elevator.elevatorProfile.calculate(ElevatorConstants.kDt, elevator.profileSetPoint, elevator.profileGoal);}
-        else if (setpointnumber == 2){
-            elevator.profileGoal = new TrapezoidProfile.State(ElevatorConstants.L3, 0);
-            elevator.profileSetPoint = elevator.elevatorProfile.calculate(ElevatorConstants.kDt, elevator.profileSetPoint, elevator.profileGoal);}
-        else if (setpointnumber == 3){
-            elevator.profileGoal = new TrapezoidProfile.State(ElevatorConstants.L4, 0);
-            elevator.profileSetPoint = elevator.elevatorProfile.calculate(ElevatorConstants.kDt, elevator.profileSetPoint, elevator.profileGoal);}}
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    // The subsystem the command runs on
+    private final ElevatorSubsystem m_elevator;
 
-    public void execute(){
-        elevator.MoveElevatorToSetpoint(int profileSetPoint) {
-        }
+    public ElevatorSetPointCommand(ElevatorSubsystem elevator, double setpoint) {
+        m_elevator = elevator;
+        addRequirements(m_elevator);
+        elevator.profileGoal = new TrapezoidProfile.State(setpoint, 0);
+        elevator.profileSetPoint = elevator.elevatorProfile.calculate(ElevatorConstants.kDt, elevator.profileSetPoint, elevator.profileGoal);
+    }
+    public void execute(ElevatorSubsystem elevator){
+        this.m_elevator.moveElevatorToVelocity(0.0, elevator.profileSetPoint);
     }
 
     public boolean isFinished() {
-        return elevator.elevatorFeedback.atSetpoint();
+        return m_elevator.elevatorFeedback.atSetpoint();
     }
 }
 
 
 
-t

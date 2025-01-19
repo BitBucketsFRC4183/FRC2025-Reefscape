@@ -11,6 +11,6 @@ public interface ElevatorEncoderIO {
         int channelA = 0;
         int channelB = 0;
     }
-    public static void getDistance(){}
+    public static double getDistance(){}
     public default void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {}
 }

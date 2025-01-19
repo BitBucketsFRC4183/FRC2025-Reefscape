@@ -32,6 +32,7 @@ import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorIO;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorIOSparkMax;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
@@ -91,7 +92,7 @@ public class RobotContainer {
         // new ModuleIOTalonFX(3));
         // flywheel = new Flywheel(new FlywheelIOTalonFX());
         elevatorSubsystem =
-                new ElevatorSubsystem(); //TODO
+                new ElevatorSubsystem(ElevatorSubsystem.elevatorIO); //TODO
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
@@ -117,7 +118,7 @@ public class RobotContainer {
                 new ModuleIOSim());
         // flywheel = new Flywheel(new FlywheelIOSim());
         elevatorSubsystem =
-                new ElevatorSubsystem(); //TODO
+                new ElevatorSubsystem(ElevatorSubsystem.elevatorIO); //TODO
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
@@ -142,7 +143,7 @@ public class RobotContainer {
                 new ModuleIO() {});
         // flywheel = new Flywheel(new FlywheelIO() {});
         elevatorSubsystem =
-                new ElevatorSubsystem(); //TODO
+                new ElevatorSubsystem(ElevatorSubsystem.elevatorIO); //TODO
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
