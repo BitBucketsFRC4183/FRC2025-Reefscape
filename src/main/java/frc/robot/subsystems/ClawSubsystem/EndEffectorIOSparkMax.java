@@ -4,8 +4,6 @@ import com.revrobotics.spark.SparkMax;
 
 import java.lang.Thread;
 
-//todo: make small wheels touching object rotate inwards for better hold
-
 public class EndEffectorIOSparkMax implements EndEffectorIO {
     private final SparkMax left;
     private final SparkMax right;
@@ -14,16 +12,16 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
 
     public EndEffectorIOSparkMax(int canID, int leftCanID, int rightCanID, EndEffectorEncoderIOSim encoder) {
         setupPID();
-        center = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless);
-        left = new SparkMax(leftCanID, SparkLowLevel.MotorType.kBrushless);
-        right = new SparkMax(rightCanID, SparkLowLevel.MotorType.kBrushless);
+        center = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless); //big
+        left = new SparkMax(leftCanID, SparkLowLevel.MotorType.kBrushless); //small
+        right = new SparkMax(rightCanID, SparkLowLevel.MotorType.kBrushless); //small 2
 
         this.encoder = encoder;
     }
 
     public void goToSetpoint(double setpoint) {
         setVelocity(pidCalculate(encoder, setpoint));
-        if (atSetpoint() || encoder.getStopped()) {
+        if (atSetpoint() || encoder.getStopped()) { //motor stops when setpoint is reached or claw closes on object
             setVelocity(0);
         }
     }

@@ -10,7 +10,7 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void open() {
-        sparkMax.goToSetpoint(1.0);
+        sparkMax.goToSetpoint(1.0); //rotate big wheel at center
     }
 
     public void close() {

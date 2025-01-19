@@ -30,5 +30,4 @@ public interface EndEffectorIO {
         return pid.atSetpoint();
     }
 
-
 }
