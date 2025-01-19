@@ -1,4 +1,5 @@
 package frc.robot.subsystems.ClawSubsystem;
+import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 
 //todo: make small wheels touching object rotate inwards for better hold
@@ -7,12 +8,12 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     //private final SparkMax left;
     //private final SparkMax right;
     private final SparkMax center;
-    private final EndEffectorEncoderIO encoder;
+    private final EndEffectorEncoderIO encoder = new EndEffectorEncoderIOSim();
 
-    public EndEffectorIOSparkMax(SparkMax center, EndEffectorEncoderIO encoder) {
-        this.center = center;
-        this.encoder = encoder;
+    public EndEffectorIOSparkMax(int canID) {
         setupPID();
+        center = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless);
+
     }
 
     public void goToSetpoint(double setpoint) {
