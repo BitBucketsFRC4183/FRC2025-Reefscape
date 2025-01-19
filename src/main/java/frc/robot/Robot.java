@@ -13,6 +13,9 @@
 
 package frc.robot;
 
+import choreo.auto.AutoTrajectory;
+import choreo.trajectory.SwerveSample;
+import choreo.trajectory.Trajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
@@ -29,6 +32,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
+import static choreo.Choreo.loadTrajectory;
 
 import java.util.Optional;
 
@@ -97,37 +101,40 @@ public class Robot extends LoggedRobot {
 //Choreao Command Need
 public class Robot1 extends TimedRobot {
   // Loads a swerve trajectory, alternatively use DifferentialSample if the robot is tank drive
-  private final Optional<Trajectory<SwerveSample>> trajectory = Choreo.loadTrajectory("myTrajectory");
-// TODO need trajectory file
-  private final Drive driveSubsystem = new Drive();
   private final Timer timer = new Timer();
 
   @Override
   public void autonomousInit() {
+    var trajectory = loadTrajectory(
+            "BitBucketsTrajectory");
     if (trajectory.isPresent()) {
       // Get the initial pose of the trajectory
       Optional<Pose2d> initialPose = trajectory.get().getInitialPose(isRedAlliance());
 
       if (initialPose.isPresent()) {
         // Reset odometry to the start of the trajectory
-        driveSubsystem.resetOdometry(initialPose.get());
+        DriveSubsystem.resetOdometry(initialPose.get());
       }
     }
-
     // Reset and start the timer when the autonomous period begins
     timer.restart();
   }
 
   @Override
   public void autonomousPeriodic() {
-    if (trajectory.isPresent()) {
-      // Sample the trajectory at the current time into the autonomous period
-      Optional<SwerveSample> sample = trajectory.get().sampleAt(timer.get(), isRedAlliance());
+      var trajectory = loadTrajectory(
+              "BitBucketsTrajectory");
+      double trajectoryTime =
+              timer.get();
+      if (trajectory.isPresent()) {
+          // Sample the trajectory at the current time into the autonomous period
+          Optional<SwerveSample> sample =
+                  (Optional<SwerveSample>) trajectory.get().sampleAt(timer.get(), isRedAlliance());
 
-      if (sample.isPresent()) {
-        driveSubsystem.followTrajectory(sample);
+          if (sample.isPresent()) {
+              DriveSubsystem.followTrajectory(sample);
+          }
       }
-    }
   }
 
   private boolean isRedAlliance() {

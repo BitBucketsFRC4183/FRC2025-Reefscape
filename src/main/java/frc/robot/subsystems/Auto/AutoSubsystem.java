@@ -3,10 +3,12 @@ package frc.robot.subsystems.Auto;
 import choreo.Choreo;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
+import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +23,7 @@ public class AutoSubsystem extends SubsystemBase {
         this.drive = drive;
         this.autoFactory = new AutoFactory();
     }
+
     public Command drive() {
         return Commands.sequence(
         );
@@ -37,92 +40,116 @@ public class AutoSubsystem extends SubsystemBase {
     }
 
 
-
-    public AutoRoutine createAutoRoutine() {
+    public AutoRoutine MoveDepositAndClaw() {
 
         var trajectory = loadTrajectory(
                 "BitBucketsTrajectory");
-        AutoRoutine routine =
+
+        // NEW routine
+        AutoRoutine rountine =
                 autoFactory.newRoutine(
-                        "BitBucketRountine");
+                        "MoveDepositAndClaw_Routine");
 
         Command autoTrajectory =
                 autoFactory.trajectoryCmd(
                         "BitBucketsTrajectory");
 
         // Initialize
-        autoFactory.autoTrajectory W1toW2 =
-                routine.trajectory();
-        autoFactory.autoTrajectory W2toDeposit =
-                routine.trajectory();
-        autoFactory.autoTrajectory W2toW3 =
-                routine.trajectory();
-        autoFactory.autoTrajectory W3toW4 =
-                routine.trajectory();
-        autoFactory.autoTrajectory W4toClaw =
-                routine.trajectory();
-        autoFactory.autoTrajectory W4toW5 =
-                routine.trajectory();
-        autoFactory.autoTrajectory W5toW6 =
-                routine.trajectory();
-        autoFactory.autoTrajectory W6toDeposit =
-                routine.trajectory();
-        autoFactory.autoTrajectory W6toW7 =
-                routine.trajectory();
-        autoFactory.autoTrajectory W7toW8 =
-                routine.trajectory();
-        autoFactory.autoTrajectory W8toClaw =
-                routine.trajectory();
-        autoFactory.autoTrajectory W8toW9 =
-                routine.trajectory();
-        autoFactory.autoTrajectory W9toDeposit =
-                routine.trajectory();
-        autoFactory.autoTrajectory W9toW10 =
-                routine.trajectory();
-        autoFactory.autoTrajectory W10toClaw =
-                routine.trajectory();
-        autoFactory.autoTrajectory W10toW11 =
-                routine.trajectory();
-        autoFactory.autoTrajectory W11toDeposit =
-                routine.trajectory();
+        AutoRoutine routine;
+        AutoTrajectory W1toW2toDeposit =
+                routine.trajectory("W1toW2toDeposit");
+
+        AutoTrajectory W2toW3toW4toClaw =
+                routine.trajectory("W2toW3toW4toClaw");
+
+        //** AutoTrajectory W3toW4 = routine
+        // .trajectory();
+        //        AutoTrajectory W4toClaw =
+        //                routine.trajectory();
+
+        AutoTrajectory W4toW5toW6toDeposit =
+                routine.trajectory("W4toW5toW6toDeposit");
+        //AutoTrajectory W5toW6 =
+        //                routine.trajectory();
+        //        AutoTrajectory W6toDeposit =
+        //                routine.trajectory();
+
+        AutoTrajectory W6toW7toW8toClaw =
+                routine.trajectory(
+                        "W6toW7toW8toClaw");
+
+        //AutoTrajectory W7toW8 =
+        //                routine.trajectory();
+        //        AutoTrajectory W8toClaw =
+        //                routine.trajectory();
+
+        AutoTrajectory W8toW9toDeposit =
+                routine.trajectory("W8toW9toDeposit");
+
+        //AutoTrajectory W9toDeposit =
+        //                routine.trajectory();
+
+        AutoTrajectory W9toW10toClaw =
+                routine.trajectory("W9toW10toClaw");
+
+        //AutoTrajectory W10toClaw =
+        //                routine.trajectory();
+
+        AutoTrajectory W10toW11toDeposit =
+                routine.trajectory("W10toW11toDeposit");
+
+        //AutoTrajectory W11toDeposit =
+        //                routine.trajectory();
 
 
         // TODO whatever trajectory plug in
 
-        routine.active().onTrue(
+
+        rountine.active().onTrue(
                 Commands.sequence(
-                        W1toW2.cmd(),
-                        W2toDeposit.cmd()
+                        Commands.print("Started" +
+                                " the routine!"),
+                        W1toW2toDeposit.resetOdometry(),
+                        W1toW2toDeposit.cmd(),
+                        W2toW3toW4toClaw.cmd(),
+                        W4toW5toW6toDeposit.cmd(),
+                        W6toW7toW8toClaw.cmd(),
+                        W8toW9toDeposit.cmd(),
+                        W9toW10toClaw.cmd(),
+                        W10toW11toDeposit.cmd()
                 )
-                );
+        );
+                W1toW2toDeposit.active().whileTrue(DriveSubsystem.drive());
+        W1toW2toDeposit.done().onTrue(ClawSubsystem.deposit().andThen(W2toW3toW4toClaw.cmd()));
+
+        W2toW3toW4toClaw.active().whileTrue(DriveSubsystem.drive());
+        W2toW3toW4toClaw.done().onTrue(ClawSubsystem.deposit().andThen(W4toW5toW6toDeposit.cmd()));
+
+        W4toW5toW6toDeposit.active().whileTrue(DriveSubsystem.drive());
+        W4toW5toW6toDeposit.done().onTrue(ClawSubsystem.deposit().andThen(W6toW7toW8toClaw.cmd()));
+
+        W6toW7toW8toClaw.active().whileTrue(DriveSubsystem.drive());
+        W6toW7toW8toClaw.done().onTrue(ClawSubsystem.deposit().andThen(W8toW9toDeposit.cmd()));
+
+        W8toW9toDeposit.active().whileTrue(DriveSubsystem.drive());
+        W8toW9toDeposit.done().onTrue(ClawSubsystem.deposit().andThen(W9toW10toClaw.cmd()));
+
+        W9toW10toClaw.active().whileTrue(DriveSubsystem.drive());
+        W9toW10toClaw.done().onTrue(ClawSubsystem.deposit().andThen(W10toW11toDeposit.cmd()));
+
+        W10toW11toDeposit.active().whileTrue(DriveSubsystem.drive());
+        W10toW11toDeposit.done().onTrue(ClawSubsystem.deposit());
+
+        //TODO
 
 
-        W1toW2.atTime(drive()).onTrue(DriveSubsystem.drive());
+        rountine.anyActive(W1toW2toDeposit,
+                W4toW5toW6toDeposit,
+                W8toW9toDeposit,
+                W10toW11toDeposit).whileTrue(ClawSubsystem.deposit());
 
-        W1toW2.done().onTrue(W2toDeposit.cmd());
 
-        W2toDeposit.active().whileTrue(ClawSubsystem.getReady());
-
-        W2toDeposit.done().onTrue(ClawSubsystem.score());
-
-        // so on so on
-
-        Trigger atW3 = W2toDeposit.done();
-        return routine;
-
-        public class trigger {
-            trigger robotTrigger =
-                    new Trigger(() -> condition);
-            // Safe
-            routine.observe(robotTrigger).onTrue(Commands.print("?"));
-            routine.active().and(robotTrigger).onTrue(Commands.print("?"));
-
-            // Unsafe
-            robotTrigger.onTrue(Commands.print("?"));
-            robotTrigger.and(routine.active()).onTrue(Commands.print("?"));
-        }
-
+        return rountine;
     }
-
-    }
+}
 
