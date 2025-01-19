@@ -151,5 +151,17 @@ public class AutoSubsystem extends SubsystemBase {
 
         return rountine;
     }
+
 }
+
+
+//         │＼＿＿╭╭╭╭╭＿＿／│
+//        │　　　　　　　　　　│
+//        │　　　　　　　　　　│
+//        │　＞　　　　　　　●　│
+//        │≡　　╰┬┬┬╯　　≡   │
+//        │　　　 ╰—╯　　　　 │
+//        ╰——┬  ｏ ——————ｏ┬—╯
+//        　　　│世界赛!│
+//　　　        ╰┬———┬ ╯
 
