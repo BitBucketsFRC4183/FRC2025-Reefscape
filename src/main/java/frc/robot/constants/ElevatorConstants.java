@@ -12,7 +12,7 @@ public class ElevatorConstants {
     public static double kP;
     public static double kDt = 0.02;
     public static int kElevatorMotorPort;
-    public static int[] kEncoderPorts;
+    public static int[] kEncoderPorts = new int[1];
     public static boolean kEncoderReversed;
     public static double kShooterToleranceRPS;
     public static double kEncoderDistancePerPulse;
