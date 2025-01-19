@@ -2,23 +2,23 @@ package frc.robot.subsystems.ClawSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClawSubsystem extends SubsystemBase {
-    private final EndEffectorIOSparkMax center;
+    private final EndEffectorIOSparkMax sparkMax;
     private final EndEffectorIO.EndEffectorInputs inputs = new EndEffectorIO.EndEffectorInputs();
 
-    public ClawSubsystem(EndEffectorIOSparkMax center) {
-        this.center = center;
+    public ClawSubsystem(EndEffectorIOSparkMax sparkMax) {
+        this.sparkMax = sparkMax;
     }
 
     public void open() {
-        center.goToSetpoint(1.0);
+        sparkMax.goToSetpoint(1.0);
     }
 
     public void close() {
-        center.goToSetpoint(-1.0);
-        //if encoder stops becauuse of object: set to 0 and rotate small wheels inward
+        sparkMax.goToSetpoint(-1.0);
+        sparkMax.rotateSmall();
     }
 
     public void robotPeriodic() {
-        center.updateInputs(inputs);
+        sparkMax.updateInputs(inputs);
     }
 }
