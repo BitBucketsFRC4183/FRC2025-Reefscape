@@ -24,6 +24,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ResetEncoderCommand;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
+import frc.robot.subsystems.Auto.AutoSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.*;
 import frc.robot.commands.ElevatorSetPointCommand;
@@ -56,6 +57,7 @@ public class RobotContainer {
   private final LEDSubsystem ledSubsystem;
   private final SingleJointedArmSubsystem singleJointedArmSubsystem;
   private final VisionSubsystem visionSubsystem;
+  private final AutoSubsystem autoSubsystem;
 
 
 
@@ -163,6 +165,9 @@ public class RobotContainer {
      * NamedCommands.registerCommand( "Run Flywheel", Commands.startEnd( () ->
      * flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel) .withTimeout(5.0));
      */
+
+    AutoSubsystem autoSubsystem =
+            new AutoSubsystem(drive);
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
