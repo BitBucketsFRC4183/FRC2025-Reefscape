@@ -23,7 +23,10 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
+import com.pathplanner.lib.util.swerve.SwerveSetpoint;
+import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
@@ -90,6 +93,8 @@ public class DriveSubsystem extends SubsystemBase {
           };
   private SwerveDrivePoseEstimator poseEstimator =
           new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
+  private SwerveSetpoint previousSetpoint;
+  private final SwerveSetpointGenerator setpointGenerator;
 
   public DriveSubsystem(
           GyroIO gyroIO,
@@ -142,6 +147,9 @@ public class DriveSubsystem extends SubsystemBase {
                             (state) -> Logger.recordOutput("DriveSubsystem/SysIdState", state.toString())),
                     new SysIdRoutine.Mechanism(
                             (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+
+    setpointGenerator = new SwerveSetpointGenerator(ppConfig, getMaxAngularSpeedRadPerSec());
+    previousSetpoint = new SwerveSetpoint(getChassisSpeeds(), getModuleStates(), DriveFeedforwards.zeros(4));
   }
 
   @Override
@@ -225,6 +233,31 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Log optimized setpoints (runSetpoint mutates each state)
     Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
+  }
+
+  // use pathplanners's / team 254's setpoint generator
+  public void runRobotRelativePathPlanner(ChassisSpeeds speeds) {
+    // Note: it is important to not discretize speeds before or after
+    // using the setpoint generator, as it will discretize them for you
+    previousSetpoint = setpointGenerator.generateSetpoint(
+            previousSetpoint, // The previous setpoint
+            speeds, // The desired target speeds
+            0.02 // The loop time of the robot code, in seconds
+    );
+
+    Logger.recordOutput("SwerveChassisSpeeds/Setpoints", previousSetpoint.moduleStates());
+
+    for (int i = 0; i < 4; i++) {
+      modules[i].runSetpoint(previousSetpoint.moduleStates()[i]);
+    }
+    // Log optimized setpoints (runSetpoint mutates each state)
+    Logger.recordOutput("SwerveStates/SetpointsOptimized", previousSetpoint.moduleStates());
+
+  }
+
+  //no feedback yet!!!! TODO
+  public void followTrajectory(SwerveSetpoint sample) {
+    runRobotRelativePathPlanner(sample.robotRelativeSpeeds());
   }
 
   /** Runs the drive in a straight line with the specified drive output. */
@@ -318,6 +351,11 @@ public class DriveSubsystem extends SubsystemBase {
     return getPose().getRotation();
   }
 
+
+  public void resetPose() {
+    setPose(new Pose2d());
+  }
+
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
@@ -355,4 +393,6 @@ public class DriveSubsystem extends SubsystemBase {
   public Supplier<Pose2d> getPose2dSupplier() {
     return this::getPose;
   }
+
+
 }
