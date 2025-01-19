@@ -8,11 +8,12 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     //private final SparkMax left;
     //private final SparkMax right;
     private final SparkMax center;
-    private final EndEffectorEncoderIO encoder = new EndEffectorEncoderIOSim();
+    private final EndEffectorEncoderIO encoder;
 
-    public EndEffectorIOSparkMax(int canID) {
+    public EndEffectorIOSparkMax(int canID, EndEffectorEncoderIOSim encoder) {
         setupPID();
         center = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless);
+        this.encoder = encoder;
 
     }
 

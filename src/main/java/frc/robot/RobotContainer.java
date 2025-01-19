@@ -100,7 +100,7 @@ public class RobotContainer {
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIOSparkMax(4));
+                new ClawSubsystem(new EndEffectorIOSparkMax(4, new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
                 new GroundIntakeSubsystem(); //TODO
         ledSubsystem =

@@ -5,7 +5,7 @@ import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.ClawSubsystem.EndEffectorIO;
 import frc.robot.subsystems.ClawSubsystem.EndEffectorIOSparkMax;
 
-public class OpenClaw extends Command implements EndEffectorIO {
+public class OpenClaw extends Command {
     private final ClawSubsystem clawSubsystem;
 
     public OpenClaw(ClawSubsystem clawSubsystem) {
@@ -20,11 +20,5 @@ public class OpenClaw extends Command implements EndEffectorIO {
     public boolean isFinished() {
         return true;
     }
-
-
-
-
-
-
 }
 
