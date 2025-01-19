@@ -7,8 +7,11 @@ import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
-public class EndEffectorIOSim {
+public class EndEffectorIOSim implements EndEffectorIO {
     //3 dcmotor sims
 
-    DCMotorSim center = new DCMotorSim(new LinearSystem<N2, N1, N2>(new Matrix<R,C>(0)), new DCMotor(0.0, 0.0, 0.0, 0.0, 0.0, 0), 0.0);
+    private final DCMotorSim gripperWheel = new DCMotorSim(new LinearSystem<N2, N1, N2>(new Matrix<R,C>(0)), new DCMotor(0.0, 0.0, 0.0, 0.0, 0.0, 0), 0.0);
+    private final DCMotorSim centerWheel = new DCMotorSim(new LinearSystem<N2, N1, N2>(new Matrix<R,C>(0)), new DCMotor(0.0, 0.0, 0.0, 0.0, 0.0, 0), 0.0);
+
+
 }

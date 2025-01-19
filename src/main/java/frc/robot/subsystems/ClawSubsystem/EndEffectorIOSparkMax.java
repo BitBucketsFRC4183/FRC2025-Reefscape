@@ -5,14 +5,14 @@ import com.revrobotics.spark.SparkMax;
 import java.lang.Thread;
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
-    private final SparkMax small;
-    private final SparkMax big;
+    private final SparkMax gripperWheels;
+    private final SparkMax centralWheel;
     private final EndEffectorEncoderIO encoder;
 
     public EndEffectorIOSparkMax(int canID, int smallCanID, EndEffectorEncoderIOSim encoder) {
         setupPID();
-        big = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless); //big
-        small = new SparkMax(smallCanID, SparkLowLevel.MotorType.kBrushless); //small
+        centralWheel = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless); //big
+        gripperWheels = new SparkMax(smallCanID, SparkLowLevel.MotorType.kBrushless); //small
         this.encoder = encoder;
     }
 
@@ -25,23 +25,23 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
 
     public void rotateSmall() { //rotate small wheels
         double velocity = 0.1;
-        small.set(velocity);
+        gripperWheels.set(velocity);
         try {
             Thread.sleep(1);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        small.set(0);
+        gripperWheels.set(0);
     }
 
     @Override
     public void setVelocity(double velocity) {
-        big.set(velocity);
+        centralWheel.set(velocity);
     }
 
     @Override
     public void setVoltage(double volts) {
-        big.setVoltage(volts);
+        centralWheel.setVoltage(volts);
     }
 
     @Override
