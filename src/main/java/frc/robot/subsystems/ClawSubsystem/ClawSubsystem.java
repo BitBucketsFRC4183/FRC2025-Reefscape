@@ -1,9 +1,5 @@
 package frc.robot.subsystems.ClawSubsystem;
-
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class ClawSubsystem extends SubsystemBase {
     private final EndEffectorIOSparkMax center;
