@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class ClawSubsystem extends SubsystemBase {
     private Trigger button;
-    private final EndEffectorEncoderIOSim encoder = new EndEffectorEncoderIOSim();
-    private final EndEffectorIOSparkMax center = new EndEffectorIOSparkMax(new SparkMax(0, SparkLowLevel.MotorType.kBrushless), encoder);
+    private final EndEffectorEncoderIO encoder = new EndEffectorEncoderIOSim();
+    private final EndEffectorIO center = new EndEffectorIOSparkMax(new SparkMax(0, SparkLowLevel.MotorType.kBrushless), encoder);
 
-    public Command openCommand() {
-        return this.runOnce(() -> center.goToSetpoint(1.0));
+    public void open() {
+        center.goToSetpoint(1.0);
     }
 
-    public Command closeCommand() {
-        return this.runOnce(() -> center.goToSetpoint(-1.0));
+    public Command close() {
+        center.goToSetpoint(-1.0);
     }
 }
