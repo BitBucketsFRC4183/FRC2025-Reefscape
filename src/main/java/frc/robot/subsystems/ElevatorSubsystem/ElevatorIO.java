@@ -12,7 +12,6 @@ public interface ElevatorIO {
         public double[] elevatorCurrentAmps = new double[] {};
         public double[] odometryTimestamps = new double[] {};
         public double[] odometryElevatorPositionsRad = new double[] {};
-        public double gearingRatio = 0.0;
         public double lastEncoderPosition = 0.0;
 
 
@@ -20,11 +19,11 @@ public interface ElevatorIO {
     }
 
     public default void setInverted(boolean b) {};
-    public static void disable() {};
+    public default void disable() {};
     public default void stopMotor() {};
 
     public default void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {}
 
-    public static void setBothElevatorMotorVoltages(double volts) {
+    public default void setBothElevatorMotorVoltages(double volts) {
     }
 }

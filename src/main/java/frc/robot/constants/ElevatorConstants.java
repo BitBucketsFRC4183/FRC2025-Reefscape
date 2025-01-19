@@ -20,8 +20,8 @@ public class ElevatorConstants {
     public static double elevator1MotorReduction;
     public static DCMotor elevator2Gearbox;
     public static double elevator2MotorReduction;
-    public static double SparkkP;
-    public static double SparkkD;
+    public static double SparkP;
+    public static double SparkD;
     public static int elevatorSparkMotorCurrentLimit;
     public static double elevatorSparkEncoderPositionFactor;
     public static double elevatorSparkEncoderVelocityFactor;
@@ -37,6 +37,6 @@ public class ElevatorConstants {
     public static double L2 = 0.635;
     public static double L3 = 1.04775;
     public static double L4 = 1.7018;
-    public static SparkBase elevatorSpark1;
-    public static SparkBase elevatorSpark2;
+    public static int elevatorSparkCAN1;
+    public static int elevatorSparkCAN2;
 }

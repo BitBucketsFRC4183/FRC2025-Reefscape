@@ -4,6 +4,8 @@ package frc.robot.subsystems.ElevatorSubsystem;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -20,8 +22,8 @@ import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 import static frc.robot.util.SparkUtil.*;
 
 public class ElevatorIOSparkMax implements ElevatorIO {
-    private SparkBase elevatorSpark1 = ElevatorConstants.elevatorSpark1;
-    private SparkBase elevatorSpark2 = ElevatorConstants.elevatorSpark2;
+    private SparkBase elevatorSpark1;
+    private SparkBase elevatorSpark2;
     private final RelativeEncoder elevatorEncoder;
 
     private final SparkClosedLoopController elevatorController;
@@ -31,13 +33,11 @@ public class ElevatorIOSparkMax implements ElevatorIO {
 
     private final Debouncer elevatorConnectedDebounce = new Debouncer(0.5);
 
-    public ElevatorIOSparkMax(SparkBase elevatorSpark1, SparkBase elevatorSpark2, Queue<Double> timestampQueue, Queue<Double> elevatorPositionQueue) {
+    public ElevatorIOSparkMax() {
+        elevatorSpark1 = new SparkMax(ElevatorConstants.elevatorSparkCAN1, SparkLowLevel.MotorType.kBrushless);
+        elevatorSpark2 = new SparkMax(ElevatorConstants.elevatorSparkCAN2, SparkLowLevel.MotorType.kBrushless);
         elevatorEncoder = elevatorSpark1.getEncoder();
-        this.elevatorSpark1 = elevatorSpark1;
         elevatorController = elevatorSpark1.getClosedLoopController();
-        this.elevatorSpark2 = elevatorSpark2;
-        this.timestampQueue = timestampQueue;
-        this.elevatorPositionQueue = elevatorPositionQueue;
 
         var elevatorConfig = new SparkFlexConfig();
         elevatorConfig
@@ -54,8 +54,8 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 .closedLoop
                 .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
                 .pidf(
-                        ElevatorConstants.SparkkP, 0.0,
-                        ElevatorConstants.SparkkD, 0.0);
+                        ElevatorConstants.SparkP, 0.0,
+                        ElevatorConstants.SparkD, 0.0);
         elevatorConfig
                 .signals
                 .primaryEncoderPositionAlwaysOn(true)

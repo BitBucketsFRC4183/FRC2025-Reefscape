@@ -10,7 +10,7 @@ import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorIOSparkMax;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorEncoderIO;
 
-public class ElevatorSetPointCommand  extends Command {
+public class ElevatorSetPointCommand extends Command {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     // The subsystem the command runs on
     private final ElevatorSubsystem m_elevator;
@@ -21,8 +21,9 @@ public class ElevatorSetPointCommand  extends Command {
         elevator.profileGoal = new TrapezoidProfile.State(setpoint, 0);
         elevator.profileSetPoint = elevator.elevatorProfile.calculate(ElevatorConstants.kDt, elevator.profileSetPoint, elevator.profileGoal);
     }
+
     public void execute(ElevatorSubsystem elevator){
-        this.m_elevator.moveElevatorToVelocity(0.0, elevator.profileSetPoint);
+        this.m_elevator.moveElevatorToVelocity(0.0, elevator.profileSetPoint.position);
     }
 
     public boolean isFinished() {
