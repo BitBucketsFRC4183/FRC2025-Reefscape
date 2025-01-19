@@ -1,35 +1,37 @@
 package frc.robot.subsystems.SingleJointedArmSubsystem;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.wpilibj2.command.Commands.parallel;
+import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
+
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkFlex;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants;
 
 public class SingleJointedArmSubsystem extends SubsystemBase{
-    private final CANSparkMax armMotor;
-    private static final double kP = 0;
-    private static final double kD = 0;
-    private static final double kI = 0;
-    private static final double MAX_ANGLE = 90.0;
-    private static final double MIN_ANGLE = 0.0;
+    private final PWMSparkMax armMotor = new PWMSparkMax(SingleJointedArmConstants.MotorNumber);
+    private final Encoder armEncoder =
+            new Encoder();
+    private final SimpleMotorFeedForward armFeedForward =
+            new SimpleMotorFeedForward(
+                    SingleJointedArmConstants.kSVolts, SingleJointedArmConstants.kVVoltsSecondsPerRotation);
+    private final PIDController armFeedback = new PIDController(SingleJointedArmConstants.kP, SingleJointedArmConstants.kD,SingleJointedArmConstants.kI);
+
+    public SingleJointedArmSubsystem() {
+        armFeedback.setTolerance(ShooterConstants.kShooterToleranceRPS);
+        armEncoder.setDistancePerPulse(ShooterConstants.kEncoderDistancePerPulse);
+        setDefaultCommand(runOnce(() ->{
+            armMotor.disable();
+        }).andThen(run(() -> {})).withName("Idle"));
+    }
+    public Command extendCommand(SingleJointedArmCostants.MaxAngle,){
+
+    }
+
+
 }
 
