@@ -126,7 +126,7 @@ public class RobotContainer {
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIOSparkMax(4));
+                new ClawSubsystem(new EndEffectorIOSparkMax(4, new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
                 new GroundIntakeSubsystem(); //TODO
         ledSubsystem =
@@ -151,7 +151,7 @@ public class RobotContainer {
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIOSparkMax(4)); //TODO
+                new ClawSubsystem(new EndEffectorIOSparkMax(4, new EndEffectorEncoderIOSim())); //TODO
         groundIntakeSubsystem =
                 new GroundIntakeSubsystem(); //TODO
         ledSubsystem =
