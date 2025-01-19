@@ -9,21 +9,28 @@ import frc.robot.subsystems.ElevatorSubsystem.ElevatorIO;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorIOSparkMax;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorEncoderIO;
-
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.Logger;
 public class ElevatorSetPointCommand extends Command {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     // The subsystem the command runs on
-    private final ElevatorSubsystem m_elevator;
+    public ElevatorSubsystem m_elevator;
 
     public ElevatorSetPointCommand(ElevatorSubsystem elevator, double setpoint) {
         m_elevator = elevator;
         addRequirements(m_elevator);
-        elevator.profileGoal = new TrapezoidProfile.State(setpoint, 0);
-        elevator.profileSetPoint = elevator.elevatorProfile.calculate(ElevatorConstants.kDt, elevator.profileSetPoint, elevator.profileGoal);
+        m_elevator.profileGoal = new TrapezoidProfile.State(setpoint, 0);
+        m_elevator.profileSetPoint = m_elevator.elevatorProfile.calculate(ElevatorConstants.kDt, elevator.profileSetPoint, elevator.profileGoal);
     }
 
-    public void execute(ElevatorSubsystem elevator){
-        this.m_elevator.moveElevatorToVelocity(1.0, elevator.profileSetPoint.position);
+    @Override
+    public void execute(){
+        this.m_elevator.moveElevatorToVelocity(1.0, m_elevator.profileSetPoint.position);
+        this.m_elevator.getTotalOutput(1.0,m_elevator.profileSetPoint.position);
+        Logger.recordOutput("ElevatorSubsystem/velocity", m_elevator.profileSetPoint.velocity);
+        Logger.recordOutput("ElevatorSubsystem/position", m_elevator.profileSetPoint.position);
+        Logger.recordOutput("ElevatorSubsystem/TotalVoltage", m_elevator.getTotalOutput(1.0,m_elevator.profileSetPoint.position));
+
     }
 
     public boolean isFinished() {

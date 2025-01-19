@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ElevatorIO {
+    ElevatorIO.ElevatorIOInputs ElevatorIOInputs = new ElevatorIOInputs(); ;
+
     @AutoLog
     class ElevatorIOInputs{
         public double loadHeight = 0.0;
@@ -25,5 +27,7 @@ public interface ElevatorIO {
     public default void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {}
 
     public default void setBothElevatorMotorVoltages(double volts) {
+
+
     }
 }

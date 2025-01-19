@@ -1,20 +1,10 @@
 package frc.robot.subsystems.ElevatorSubsystem;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.ElevatorConstants;
-import org.littletonrobotics.junction.Logger;
-
-import static frc.robot.constants.ElevatorConstants.L1;
 
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -23,7 +13,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public final PIDController elevatorFeedback = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
     double maxVoltage = 12.0;
     public final TrapezoidProfile elevatorProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5,5));
-    public TrapezoidProfile.State profileGoal = new TrapezoidProfile.State();// goal is the place where we want to go after already moving to another level. For motion profiling, we need to convert this to the setpoint or something idk I dont get paid enough for this crap I mean technically it is a -$350 profit//
+    public TrapezoidProfile.State profileGoal = new TrapezoidProfile.State(0,0);// goal is the place where we want to go after already moving to another level. For motion profiling, we need to convert this to the setpoint or something idk I dont get paid enough for this crap I mean technically it is a -$350 profit//
     public TrapezoidProfile.State profileSetPoint = new TrapezoidProfile.State();
     private final ElevatorEncoderIO elevatorEncoderIO;
     private final ElevatorIOInputsAutoLogged elevatorIOInputs;
@@ -51,6 +41,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         double feedforwardOutput = elevatorFeedforward.calculate(velocitySetpoint);
         double pidOutput = elevatorFeedback.calculate(encoderIOInputs.elevatorPosition, positionSetpoint);
         double totalOutput = feedforwardOutput + pidOutput;
-        elevatorIO.setBothElevatorMotorVoltages(totalOutput);
+        ElevatorIOSim.setBothElevatorMotorVoltages(totalOutput);
+    }
+
+    public double getTotalOutput(double velocitySetpoint, double positionSetpoint) {
+        double feedforwardOutput = elevatorFeedforward.calculate(velocitySetpoint);
+        double pidOutput = elevatorFeedback.calculate(encoderIOInputs.elevatorPosition, positionSetpoint);
+        return feedforwardOutput + pidOutput;
     }
 }

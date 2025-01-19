@@ -17,7 +17,7 @@ public class OperatorInput {
   public final Trigger slowModeHold = driver.leftTrigger();
   public final Trigger turboModeHold = driver.rightTrigger();
 
-  final Trigger resetEncoder = driver.start();
+  final Trigger resetEncoder = operatorControl.a();
 
   final Trigger elevatorsetpoint1 = operatorControl.x();
   final Trigger elevatorsetpoint2 = operatorControl.y();

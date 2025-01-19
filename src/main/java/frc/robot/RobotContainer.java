@@ -192,7 +192,7 @@ public class RobotContainer {
     operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
     operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
 
-    operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
+    operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem, ElevatorIO.ElevatorIOInputs));
 
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
