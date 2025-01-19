@@ -27,6 +27,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ResetEncoderCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.*;
@@ -85,18 +86,11 @@ public class RobotContainer {
         drive =
             new DriveSubsystem(
                 new GyroIOPigeon2(),
-                new ModuleIOSpark(0),
-                new ModuleIOSpark(1),
-                new ModuleIOSpark(2),
-                new ModuleIOSpark(3));
-        // flywheel = new Flywheel(new FlywheelIOSparkMax());
-        // drive = new DriveSubsystem(
-        // new GyroIOPigeon2(true),
-        // new ModuleIOTalonFX(0),
-        // new ModuleIOTalonFX(1),
-        // new ModuleIOTalonFX(2),
-        // new ModuleIOTalonFX(3));
-        // flywheel = new Flywheel(new FlywheelIOTalonFX());
+                new ModuleIOHybrid(0, TunerConstants.FrontLeft),
+                new ModuleIOHybrid(1,TunerConstants.FrontRight),
+                new ModuleIOHybrid(2, TunerConstants.BackLeft),
+                new ModuleIOHybrid(3, TunerConstants.BackRight));
+
         elevatorSubsystem =
                 new ElevatorSubsystem(); //TODO
         algaeManagementSubsystem =
