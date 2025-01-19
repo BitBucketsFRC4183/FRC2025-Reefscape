@@ -29,6 +29,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
+import frc.robot.subsystems.Auto.AutoSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.*;
 import frc.robot.commands.ElevatorSetPointCommand;
@@ -65,6 +66,7 @@ public class RobotContainer {
   private final SingleJointedArmSubsystem singleJointedArmSubsystem;
   private final VisionSubsystem visionSubsystem;
   private SwerveDriveSimulation driveSimulation = null;
+  private final AutoSubsystem autoSubsystem;
 
 
   // Controller
@@ -162,10 +164,8 @@ public class RobotContainer {
     }
 
     // Set up auto routines
-    /**
-     * NamedCommands.registerCommand( "Run Flywheel", Commands.startEnd( () ->
-     * flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel) .withTimeout(5.0));
-     */
+
+    autoSubsystem = new AutoSubsystem(drive);
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
