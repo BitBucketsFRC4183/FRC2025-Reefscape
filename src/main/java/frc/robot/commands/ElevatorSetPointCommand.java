@@ -23,7 +23,7 @@ public class ElevatorSetPointCommand extends Command {
     }
 
     public void execute(ElevatorSubsystem elevator){
-        this.m_elevator.moveElevatorToVelocity(0.0, elevator.profileSetPoint.position);
+        this.m_elevator.moveElevatorToVelocity(1.0, elevator.profileSetPoint.position);
     }
 
     public boolean isFinished() {

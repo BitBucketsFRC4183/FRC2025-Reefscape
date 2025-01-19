@@ -12,6 +12,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.DriveSubsystem.SparkOdometryThread;
+import org.littletonrobotics.junction.AutoLog;
 
 import java.util.Map;
 import java.util.Queue;
@@ -20,7 +21,6 @@ import java.util.function.DoubleSupplier;
 import static frc.robot.constants.DriveConstants.odometryFrequency;
 import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 import static frc.robot.util.SparkUtil.*;
-
 public class ElevatorIOSparkMax implements ElevatorIO {
     private SparkBase elevatorSpark1;
     private SparkBase elevatorSpark2;

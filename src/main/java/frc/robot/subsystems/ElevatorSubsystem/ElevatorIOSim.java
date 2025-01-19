@@ -1,13 +1,18 @@
 package frc.robot.subsystems.ElevatorSubsystem;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.ElevatorConstants;
+import org.littletonrobotics.junction.Logger;
+
+import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 
 
 public class ElevatorIOSim implements ElevatorIO {
+
     private static final double LOOP_PERIOD_SECS = 0.02;
 
     private final DCMotorSim elevatorMotor1Sim = new DCMotorSim(
@@ -22,8 +27,12 @@ public class ElevatorIOSim implements ElevatorIO {
     public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
         elevatorMotor1Sim.update(LOOP_PERIOD_SECS);
         elevatorMotor2Sim.update(LOOP_PERIOD_SECS);
-        inputs.loadHeight = 0;
+        Logger.recordOutput("ElevatorSubsystem/position", inputs.loadHeight);
+        inputs.loadHeight = (2 * Math.PI * pulleyRadius) / ((elevatorMotor1Sim.getAngularPositionRad() - inputs.lastEncoderPosition) * ElevatorConstants.gearingRatio);
+        inputs.lastEncoderPosition = elevatorMotor1Sim.getAngularPositionRad();
+
         inputs.elevatorAppliedVolts = elevatorAppliedVolts;
+        Logger.recordOutput("ElevatorSubsystem/voltage", elevatorAppliedVolts);
         inputs.elevatorCurrentAmps = new double[] {Math.abs(elevatorMotor1Sim.getCurrentDrawAmps())};
     }
 

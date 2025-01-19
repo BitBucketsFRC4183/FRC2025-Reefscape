@@ -189,8 +189,8 @@ public class RobotContainer {
    */
   void loadCommands() {
     operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L1));
-    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L2));
-    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
+    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
+    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
 
     operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
 

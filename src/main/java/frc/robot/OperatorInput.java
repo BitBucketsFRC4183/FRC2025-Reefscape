@@ -19,9 +19,9 @@ public class OperatorInput {
 
   final Trigger resetEncoder = driver.start();
 
-  final Trigger elevatorsetpoint1 = driver.x();
-  final Trigger elevatorsetpoint2 = driver.y();
-  final Trigger elevatorsetpoint3 = driver.b();
+  final Trigger elevatorsetpoint1 = operatorControl.x();
+  final Trigger elevatorsetpoint2 = operatorControl.y();
+  final Trigger elevatorsetpoint3 = operatorControl.b();
 
   final Trigger IntakeOn = driver.a();
 
