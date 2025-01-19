@@ -164,13 +164,8 @@ public class RobotContainer {
     }
 
     // Set up auto routines
-    /**
-     * NamedCommands.registerCommand( "Run Flywheel", Commands.startEnd( () ->
-     * flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel) .withTimeout(5.0));
-     */
 
-    AutoSubsystem autoSubsystem =
-            new AutoSubsystem(drive);
+    autoSubsystem = new AutoSubsystem(drive);
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines

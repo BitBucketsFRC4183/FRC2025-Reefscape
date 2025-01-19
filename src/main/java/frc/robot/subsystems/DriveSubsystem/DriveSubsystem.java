@@ -16,6 +16,7 @@ package frc.robot.subsystems.DriveSubsystem;
 import static edu.wpi.first.units.Units.*;
 import static frc.robot.constants.DriveConstants.*;
 
+import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -256,8 +257,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   //no feedback yet!!!! TODO
-  public void followTrajectory(SwerveSetpoint sample) {
-    runRobotRelativePathPlanner(sample.robotRelativeSpeeds());
+  public void followTrajectorySample(SwerveSample sample) {
+    runRobotRelativePathPlanner(sample.getChassisSpeeds());
   }
 
   /** Runs the drive in a straight line with the specified drive output. */

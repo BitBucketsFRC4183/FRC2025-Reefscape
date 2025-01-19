@@ -13,6 +13,7 @@
 
 package frc.robot;
 
+import choreo.Choreo;
 import choreo.auto.AutoTrajectory;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
@@ -35,6 +36,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
 import static choreo.Choreo.loadTrajectory;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -93,24 +95,26 @@ public class Robot extends LoggedRobot {
 
     // Start AdvantageKit logger
     Logger.start();
-
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
   }
+
   private final Timer timer = new Timer();
 
   @Override
   public void autonomousInit() {
-    var trajectory = loadTrajectory(
-            "BitBucketsTrajectory");
+
+    System.out.println(Arrays.toString(Choreo.availableTrajectories()));
+    var trajectory = loadTrajectory("test");
     if (trajectory.isPresent()) {
+      System.out.print("THANK");
       // Get the initial pose of the trajectory
       Optional<Pose2d> initialPose = trajectory.get().getInitialPose(isRedAlliance());
-
+      Logger.recordOutput("monkey", true);
       if (initialPose.isPresent()) {
         // Reset odometry to the start of the trajectory
-        DriveSubsystem.resetOdometry(initialPose.get());
+        robotContainer.drive.setPose(initialPose.get());
       }
     }
     // Reset and start the timer when the autonomous period begins
@@ -119,18 +123,11 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousPeriodic() {
-      var trajectory = loadTrajectory(
-              "BitBucketsTrajectory");
-      double trajectoryTime =
-              timer.get();
+      Optional<Trajectory<SwerveSample>> trajectory = loadTrajectory("test");
       if (trajectory.isPresent()) {
-          // Sample the trajectory at the current time into the autonomous period
-          Optional<SwerveSample> sample =
-                  (Optional<SwerveSample>) trajectory.get().sampleAt(timer.get(), isRedAlliance());
+        Optional<SwerveSample> sample = trajectory.get().sampleAt(timer.get(), isRedAlliance());
 
-          if (sample.isPresent()) {
-              DriveSubsystem.followTrajectory(sample);
-          }
+          sample.ifPresent(swerveSample -> robotContainer.drive.followTrajectorySample(swerveSample));
       }
   }
 
@@ -166,20 +163,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledPeriodic() {}
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-  @Override
-  public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
-    }
-  }
-
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {}
 
   /** This function is called once when teleop is enabled. */
   @Override
