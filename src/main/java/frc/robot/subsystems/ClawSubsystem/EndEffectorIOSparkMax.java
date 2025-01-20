@@ -1,6 +1,7 @@
 package frc.robot.subsystems.ClawSubsystem;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import frc.robot.constants.ClawConstants;
 
 import java.lang.Thread;
 
@@ -23,11 +24,11 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
         }
     }
 
-    public void rotateSmall() { //rotate small wheels
+    public void rotateGrippers() { //rotate small wheels
         double velocity = 0.1;
         gripperWheels.set(velocity);
         try {
-            Thread.sleep(1);
+            Thread.sleep(ClawConstants.gripperMoveTimeMilliseconds);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -46,8 +47,7 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
 
     @Override
     public void updateInputs(EndEffectorInputs inputs) {
-        inputs.position = encoder.getDistance();
-        inputs.velocityUnitsPerSec = encoder.getVelocity();
+        inputs.volts = 0.0; //get voltage
     }
 
 }

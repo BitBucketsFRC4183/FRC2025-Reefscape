@@ -7,8 +7,7 @@ public interface EndEffectorIO {
     final PIDController pid = new PIDController(0, 0, 0);
 
     public static class EndEffectorInputs {
-        public double position = 0.0;
-        public double velocityUnitsPerSec = 0.0;
+        public double volts = 0.0;
     }
 
     public default void updateInputs(EndEffectorInputs inputs) {}
