@@ -26,10 +26,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ResetEncoderCommand;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
-import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
-import frc.robot.subsystems.ClawSubsystem.EndEffectorEncoderIO;
-import frc.robot.subsystems.ClawSubsystem.EndEffectorEncoderIOSim;
-import frc.robot.subsystems.ClawSubsystem.EndEffectorIOSparkMax;
+import frc.robot.subsystems.ClawSubsystem.*;
 import frc.robot.subsystems.DriveSubsystem.*;
 import frc.robot.commands.ElevatorSetPointCommand;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
@@ -126,7 +123,7 @@ public class RobotContainer {
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIOSparkMax(4, 5, new EndEffectorEncoderIOSim()));
+                new ClawSubsystem(new EndEffectorIOSim());
         groundIntakeSubsystem =
                 new GroundIntakeSubsystem(); //TODO
         ledSubsystem =

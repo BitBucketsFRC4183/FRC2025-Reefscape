@@ -35,7 +35,7 @@ public class EndEffectorIOSim implements EndEffectorIO {
     }
 
     public void setVelocity(DCMotorSim motor, double velocity) {
-        motor.setAngularVelocity(velocity);
+        motor.setAngularVelocity(velocity); //probably change later
     }
 
     public void setVoltage(DCMotorSim motor, double volts) {

@@ -17,32 +17,30 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
         this.encoder = encoder;
     }
 
-    public void goToSetpoint(double setpoint) {
-        setVelocity(pidCalculate(encoder, setpoint));
+    public void goToSetpoint(SparkMax motor, double setpoint) {
+        setVelocity(motor, pidCalculate(encoder, setpoint));
         if (atSetpoint() || encoder.getStopped()) { //motor stops when setpoint is reached or claw closes on object
-            setVelocity(0);
+            setVelocity(motor, 0);
         }
     }
 
     public void rotateGrippers() { //rotate small wheels
         double velocity = 0.1;
-        gripperWheels.set(velocity);
+        setVelocity(gripperWheels, velocity);
         try {
             Thread.sleep(ClawConstants.gripperMoveTimeMilliseconds);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        gripperWheels.set(0);
+        setVelocity(gripperWheels, 0);
     }
 
-    @Override
-    public void setVelocity(double velocity) {
-        centralWheel.set(velocity);
+    public void setVelocity(SparkMax motor, double velocity) {
+        motor.set(velocity);
     }
 
-    @Override
-    public void setVoltage(double volts) {
-        centralWheel.setVoltage(volts);
+    public void setVoltage(SparkMax motor, double volts) {
+        motor.setVoltage(volts);
     }
 
     @Override
