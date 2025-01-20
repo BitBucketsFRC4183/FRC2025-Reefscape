@@ -1,10 +1,11 @@
 package frc.robot.subsystems.ClawSubsystem;
 
 import edu.wpi.first.math.controller.PIDController;
+import frc.robot.constants.ClawConstants;
 
 public interface EndEffectorIO {
 
-    final PIDController pid = new PIDController(0, 0, 0);
+    final PIDController pid = new PIDController(ClawConstants.kP, 0, 0);
 
     public static class EndEffectorInputs {
         public double volts = 0.0;

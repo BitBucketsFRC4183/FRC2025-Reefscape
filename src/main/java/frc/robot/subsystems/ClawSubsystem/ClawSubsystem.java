@@ -15,7 +15,11 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void close() {
         sparkMax.goToSetpoint(-1.0);
+<<<<<<< HEAD
         sparkMax.rotateGrippers();
+=======
+        //sparkMax.rotateSmall();
+>>>>>>> origin/endeffector
     }
 
     public void robotPeriodic() {
