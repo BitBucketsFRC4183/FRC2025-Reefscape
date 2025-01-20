@@ -21,7 +21,7 @@ import java.util.function.DoubleSupplier;
 import static frc.robot.constants.DriveConstants.odometryFrequency;
 import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 import static frc.robot.util.SparkUtil.*;
-public class ElevatorIOSparkMax implements ElevatorIO {
+ public class ElevatorIOSparkMax implements ElevatorIO {
     private SparkBase elevatorSpark1;
     private SparkBase elevatorSpark2;
     private final RelativeEncoder elevatorEncoder;
@@ -34,8 +34,8 @@ public class ElevatorIOSparkMax implements ElevatorIO {
     private final Debouncer elevatorConnectedDebounce = new Debouncer(0.5);
 
     public ElevatorIOSparkMax() {
-        elevatorSpark1 = new SparkMax(ElevatorConstants.elevatorSparkCAN1, SparkLowLevel.MotorType.kBrushless);
-        elevatorSpark2 = new SparkMax(ElevatorConstants.elevatorSparkCAN2, SparkLowLevel.MotorType.kBrushless);
+        elevatorSpark1 = new SparkMax(9, SparkLowLevel.MotorType.kBrushless);
+        elevatorSpark2 = new SparkMax(10, SparkLowLevel.MotorType.kBrushless);
         elevatorEncoder = elevatorSpark1.getEncoder();
         elevatorController = elevatorSpark1.getClosedLoopController();
 
@@ -106,7 +106,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         elevatorPositionQueue.clear();
         inputs.lastEncoderPosition = elevatorEncoder.getPosition();
     }
-    public void setBothElevatorMotorVoltages(double volts){
+    public void setElevatorMotorVoltage(double volts){
         elevatorSpark1.setVoltage(volts);
         elevatorSpark2.setVoltage(volts);
     }

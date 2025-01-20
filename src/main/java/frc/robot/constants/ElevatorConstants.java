@@ -9,7 +9,7 @@ import edu.wpi.first.units.Units;
 import static edu.wpi.first.units.Units.Inches;
 
 public class ElevatorConstants {
-    public static double kP;
+
     public static double kDt = 0.02;
     public static int kElevatorMotorPort;
     public static int[] kEncoderPorts = new int[1];
@@ -28,15 +28,16 @@ public class ElevatorConstants {
     public static double gearingRatio = 0.1 ;
     public static double pulleyRadius = 1;
     public static double kS = 0;
-    public static double kV = 0;
-    public static double kG = 0;
-    public static double kA = 0;
+    public static double kV = 6;
+    public static double kG = 0.1;
+    public static double kA = 2;
+    public static double kP = 2;
     public static double kI = 0;
     public static double kD = 0;
     public static double L1 = 0.635; // THESE VALUES ARE IN Meters. FOR EVERY CALCULATION, ASSUME THESE ARE INCHES.
     public static double L2 = 0.635;
     public static double L3 = 1.04775;
     public static double L4 = 1.7018;
-    public static int elevatorSparkCAN1;
-    public static int elevatorSparkCAN2;
+    public static int elevatorSparkCAN1 = 4;
+    public static int elevatorSparkCAN2 = 3;
 }

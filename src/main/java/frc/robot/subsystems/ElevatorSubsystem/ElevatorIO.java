@@ -1,7 +1,5 @@
 package frc.robot.subsystems.ElevatorSubsystem;
 
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ElevatorIO {
@@ -26,7 +24,7 @@ public interface ElevatorIO {
 
     public default void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {}
 
-    public default void setBothElevatorMotorVoltages(double volts) {
+    public default void setElevatorMotorVoltage(double volts) {
 
 
     }

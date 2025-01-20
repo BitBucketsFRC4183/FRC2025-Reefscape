@@ -13,8 +13,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     public final PIDController elevatorFeedback = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
     double maxVoltage = 12.0;
     public final TrapezoidProfile elevatorProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5,5));
-    public TrapezoidProfile.State profileGoal = new TrapezoidProfile.State(0,0);// goal is the place where we want to go after already moving to another level. For motion profiling, we need to convert this to the setpoint or something idk I dont get paid enough for this crap I mean technically it is a -$350 profit//
-    public TrapezoidProfile.State profileSetPoint = new TrapezoidProfile.State();
     private final ElevatorEncoderIO elevatorEncoderIO;
     private final ElevatorIOInputsAutoLogged elevatorIOInputs;
     private final ElevatorEncoderIOInputsAutoLogged encoderIOInputs;
@@ -37,16 +35,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorEncoderIO.updateInputs(encoderIOInputs);
     }
 
-    public void moveElevatorToVelocity(double velocitySetpoint, double positionSetpoint) {
-        double feedforwardOutput = elevatorFeedforward.calculate(velocitySetpoint);
-        double pidOutput = elevatorFeedback.calculate(encoderIOInputs.elevatorPosition, positionSetpoint);
-        double totalOutput = feedforwardOutput + pidOutput;
-        ElevatorIOSim.setBothElevatorMotorVoltages(totalOutput);
-    }
-
-    public double getTotalOutput(double velocitySetpoint, double positionSetpoint) {
-        double feedforwardOutput = elevatorFeedforward.calculate(velocitySetpoint);
-        double pidOutput = elevatorFeedback.calculate(encoderIOInputs.elevatorPosition, positionSetpoint);
-        return feedforwardOutput + pidOutput;
+    public void setElevatorVoltage(double volts) {
+        elevatorIO.setElevatorMotorVoltage(volts);
     }
 }
