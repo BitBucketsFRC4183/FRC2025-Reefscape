@@ -28,7 +28,7 @@ public class EndEffectorIOSim implements EndEffectorIO {
     public void rotateGrippers() {
         setVelocity(gripperWheel, 1);
         try {
-            Thread.sleep(30);
+            Thread.sleep(ClawConstants.gripperMoveTimeMilliseconds);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -40,5 +40,9 @@ public class EndEffectorIOSim implements EndEffectorIO {
 
     public void setVoltage(DCMotorSim motor, double volts) {
         motor.setInputVoltage(volts);
+    }
+
+    public void updateInputs(EndEffectorInputs inputs) {
+        inputs.volts = 0.0;
     }
 }

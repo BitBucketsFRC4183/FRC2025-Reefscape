@@ -1,5 +1,8 @@
 package frc.robot.subsystems.ClawSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class ClawSubsystem extends SubsystemBase {
     private final EndEffectorIO endEffector;
@@ -20,5 +23,6 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void robotPeriodic() {
         endEffector.updateInputs(inputs);
+        Logger.processInputs("ClawSubsystem", (LoggableInputs) inputs);
     }
 }
