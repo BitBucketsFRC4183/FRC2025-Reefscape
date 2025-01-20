@@ -1,5 +1,5 @@
 package frc.robot.subsystems.SingleJointedArmSubsystem;
 
-public class SingleJointedArmEncoderIO {
+public class SingleJointedArmIOEncoder {
 
 }
