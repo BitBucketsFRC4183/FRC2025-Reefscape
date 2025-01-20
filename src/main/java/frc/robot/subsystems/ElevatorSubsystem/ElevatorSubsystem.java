@@ -2,6 +2,7 @@ package frc.robot.subsystems.ElevatorSubsystem;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ElevatorConstants;
@@ -9,10 +10,10 @@ import frc.robot.constants.ElevatorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorIO elevatorIO;
-    public final ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS,ElevatorConstants.kG,ElevatorConstants.kV,ElevatorConstants.kA);
-    public final PIDController elevatorFeedback = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
-    double maxVoltage = 12.0;
+    public ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS,ElevatorConstants.kG,ElevatorConstants.kV,ElevatorConstants.kA);
     public final TrapezoidProfile elevatorProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5,5));
+    public final ProfiledPIDController elevatorFeedback = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(5,5));
+    double maxVoltage = 12.0;
     private final ElevatorEncoderIO elevatorEncoderIO;
     private final ElevatorIOInputsAutoLogged elevatorIOInputs;
     private final ElevatorEncoderIOInputsAutoLogged encoderIOInputs;
@@ -33,6 +34,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic(){
         elevatorIO.updateInputs(elevatorIOInputs);
         elevatorEncoderIO.updateInputs(encoderIOInputs);
+    }
+    public double calculateVolts(double velocity, double positionError){
+        return elevatorFeedforward.calculate(velocity) + elevatorFeedback.calculate(positionError);
     }
 
     public void setElevatorVoltage(double volts) {

@@ -40,4 +40,7 @@ public class ElevatorConstants {
     public static double L4 = 1.7018;
     public static int elevatorSparkCAN1 = 4;
     public static int elevatorSparkCAN2 = 3;
+    public static double carriageMass = 1.0;
+    public static double maxHeight = 2.0;
+    public static double minHeight = 0;
 }
