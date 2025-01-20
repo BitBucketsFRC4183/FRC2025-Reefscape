@@ -13,17 +13,19 @@
 
 package frc.robot;
 
+import choreo.auto.AutoChooser;
+import choreo.auto.AutoFactory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ResetEncoderCommand;
@@ -40,7 +42,6 @@ import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
-import frc.robot.subsystems.ElevatorSubsystem.ElevatorIOSparkMax;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
@@ -72,30 +73,31 @@ public class RobotContainer {
   private final AutoSubsystem autoSubsystem;
 
 
-
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardNumber flywheelSpeedInput =
-      new LoggedDashboardNumber("Flywheel Speed", 1500.0);
+          new LoggedDashboardNumber("Flywheel Speed", 1500.0);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
 
-      this.operatorInput = new OperatorInput();
+    this.operatorInput = new OperatorInput();
 
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         drive =
-            new DriveSubsystem(
-                new GyroIOPigeon2(),
-                new ModuleIOHybrid(0, TunerConstants.FrontLeft),
-                new ModuleIOHybrid(1,TunerConstants.FrontRight),
-                new ModuleIOHybrid(2, TunerConstants.BackLeft),
-                new ModuleIOHybrid(3, TunerConstants.BackRight));
+                new DriveSubsystem(
+                        new GyroIOPigeon2(),
+                        new ModuleIOHybrid(0, TunerConstants.FrontLeft),
+                        new ModuleIOHybrid(1, TunerConstants.FrontRight),
+                        new ModuleIOHybrid(2, TunerConstants.BackLeft),
+                        new ModuleIOHybrid(3, TunerConstants.BackRight));
 
         elevatorSubsystem =
                 new ElevatorSubsystem(); //TODO
@@ -118,12 +120,12 @@ public class RobotContainer {
         this.driveSimulation = new SwerveDriveSimulation(DriveConstants.mapleSimConfig, new Pose2d());
         SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
         drive =
-            new DriveSubsystem(
-                    new GyroIOSim(driveSimulation.getGyroSimulation()),
-                    new ModuleIOSim(driveSimulation.getModules()[0]),
-                    new ModuleIOSim(driveSimulation.getModules()[1]),
-                    new ModuleIOSim(driveSimulation.getModules()[2]),
-                    new ModuleIOSim(driveSimulation.getModules()[3]));
+                new DriveSubsystem(
+                        new GyroIOSim(driveSimulation.getGyroSimulation()),
+                        new ModuleIOSim(driveSimulation.getModules()[0]),
+                        new ModuleIOSim(driveSimulation.getModules()[1]),
+                        new ModuleIOSim(driveSimulation.getModules()[2]),
+                        new ModuleIOSim(driveSimulation.getModules()[3]));
         // flywheel = new Flywheel(new FlywheelIOSim());
         elevatorSubsystem =
                 new ElevatorSubsystem(); //TODO
@@ -143,12 +145,17 @@ public class RobotContainer {
       default:
         // Replayed robot, disable IO implementations
         drive =
-            new DriveSubsystem(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
+                new DriveSubsystem(
+                        new GyroIO() {
+                        },
+                        new ModuleIO() {
+                        },
+                        new ModuleIO() {
+                        },
+                        new ModuleIO() {
+                        },
+                        new ModuleIO() {
+                        });
         // flywheel = new Flywheel(new FlywheelIO() {});
         elevatorSubsystem =
                 new ElevatorSubsystem(); //TODO
@@ -163,34 +170,27 @@ public class RobotContainer {
         singleJointedArmSubsystem =
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
-                new VisionSubsystem(new VisionIO() {}); //TODO
+                new VisionSubsystem(new VisionIO() {
+                }); //TODO
         break;
     }
 //
 //    // Set up auto routines
 
-      autoSubsystem =
-              new AutoSubsystem(clawSubsystem,
-                      drive);
+    autoSubsystem =
+            new AutoSubsystem(clawSubsystem,
+                    drive);
 
 
-      autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+      autoChooser =
+              new LoggedDashboardChooser<>(
+                      "AutoRoutine",
+                      AutoBuilder.buildAutoChooser());
 
-      // Set up SysId routines
-      autoChooser.addOption(
-          "DriveSubsystem SysId (Quasistatic Forward)",
-          drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-      autoChooser.addOption(
-          "DriveSubsystem SysId (Quasistatic Reverse)",
-          drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-      autoChooser.addOption(
-          "DriveSubsystem SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-      autoChooser.addOption(
-          "DriveSubsystem SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+      
 
-      // Configure the button bindings
-      loadCommands();
-    }
+    loadCommands();
+  }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -206,12 +206,14 @@ public class RobotContainer {
     operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
 
     operatorInput.movementDesired.whileTrue(
-        DriveCommands.BaseDriveCommand(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            DriveCommands.BaseDriveCommand(
+                    drive,
+                    () -> -controller.getLeftY(),
+                    () -> -controller.getLeftX(),
+                    () -> -controller.getRightX()));
   } // TODO FIX COMMAND THIS WILL BREAK DO NOT RUN IT
+
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

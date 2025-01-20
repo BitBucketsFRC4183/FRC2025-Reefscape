@@ -47,18 +47,13 @@ public class AutoSubsystem extends SubsystemBase {
     }
 
 
-    public AutoRoutine MoveDepositAndClaw() {
+    public AutoRoutine FourL4CoralBottom() {
 
         var trajectory = loadTrajectory(
                 "FourL4CoralBottom");
 
-        // NEW routine
         AutoRoutine routine =
                 autoFactory.newRoutine(
-                        "MoveDepositAndClaw_Routine");
-//
-        Command autoTrajectory =
-                autoFactory.trajectoryCmd(
                         "FourL4CoralBottom");
 
         // Initialize
