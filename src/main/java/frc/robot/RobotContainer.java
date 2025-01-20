@@ -18,10 +18,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ResetEncoderCommand;
@@ -56,6 +58,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 public class RobotContainer {
   // Subsystems
   public final DriveSubsystem drive;
+
   // private final Flywheel flywheel;
   public final OperatorInput operatorInput;
   private final ElevatorSubsystem elevatorSubsystem;
@@ -69,6 +72,7 @@ public class RobotContainer {
   private final AutoSubsystem autoSubsystem;
 
 
+
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -80,7 +84,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    this.operatorInput = new OperatorInput();
+      this.operatorInput = new OperatorInput();
 
     switch (Constants.currentMode) {
       case REAL:
@@ -162,33 +166,37 @@ public class RobotContainer {
                 new VisionSubsystem(new VisionIO() {}); //TODO
         break;
     }
+//
+//    // Set up auto routines
 
-    // Set up auto routines
+      autoSubsystem =
+              new AutoSubsystem(clawSubsystem,
+                      drive);
 
-    autoSubsystem = new AutoSubsystem(drive);
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // Set up SysId routines
-    autoChooser.addOption(
-        "DriveSubsystem SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "DriveSubsystem SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "DriveSubsystem SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "DriveSubsystem SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+      autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // Configure the button bindings
-    loadCommands();
-  }
+      // Set up SysId routines
+      autoChooser.addOption(
+          "DriveSubsystem SysId (Quasistatic Forward)",
+          drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+      autoChooser.addOption(
+          "DriveSubsystem SysId (Quasistatic Reverse)",
+          drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+      autoChooser.addOption(
+          "DriveSubsystem SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+      autoChooser.addOption(
+          "DriveSubsystem SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+      // Configure the button bindings
+      loadCommands();
+    }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * Joystick} or {@link XboxController}), and then passing it to a {@link
+   * JoystickButton}.
    */
   void loadCommands() {
     operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 1));
