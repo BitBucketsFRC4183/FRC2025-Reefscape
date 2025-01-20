@@ -19,9 +19,7 @@ import static frc.robot.constants.DriveConstants.*;
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.DriveFeedforwards;
@@ -43,7 +41,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -237,7 +234,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   // use pathplanners's / team 254's setpoint generator
-  public void runRobotRelativePathPlanner(ChassisSpeeds speeds) {
+  public void runVelocityPP(ChassisSpeeds speeds) {
     // Note: it is important to not discretize speeds before or after
     // using the setpoint generator, as it will discretize them for you
     previousSetpoint = setpointGenerator.generateSetpoint(
@@ -258,7 +255,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   //no feedback yet!!!! TODO
   public void followTrajectorySample(SwerveSample sample) {
-    runRobotRelativePathPlanner(sample.getChassisSpeeds());
+    runVelocityPP(sample.getChassisSpeeds());
   }
 
   /** Runs the drive in a straight line with the specified drive output. */
