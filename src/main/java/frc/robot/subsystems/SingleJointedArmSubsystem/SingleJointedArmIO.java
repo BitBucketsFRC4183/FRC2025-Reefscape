@@ -7,6 +7,8 @@ public interface SingleJointedArmIO {
     class ArmIOInputs {
         public double armAngle = 0.0;
         public double armAppliedVoltage = 0.0;
+        public double armCurrentAmps = 0.0;
+        public boolean armConnected;
     }
     public default void setArmMotorVoltage(double volts) {
     }

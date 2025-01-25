@@ -16,4 +16,8 @@ public class SingleJointedArmConstants {
     private static final double MIN_ANGLE = 0.0;
     public static double SparkkP = 0.0;
     public static double SparkkD = 0.0;
+    public static double gearingRatio = 0.0;
+    public static double armSparkMotorCurrentLimit = 0.0;
+    public static double armSparkEncoderPositionFactor;
+    public static double armSparkEncoderVelocityFactor;
 }
