@@ -16,10 +16,14 @@ public class EndEffectorIOSim implements EndEffectorIO {
             ClawConstants.smallGearBox
     );
 
+    public EndEffectorIOSim() {
+        setupPID(3.0, 5.0, -0.5, 0.5); //change pid settings
+    }
+
     private final EndEffectorEncoderIOSim encoder = new EndEffectorEncoderIOSim();
 
     @Override
-    public void centralToSetpoint(double setpoint) {
+    public void centralToSetpoint(double setpoint) { //move wheels to setpoint
         setCentralVelocity(pidCalculate(encoder, setpoint));
     }
 
@@ -49,7 +53,7 @@ public class EndEffectorIOSim implements EndEffectorIO {
     }
 
     @Override
-    public void updateInputs(EndEffectorInputs inputs) {
+    public void updateInputs(EndEffectorInputsAutoLogged inputs) {
         inputs.centralVolts = centralWheel.getInputVoltage();
         inputs.gripperVolts = gripperWheels.getInputVoltage();
     }

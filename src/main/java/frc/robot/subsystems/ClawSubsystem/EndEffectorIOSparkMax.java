@@ -5,19 +5,19 @@ import frc.robot.constants.ClawConstants;
 
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
-    private final SparkMax gripperWheels;
-    private final SparkMax centralWheel;
+    private final SparkMax gripperWheels; //hold object
+    private final SparkMax centralWheel; //open and close claw
     private final EndEffectorEncoderIO encoder;
 
     public EndEffectorIOSparkMax(int canID, int smallCanID, EndEffectorEncoderIOSim encoder) {
-        setupPID();
+        setupPID(3.0, 5.0, -0.5, 0.5); //change pid setting
         centralWheel = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless); //big
         gripperWheels = new SparkMax(smallCanID, SparkLowLevel.MotorType.kBrushless); //small
         this.encoder = encoder;
     }
 
     @Override
-    public void centralToSetpoint(double setpoint) {
+    public void centralToSetpoint(double setpoint) { //move wheels to setpoint
         setCentralVelocity(pidCalculate(encoder, setpoint));
     }
 
@@ -47,7 +47,7 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     }
 
     @Override
-    public void updateInputs(EndEffectorInputs inputs) {
+    public void updateInputs(EndEffectorInputsAutoLogged inputs) {
         //inputs.centralVolts = getVoltage();
         //inputs.gripperVolts = getVoltage();
     }

@@ -3,28 +3,26 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ClawConstants;
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class ClawSubsystem extends SubsystemBase {
     private final EndEffectorIO endEffector;
-    private final EndEffectorIO.EndEffectorInputs inputs = new EndEffectorIO.EndEffectorInputs();
+    private final EndEffectorIO.EndEffectorInputsAutoLogged inputs = new EndEffectorIO.EndEffectorInputsAutoLogged();
 
     public ClawSubsystem(EndEffectorIO endEffector) {
         this.endEffector = endEffector;
     }
-
     public void open() {
         endEffector.centralToSetpoint(ClawConstants.mainSetpoint); //rotate big wheel at center
     }
 
     public void close() {
         endEffector.centralToSetpoint(-ClawConstants.mainSetpoint);
-        endEffector.grippersToSetpoint(0.2);
+        endEffector.grippersToSetpoint(0.2); //rotate grippers for better hold
     }
 
-    public void robotPeriodic() {
+    @Override
+    public void periodic() {
         endEffector.updateInputs(inputs);
-        Logger.processInputs("ClawSubsystem", (LoggableInputs) inputs);
     }
 }
 
