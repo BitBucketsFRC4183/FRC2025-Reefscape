@@ -9,21 +9,20 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.constants.SingleJointedArmConstants;
 
 public class SingleJointedArmSubsystem extends SubsystemBase {
     private final PWMSparkMax armMotor = new PWMSparkMax(SingleJointedArmConstants.MotorNumber);
-    private final Encoder armEncoder = new Encoder();
+    private final Encoder armEncoder = new Encoder(SingleJointedArmConstants.EncoderNumber);
     private final SimpleMotorFeedforward armFeedForward = new SimpleMotorFeedforward(SingleJointedArmConstants.kSVolts, SingleJointedArmConstants.kVVoltsSecondsPerRotation);
-    private final PIDController armFeedback = new PIDController(SingleJointedArmConstants.kP, SingleJointedArmConstants.kD, SingleJointedArmConstants.kI);
+    // add soleniod thingy
+    private final PIDController armFeedback = new PIDController(SingleJointedArmConstants.kP, SingleJointedArmConstants.kI, SingleJointedArmConstants.kD);
 
     public SingleJointedArmSubsystem() {
-        armFeedback.setTolerance(SingleJointedArmConstants.kArmToleranceRPS);
-        armEncoder.setDistancePerPulse(SingleJointedArmConstants.kEncoderDistancePerPulse);
-        setDefaultCommand(runOnce(() -> {
-            armMotor.disable();
-        }).andThen(run(() -> {
-        })).withName("Idle"));
+            armMotor.set(0);
+        }
+
     }
 }
 

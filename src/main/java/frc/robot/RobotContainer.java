@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.BendCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ResetEncoderCommand;
 import frc.robot.constants.Constants;
@@ -194,12 +195,15 @@ public class RobotContainer {
 
     operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
 
+    operatorInput.armbendup.whileTrue(new BendCommand());
+    operatorInput.armbenddown.whileTrue(new BendCommand());
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
             drive,
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
+
   } // TODO FIX COMMAND THIS WILL BREAK DO NOT RUN IT
 
   /**

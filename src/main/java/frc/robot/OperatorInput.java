@@ -25,6 +25,8 @@ public class OperatorInput {
 
   final Trigger IntakeOn = driver.a();
 
+  final Trigger armbendup = driver.povDown();
+  final Trigger armbenddown = driver.povUp();
   final Trigger xNotDesired =
       driver
           .axisGreaterThan(XboxController.Axis.kLeftX.value, 0.1)
