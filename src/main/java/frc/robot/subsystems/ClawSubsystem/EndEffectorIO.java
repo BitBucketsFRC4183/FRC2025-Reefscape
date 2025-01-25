@@ -6,20 +6,18 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface EndEffectorIO {
 
-    final PIDController pid = new PIDController(ClawConstants.kP, 0, 0);
-
     @AutoLog
     public class EndEffectorInputsAutoLogged {  //autolog volts
         public double centralVolts = 0.0;
         public double gripperVolts = 0.0;
     }
 
-    public default void setupPID(double errorTolerance, double errorDerivativeTolerance, double minimumIntegral, double maximumIntegral) {
+    public default void setupPID(PIDController pid, double errorTolerance, double errorDerivativeTolerance, double minimumIntegral, double maximumIntegral) {
         pid.setTolerance(errorTolerance, errorDerivativeTolerance);
         pid.setIntegratorRange(minimumIntegral, maximumIntegral);
     }
 
-    public default double pidCalculate(EndEffectorEncoderIO encoder, double setpoint) {
+    public default double pidCalculate(PIDController pid, EndEffectorEncoderIO encoder, double setpoint) {
         return pid.calculate(encoder.getDistance(), setpoint);
     }
 
