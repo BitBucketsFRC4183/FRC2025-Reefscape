@@ -2,23 +2,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
-import frc.robot.subsystems.ClawSubsystem.EndEffectorIO;
-import frc.robot.subsystems.ClawSubsystem.EndEffectorIOSparkMax;
 
-public class OpenClaw extends Command {
+public class CloseClawCommand extends Command {
     private final ClawSubsystem clawSubsystem;
 
-    public OpenClaw(ClawSubsystem clawSubsystem) {
+    public CloseClawCommand(ClawSubsystem clawSubsystem) {
         this.clawSubsystem = clawSubsystem;
         addRequirements(clawSubsystem);
     }
 
     public void initialize() {
-        clawSubsystem.open();
+        clawSubsystem.close();
     }
 
     public boolean isFinished() {
         return true;
     }
 }
-

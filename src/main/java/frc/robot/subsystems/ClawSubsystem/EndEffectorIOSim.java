@@ -6,43 +6,43 @@ import frc.robot.constants.ClawConstants;
 
 public class EndEffectorIOSim implements EndEffectorIO {
 
-    private final DCMotorSim centerWheel = new DCMotorSim(
+    private final DCMotorSim centralWheel = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(ClawConstants.bigGearBox, 0.1, ClawConstants.gearing),
             ClawConstants.bigGearBox
     );
 
-    private final DCMotorSim gripperWheel = new DCMotorSim(
+    private final DCMotorSim gripperWheels = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(ClawConstants.smallGearBox, 0.1, ClawConstants.gearing),
             ClawConstants.smallGearBox
     );
 
     private final EndEffectorEncoderIOSim encoder = new EndEffectorEncoderIOSim();
 
-    public void goToSetpoint(DCMotorSim motor, double setpoint) {
-        setVelocity(motor, pidCalculate(encoder, setpoint));
-        if (atSetpoint() || encoder.getStopped()) { //motor stops when setpoint is reached or claw closes on object
-        setVelocity(motor, 0);
-        }
+    public void centralToSetpoint(double setpoint) {
+        setCentralVelocity(pidCalculate(encoder, setpoint));
     }
 
-    public void rotateGrippers() {
-        setVelocity(gripperWheel, 1);
-        try {
-            Thread.sleep(ClawConstants.gripperMoveTimeMilliseconds);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    public void grippersToSetpoint(double setpoint) {
+        setGrippersVelocity(pidCalculate(encoder, setpoint));
     }
 
-    public void setVelocity(DCMotorSim motor, double velocity) {
-        motor.setAngularVelocity(velocity); //probably change later
+    public void setCentralVelocity(double velocity) {
+        centralWheel.setAngularVelocity(velocity); //probably change later
     }
 
-    public void setVoltage(DCMotorSim motor, double volts) {
-        motor.setInputVoltage(volts);
+    public void setCentralVoltage(double volts) {
+        centralWheel.setInputVoltage(volts);
+    }
+
+    public void setGrippersVelocity(double velocity) {
+        gripperWheels.setAngularVelocity(velocity); //probably change later
+    }
+
+    public void setGrippersVoltage(double volts) {
+        gripperWheels.setInputVoltage(volts);
     }
 
     public void updateInputs(EndEffectorInputs inputs) {
-        inputs.volts = 0.0;
+        //inputs.volts = ._.;
     }
 }

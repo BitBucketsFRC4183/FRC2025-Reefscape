@@ -1,5 +1,6 @@
 package frc.robot.subsystems.ClawSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.ClawConstants;
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
@@ -13,12 +14,12 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void open() {
-        endEffector.goToSetpoint(1.0); //rotate big wheel at center
+        endEffector.centralToSetpoint(ClawConstants.mainSetpoint); //rotate big wheel at center
     }
 
     public void close() {
-        endEffector.goToSetpoint(-1.0);
-        endEffector.rotateGrippers();
+        endEffector.centralToSetpoint(-ClawConstants.mainSetpoint);
+        endEffector.grippersToSetpoint(0.2);
     }
 
     public void robotPeriodic() {
@@ -26,3 +27,4 @@ public class ClawSubsystem extends SubsystemBase {
         Logger.processInputs("ClawSubsystem", (LoggableInputs) inputs);
     }
 }
+

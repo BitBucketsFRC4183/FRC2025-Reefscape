@@ -30,7 +30,9 @@ public interface EndEffectorIO {
         return pid.atSetpoint();
     }
 
-    public default void goToSetpoint(double setpoint) {}
+    public default void centralToSetpoint(double setpoint) {}
+
+    public default void grippersToSetpoint(double setpoint) {}
 
     public default void rotateGrippers() {}
 
