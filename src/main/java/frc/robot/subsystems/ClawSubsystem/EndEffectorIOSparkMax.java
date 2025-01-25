@@ -48,7 +48,8 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
 
     @Override
     public void updateInputs(EndEffectorInputs inputs) {
-        //inputs.volts = placeholder; //get voltage
+        //inputs.centralVolts = getVoltage();
+        //inputs.gripperVolts = getVoltage();
     }
 
 }

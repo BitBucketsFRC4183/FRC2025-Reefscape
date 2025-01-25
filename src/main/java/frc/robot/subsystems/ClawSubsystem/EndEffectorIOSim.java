@@ -50,6 +50,7 @@ public class EndEffectorIOSim implements EndEffectorIO {
 
     @Override
     public void updateInputs(EndEffectorInputs inputs) {
-        //inputs.volts = ._.; todo add real volts
+        inputs.centralVolts = centralWheel.getInputVoltage();
+        inputs.gripperVolts = gripperWheels.getInputVoltage();
     }
 }
