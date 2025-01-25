@@ -18,7 +18,7 @@ import static choreo.Choreo.loadTrajectory;
 public class AutoSubsystem extends SubsystemBase {
     private final DriveSubsystem drive;
     private final ClawSubsystem claw;
-    private final AutoFactory autoFactory;
+    private static AutoFactory autoFactory;
 
 
 
@@ -31,54 +31,52 @@ public class AutoSubsystem extends SubsystemBase {
 
 
 
-    public Command drive() {
-
+    public static Command drive() {
         return Commands.sequence(
         );
     }
 
-    public Command deposit() {
+    public static Command deposit() {
         return Commands.sequence(
         );
     }
 
-    public Command claw() {
+    public static Command claw() {
         return Commands.sequence(
         );
     }
 
-    public AutoRoutine WaitTaxiBottom(){
-
-    }
-    public AutoRoutine TwoL4CoralTop(){
-
-    }
-    public AutoRoutine TwoL4CoralBottom(){
-
-    }
-    public AutoRoutine ThreeL4CoralTop(){
-
-    }
-    public AutoRoutine ThreeL4CoralBottom(){
-
-    }
-    public AutoRoutine ThreeL4CoralTop(){
-
-    }
-    public AutoRoutine FourL4CoralTop(){
+//    public AutoRoutine WaitTaxiBottom(){
+//
+//    }
+//    public AutoRoutine TwoL4CoralTop(){
+//
+//    }
+//    public AutoRoutine TwoL4CoralBottom(){
+//
+//    }
+//    public AutoRoutine ThreeL4CoralTop(){
+//
+//    }
+//    public AutoRoutine ThreeL4CoralBottom(){
+//
+//    }
+//    public AutoRoutine ThreeL4CoralTop(){
+//
+//    }
+    public static AutoRoutine FourL4CoralTop(){
         var trajectory = loadTrajectory(
                 "FourL4CoralTop");
 
-        AutoRoutine routine =
-                autoFactory.newRoutine(
+        AutoRoutine FourL4CoralTopRoutine = autoFactory.newRoutine(
                         "FourL4CoralTop");
 
         // Initialize
         AutoTrajectory W1toW2toDeposit =
-                routine.trajectory("W1toW2toDeposit");
+                FourL4CoralTopRoutine.trajectory("W1toW2toDeposit");
 
         AutoTrajectory W2toW3toW4toClaw =
-                routine.trajectory("W2toW3toW4toClaw");
+                FourL4CoralTopRoutine.trajectory("W2toW3toW4toClaw");
 
         //** AutoTrajectory W3toW4 = routine
         // .trajectory();
@@ -86,14 +84,14 @@ public class AutoSubsystem extends SubsystemBase {
         //                routine.trajectory();
 
         AutoTrajectory W4toW5toW6toDeposit =
-                routine.trajectory("W4toW5toW6toDeposit");
+                FourL4CoralTopRoutine.trajectory("W4toW5toW6toDeposit");
         //AutoTrajectory W5toW6 =
         //                routine.trajectory();
         //        AutoTrajectory W6toDeposit =
         //                routine.trajectory();
 
         AutoTrajectory W6toW7toW8toClaw =
-                routine.trajectory(
+                FourL4CoralTopRoutine.trajectory(
                         "W6toW7toW8toClaw");
 
         //AutoTrajectory W7toW8 =
@@ -102,19 +100,19 @@ public class AutoSubsystem extends SubsystemBase {
         //                routine.trajectory();
 
         AutoTrajectory W8toW9toDeposit =
-                routine.trajectory("W8toW9toDeposit");
+                FourL4CoralTopRoutine.trajectory("W8toW9toDeposit");
 
         //AutoTrajectory W9toDeposit =
         //                routine.trajectory();
 
         AutoTrajectory W9toW10toClaw =
-                routine.trajectory("W9toW10toClaw");
+                FourL4CoralTopRoutine.trajectory("W9toW10toClaw");
 
         //AutoTrajectory W10toClaw =
         //                routine.trajectory();
 
         AutoTrajectory W10toW11toDeposit =
-                routine.trajectory("W10toW11toDeposit");
+                FourL4CoralTopRoutine.trajectory("W10toW11toDeposit");
 
         //AutoTrajectory W11toDeposit =
         //                routine.trajectory();
@@ -122,7 +120,7 @@ public class AutoSubsystem extends SubsystemBase {
 //
 //
 //
-        routine.active().onTrue(
+        FourL4CoralTopRoutine.active().onTrue(
                 Commands.sequence(
                         Commands.print("Started" +
                                 " the routine!"),
@@ -160,13 +158,13 @@ public class AutoSubsystem extends SubsystemBase {
         //TODO
 
 
-        routine.anyActive(W1toW2toDeposit,
+        FourL4CoralTopRoutine.anyActive(W1toW2toDeposit,
                 W4toW5toW6toDeposit,
                 W8toW9toDeposit,
                 W10toW11toDeposit).whileTrue(deposit());
 
 
-        return routine;
+        return FourL4CoralTopRoutine;
     }
 
     public AutoRoutine FourL4CoralBottom() {

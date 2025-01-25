@@ -14,8 +14,8 @@
 package frc.robot;
 
 import choreo.auto.AutoChooser;
-import choreo.auto.AutoFactory;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ResetEncoderCommand;
 import frc.robot.constants.Constants;
@@ -52,9 +51,11 @@ import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+
+import java.io.IOException;
 
 public class RobotContainer {
   // Subsystems
@@ -77,7 +78,7 @@ public class RobotContainer {
   private final CommandXboxController controller = new CommandXboxController(0);
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+  private final AutoChooser autoChooser;
   private final LoggedDashboardNumber flywheelSpeedInput =
           new LoggedDashboardNumber("Flywheel Speed", 1500.0);
 
@@ -177,17 +178,19 @@ public class RobotContainer {
 //
 //    // Set up auto routines
 
-    autoSubsystem =
-            new AutoSubsystem(clawSubsystem,
-                    drive);
+    autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
+
+    autoChooser = new AutoChooser();
+    autoChooser.addRoutine(
+            "FourL4CoralTopRoutine",
+            AutoSubsystem::FourL4CoralTop);
+    autoChooser.addCmd("drive",
+            AutoSubsystem::drive);
 
 
-      autoChooser =
-              new LoggedDashboardChooser<>(
-                      "AutoRoutine",
-                      AutoBuilder.buildAutoChooser());
+    SmartDashboard.putData(autoChooser);
+    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
-      
 
     loadCommands();
   }
@@ -220,9 +223,9 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return autoChooser.get();
-  }
+//  public Command getAutonomousCommand() {
+//    return autoChooser.get();
+//  }
 
   public void resetSimulationField() {
     if (Constants.currentMode != Constants.Mode.SIM) return;
