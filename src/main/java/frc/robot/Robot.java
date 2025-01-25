@@ -105,6 +105,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
 
+    autonomousCommand = robotContainer.getAutonomousCommand();
     System.out.println(Arrays.toString(Choreo.availableTrajectories()));
     var trajectory = loadTrajectory("test");
     if (trajectory.isPresent()) {
