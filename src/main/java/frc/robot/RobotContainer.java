@@ -182,8 +182,8 @@ public class RobotContainer {
 
     autoChooser = new AutoChooser();
     autoChooser.addRoutine(
-            "FourL4CoralTopRoutine",
-            AutoSubsystem::FourL4CoralTop);
+            "FourL4CoralBottomRoutine",
+            AutoSubsystem::FourL4CoralBottomRoutine);
     autoChooser.addCmd("drive",
             AutoSubsystem::drive);
 
