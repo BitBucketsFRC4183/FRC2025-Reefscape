@@ -16,26 +16,32 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
         this.encoder = encoder;
     }
 
+    @Override
     public void centralToSetpoint(double setpoint) {
         setCentralVelocity(pidCalculate(encoder, setpoint));
     }
 
+    @Override
     public void grippersToSetpoint(double setpoint) {
         setGrippersVelocity(pidCalculate(encoder, setpoint));
     }
 
+    @Override
     public void setGrippersVelocity(double velocity) {
         gripperWheels.set(velocity);
     }
 
+    @Override
     public void setCentralVelocity(double velocity) {
         centralWheel.set(velocity);
     }
 
+    @Override
     public void setCentralVoltage(double volts) {
         centralWheel.setVoltage(volts);
     }
 
+    @Override
     public void setGrippersVoltage(double volts) {
         gripperWheels.setVoltage(volts);
     }

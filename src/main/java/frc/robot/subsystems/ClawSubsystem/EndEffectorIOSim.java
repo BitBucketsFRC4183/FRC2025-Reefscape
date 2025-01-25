@@ -18,31 +18,38 @@ public class EndEffectorIOSim implements EndEffectorIO {
 
     private final EndEffectorEncoderIOSim encoder = new EndEffectorEncoderIOSim();
 
+    @Override
     public void centralToSetpoint(double setpoint) {
         setCentralVelocity(pidCalculate(encoder, setpoint));
     }
 
+    @Override
     public void grippersToSetpoint(double setpoint) {
         setGrippersVelocity(pidCalculate(encoder, setpoint));
     }
 
+    @Override
     public void setCentralVelocity(double velocity) {
         centralWheel.setAngularVelocity(velocity); //probably change later
     }
 
-    public void setCentralVoltage(double volts) {
-        centralWheel.setInputVoltage(volts);
-    }
-
+    @Override
     public void setGrippersVelocity(double velocity) {
         gripperWheels.setAngularVelocity(velocity); //probably change later
     }
 
+    @Override
+    public void setCentralVoltage(double volts) {
+        centralWheel.setInputVoltage(volts);
+    }
+
+    @Override
     public void setGrippersVoltage(double volts) {
         gripperWheels.setInputVoltage(volts);
     }
 
+    @Override
     public void updateInputs(EndEffectorInputs inputs) {
-        //inputs.volts = ._.;
+        //inputs.volts = ._.; todo add real volts
     }
 }

@@ -13,9 +13,13 @@ public interface EndEffectorIO {
 
     public default void updateInputs(EndEffectorInputs inputs) {}
 
-    public default void setVelocity(double velocity) {}
+    public default void setCentralVelocity(double velocity) {}
 
-    public default void setVoltage(double volts) {}
+    public default void setGrippersVelocity(double velocity) {}
+
+    public default void setCentralVoltage(double volts) {}
+
+    public default void setGrippersVoltage(double volts) {}
 
     public default void setupPID() {
         pid.setTolerance(3, 5);
@@ -26,14 +30,8 @@ public interface EndEffectorIO {
         return pid.calculate(encoder.getDistance(), setpoint);
     }
 
-    public default boolean atSetpoint() {
-        return pid.atSetpoint();
-    }
-
     public default void centralToSetpoint(double setpoint) {}
 
     public default void grippersToSetpoint(double setpoint) {}
-
-    public default void rotateGrippers() {}
 
 }
