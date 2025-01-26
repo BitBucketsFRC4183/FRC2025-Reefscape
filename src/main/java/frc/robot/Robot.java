@@ -103,42 +103,13 @@ public class Robot extends LoggedRobot {
   private final Timer timer = new Timer();
 
   @Override
-  public void autonomousInit() {
+  public void robotInit() {
 
-    System.out.println(Arrays.toString(Choreo.availableTrajectories()));
-    var trajectory = loadTrajectory(
-            "FourL4CoralBottom");
-
-    if (trajectory.isPresent()) {
-      System.out.print("THANK");
-      // Get the initial pose of the trajectory
-      Optional<Pose2d> initialPose = trajectory.get().getInitialPose(isRedAlliance());
-      Logger.recordOutput("monkey", true);
-      if (initialPose.isPresent()) {
-        // Reset odometry to the start of the trajectory
-        robotContainer.drive.setPose(initialPose.get());
-      }
-    }
-    // Reset and start the timer when the autonomous period begins
-    timer.restart();
   }
 
-  @Override
-  public void autonomousPeriodic() {
-      Optional<Trajectory<SwerveSample>> trajectory = loadTrajectory("test");
-      if (trajectory.isPresent()) {
-        Optional<SwerveSample> sample = trajectory.get().sampleAt(timer.get(), isRedAlliance());
-
-          sample.ifPresent(swerveSample -> robotContainer.drive.followTrajectorySample(swerveSample));
-      }
-  }
-
-  private boolean isRedAlliance() {
-    return DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue).equals(DriverStation.Alliance.Red);
-  }
-
-
-  /** This function is called periodically during all modes. */
+  /**
+   * This function is called periodically during all modes.
+   */
   @Override
   public void robotPeriodic() {
     // Switch thread to high priority to improve loop timing
@@ -156,18 +127,73 @@ public class Robot extends LoggedRobot {
     Threads.setCurrentThreadPriority(false, 10);
   }
 
-  /** This function is called once when the robot is disabled. */
+  /**
+   * This function is called once when the robot is disabled.
+   */
   @Override
   public void disabledInit() {
     robotContainer.resetSimulationField();
   }
 
-  /** This function is called periodically when disabled. */
+  /**
+   * This function is called periodically when disabled.
+   */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
 
-  /** This function is called once when teleop is enabled. */
+  @Override
+  public void disabledExit() {
+  }
+
+
+  @Override
+  public void autonomousInit() {
+
+        System.out.println(Arrays.toString(Choreo.availableTrajectories()));
+        var trajectory = loadTrajectory(
+                "FourL4CoralBottom");
+
+        if (trajectory.isPresent()) {
+          System.out.print("THANK");
+          // Get the initial pose of the trajectory
+          Optional<Pose2d> initialPose = trajectory.get().getInitialPose(isRedAlliance());
+          Logger.recordOutput("monkey", true);
+          if (initialPose.isPresent()) {
+            // Reset odometry to the start of the trajectory
+            robotContainer.drive.setPose(initialPose.get());
+          }
+        }
+//     Reset and start the timer when the autonomous period begins
+        timer.restart();
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    Optional<Trajectory<SwerveSample>> trajectory = loadTrajectory("FourL4CoralBottom");
+    if (trajectory.isPresent()) {
+      Optional<SwerveSample> sample = trajectory.get().sampleAt(timer.get(), isRedAlliance());
+
+      sample.ifPresent(swerveSample -> robotContainer.drive.followTrajectorySample(swerveSample));
+    }
+  }
+
+  private boolean isRedAlliance() {
+    return DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue).equals(DriverStation.Alliance.Red);
+  }
+
+  @Override
+  public void autonomousExit(){
+
+  }
+
+
+
+
+  /**
+   * This function is called once when teleop is enabled.
+   */
   @Override
   public void teleopInit() {
     // This makes sure that the autonomous stops running when
@@ -179,31 +205,56 @@ public class Robot extends LoggedRobot {
     }
   }
 
-  /** This function is called periodically during operator control. */
+  /**
+   * This function is called periodically during operator control.
+   */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
-  /** This function is called once when test mode is enabled. */
+  @Override
+  public void teleopExit(){
+
+  }
+
+  /**
+   * This function is called once when test mode is enabled.
+   */
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 
-  /** This function is called periodically during test mode. */
+  /**
+   * This function is called periodically during test mode.
+   */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
-  /** This function is called once when the robot is first started up. */
+  @Override
+  public void testExit(){
+  }
+
+  /**
+   * This function is called once when the robot is first started up.
+   */
   @Override
   public void simulationInit() {
     robotContainer.resetSimulationField();
   }
 
-  /** This function is called periodically whilst in simulation. */
+  /**
+   * This function is called periodically whilst in simulation.
+   */
   @Override
   public void simulationPeriodic() {
     SimulatedArena.getInstance().simulationPeriodic();
     robotContainer.displaySimFieldToAdvantageScope();
   }
+
+
+
 }
+
