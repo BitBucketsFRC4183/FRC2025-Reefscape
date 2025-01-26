@@ -88,5 +88,13 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
         inputs.hasEstimate =
                 optionalPose.isPresent();
 
+        //sim field construct
+        visionSim.getDebugField();
+        cameraSim.enableRawStream(true);
+        cameraSim.enableProcessedStream(true);
+        cameraSim.enableDrawWireframe(true);
+
+
     }
+
 }
