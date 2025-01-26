@@ -165,6 +165,8 @@ public class Robot extends LoggedRobot {
           Logger.recordOutput("monkey", true);
           if (initialPose.isPresent()) {
             // Reset odometry to the start of the trajectory
+            AutoUtil.getAutoFactory();
+            AutoUtil.getChooser();
             robotContainer.drive.setPose(initialPose.get());
           }
         }
