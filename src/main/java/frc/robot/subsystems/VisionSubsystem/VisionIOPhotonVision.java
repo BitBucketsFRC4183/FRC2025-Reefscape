@@ -27,7 +27,7 @@ import org.photonvision.*;
 
 public class VisionIOPhotonVision implements VisionIO {
     public final PhotonCamera camera;
-    public final PhotonPoseEstimator photonPoseEstimator;
+    public PhotonPoseEstimator photonPoseEstimator;
 
     public VisionIOPhotonVision() {
         this.camera =
@@ -56,7 +56,8 @@ public class VisionIOPhotonVision implements VisionIO {
             Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
 
             inputs.latestTargetObservation = new TargetObservation(Rotation2d.fromDegrees(target.getYaw()), Rotation2d.fromDegrees(target.getPitch()));
-
+            inputs.tagPose =
+                    VisionConstants.aprilTagFieldLayout.getTagPose(targetID).get();
         }
 
         var optionalPose = photonPoseEstimator.update(visionResult);
@@ -67,6 +68,7 @@ public class VisionIOPhotonVision implements VisionIO {
                 camera.isConnected();
         inputs.hasEstimate =
                 optionalPose.isPresent();
+
 
     }
 }

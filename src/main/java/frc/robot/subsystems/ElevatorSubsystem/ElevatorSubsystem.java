@@ -19,11 +19,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     private Double speedSetpoint = null;
 
     private final SparkMax elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort, SparkLowLevel.MotorType.kBrushless);
-    private final Encoder elevatorEncoder = new Encoder(ElevatorConstants.kEncoderPorts[0], ElevatorConstants.kEncoderPorts[1],ElevatorConstants.kEncoderReversed);
+    // private final Encoder elevatorEncoder = new Encoder(ElevatorConstants.kEncoderPorts[0], ElevatorConstants.kEncoderPorts[1],ElevatorConstants.kEncoderReversed);
 
     public ElevatorSubsystem() {
         elevatorFeedback.setTolerance(ElevatorConstants.kShooterToleranceRPS);
-        elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
+       //  elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
 
         setDefaultCommand(runOnce(() ->{
             elevatorMotor.disable();
