@@ -13,12 +13,24 @@
 
 package frc.robot.constants;
 
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveDrivetrain;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.robot.generated.TunerConstants;
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+
+import static edu.wpi.first.units.Units.Kilogram;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.Meters;
+import org.ironmaple.simulation.drivesims.GyroSimulation;
+import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
 public class DriveConstants {
     public static final double maxSpeedMetersPerSec = 4.8;
@@ -55,10 +67,9 @@ public class DriveConstants {
 
     // Drive motor configuration
     public static final int driveMotorCurrentLimit = 50;
-    public static final double wheelRadiusMeters = Units.inchesToMeters(1.5);
-    public static final double driveMotorReduction =
-            (45.0 * 22.0) / (14.0 * 15.0); // MAXSwerve with 14 pinion teeth and 22 spur teeth
-    public static final DCMotor driveGearbox = DCMotor.getNEO(1);
+    public static final double wheelRadiusMeters = TunerConstants.FrontLeft.WheelRadius;
+    public static final double driveMotorReduction = TunerConstants.FrontLeft.DriveMotorGearRatio;
+    public static final DCMotor driveGearbox = DCMotor.getKrakenX60(1);
 
     // Drive encoder configuration
     public static final double driveEncoderPositionFactor =
@@ -66,7 +77,7 @@ public class DriveConstants {
     public static final double driveEncoderVelocityFactor =
             (2 * Math.PI) / 60.0 / driveMotorReduction; // Rotor RPM -> Wheel Rad/Sec
 
-    // Drive PID configuration
+    // Drive Velocity firmware PID gains
     public static final double driveKp = 0.0;
     public static final double driveKd = 0.0;
     public static final double driveKs = 0.0;
@@ -80,7 +91,7 @@ public class DriveConstants {
     public static final boolean turnInverted = false;
     public static final int turnMotorCurrentLimit = 20;
     public static final double turnMotorReduction = 9424.0 / 203.0;
-    public static final DCMotor turnGearbox = DCMotor.getNeo550(1);
+    public static final DCMotor turnGearbox = DCMotor.getNEO(1);
 
     // Turn encoder configuration
     public static final boolean turnEncoderInverted = true;
@@ -95,7 +106,6 @@ public class DriveConstants {
     public static final double turnPIDMinInput = 0; // Radians
     public static final double turnPIDMaxInput = 2 * Math.PI; // Radians
 
-    // PathPlanner configuration
     public static final double robotMassKg = 74.088;
     public static final double robotMOI = 6.883;
     public static final double wheelCOF = 1.2;
@@ -111,4 +121,19 @@ public class DriveConstants {
                             driveMotorCurrentLimit,
                             1),
                     moduleTranslations);
+
+    public static final DriveTrainSimulationConfig mapleSimConfig = DriveTrainSimulationConfig.Default()
+            .withCustomModuleTranslations(moduleTranslations)
+            .withRobotMass(Kilogram.of(robotMassKg))
+            .withGyro(COTS.ofPigeon2())
+            .withSwerveModule(new SwerveModuleSimulationConfig(
+                    driveGearbox,
+                    turnGearbox,
+                    driveMotorReduction,
+                    turnMotorReduction,
+                    Volts.of(0.1),
+                    Volts.of(0.1),
+                    Meters.of(wheelRadiusMeters),
+                    KilogramSquareMeters.of(0.02),
+                    wheelCOF));
 }

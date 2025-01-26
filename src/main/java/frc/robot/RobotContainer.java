@@ -14,16 +14,21 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ResetEncoderCommand;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DriveConstants;
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
+import frc.robot.subsystems.Auto.AutoSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.*;
 import frc.robot.commands.ElevatorSetPointCommand;
@@ -41,8 +46,12 @@ import frc.robot.subsystems.VisionSubsystem.VisionIO;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+import frc.robot.commands.*;
 
 public class RobotContainer {
   // Subsystems
@@ -56,7 +65,8 @@ public class RobotContainer {
   private final LEDSubsystem ledSubsystem;
   private final SingleJointedArmSubsystem singleJointedArmSubsystem;
   private final VisionSubsystem visionSubsystem;
-
+  private SwerveDriveSimulation driveSimulation = null;
+  private final AutoSubsystem autoSubsystem;
 
 
   // Controller
@@ -78,18 +88,11 @@ public class RobotContainer {
         drive =
             new DriveSubsystem(
                 new GyroIOPigeon2(),
-                new ModuleIOSpark(0),
-                new ModuleIOSpark(1),
-                new ModuleIOSpark(2),
-                new ModuleIOSpark(3));
-        // flywheel = new Flywheel(new FlywheelIOSparkMax());
-        // drive = new DriveSubsystem(
-        // new GyroIOPigeon2(true),
-        // new ModuleIOTalonFX(0),
-        // new ModuleIOTalonFX(1),
-        // new ModuleIOTalonFX(2),
-        // new ModuleIOTalonFX(3));
-        // flywheel = new Flywheel(new FlywheelIOTalonFX());
+                new ModuleIOHybrid(0, TunerConstants.FrontLeft),
+                new ModuleIOHybrid(1,TunerConstants.FrontRight),
+                new ModuleIOHybrid(2, TunerConstants.BackLeft),
+                new ModuleIOHybrid(3, TunerConstants.BackRight));
+
         elevatorSubsystem =
                 new ElevatorSubsystem(); //TODO
         algaeManagementSubsystem =
@@ -108,13 +111,21 @@ public class RobotContainer {
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
+        this.driveSimulation = new SwerveDriveSimulation(DriveConstants.mapleSimConfig, new Pose2d());
+        SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
         drive =
             new DriveSubsystem(
-                new GyroIO() {},
-                new ModuleIOSim(),
-                new ModuleIOSim(),
-                new ModuleIOSim(),
-                new ModuleIOSim());
+                    new GyroIOSim(driveSimulation.getGyroSimulation()),
+                    new ModuleIOSim(driveSimulation.getModules()[0]),
+                    new ModuleIOSim(driveSimulation.getModules()[1]),
+                    new ModuleIOSim(driveSimulation.getModules()[2]),
+                    new ModuleIOSim(driveSimulation.getModules()[3]));
+//        new DriveSubsystem(
+//                new GyroIOSim(driveSimulation.getGyroSimulation()),
+//                new ModuleIOHybridSim(0, TunerConstants.FrontLeft, driveSimulation.getModules()[0]),
+//                new ModuleIOHybridSim(1, TunerConstants.FrontRight,driveSimulation.getModules()[1]),
+//                new ModuleIOHybridSim(2, TunerConstants.BackLeft,driveSimulation.getModules()[2]),
+//                new ModuleIOHybridSim(3, TunerConstants.BackRight,driveSimulation.getModules()[3]));
         // flywheel = new Flywheel(new FlywheelIOSim());
         elevatorSubsystem =
                 new ElevatorSubsystem(); //TODO
@@ -129,7 +140,7 @@ public class RobotContainer {
         singleJointedArmSubsystem =
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
-                new VisionSubsystem(new VisionIOPhotonVisionSim(drive.getPose2dSupplier())); //TODO
+                new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
         break;
       default:
         // Replayed robot, disable IO implementations
@@ -159,10 +170,8 @@ public class RobotContainer {
     }
 
     // Set up auto routines
-    /**
-     * NamedCommands.registerCommand( "Run Flywheel", Commands.startEnd( () ->
-     * flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel) .withTimeout(5.0));
-     */
+
+    autoSubsystem = new AutoSubsystem(drive);
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
@@ -195,11 +204,11 @@ public class RobotContainer {
     operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
 
     operatorInput.movementDesired.whileTrue(
-        DriveCommands.BaseDriveCommand(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            new BaseDriveCommand(
+                drive,
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () -> -controller.getRightX()));
   } // TODO FIX COMMAND THIS WILL BREAK DO NOT RUN IT
 
   /**
@@ -209,5 +218,18 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  public void resetSimulationField() {
+    if (Constants.currentMode != Constants.Mode.SIM) return;
+
+    driveSimulation.setSimulationWorldPose(new Pose2d(3, 3, new Rotation2d()));
+    SimulatedArena.getInstance().resetFieldForAuto();
+  }
+
+  public void displaySimFieldToAdvantageScope() {
+    if (Constants.currentMode != Constants.Mode.SIM) return;
+
+    Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
   }
 }

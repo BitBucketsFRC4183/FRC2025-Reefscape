@@ -13,34 +13,38 @@
 
 package frc.robot.subsystems.DriveSubsystem;
 
-import static edu.wpi.first.units.Units.*;
-import static frc.robot.constants.DriveConstants.*;
-
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.util.PhoenixUtil;
 import frc.robot.util.SparkUtil;
-import java.util.Arrays;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.ironmaple.simulation.motorsims.SimulatedMotorController;
 
+import java.util.Arrays;
+
+import static edu.wpi.first.units.Units.*;
+import static frc.robot.constants.DriveConstants.*;
+
 /** Physics sim implementation of module IO. */
-public class ModuleIOSim implements ModuleIO {
+public class ModuleIOHybridSim extends ModuleIOHybrid {
   private final SwerveModuleSimulation moduleSimulation;
-  private final SimulatedMotorController.GenericMotorController driveMotor;
+  private final SimulatedMotorController driveMotor;
   private final SimulatedMotorController.GenericMotorController turnMotor;
 
-  private boolean driveClosedLoop = false;
   private boolean turnClosedLoop = false;
   private final PIDController driveController = new PIDController(driveSimP, 0, driveSimD);
   private final PIDController turnController = new PIDController(turnSimP, 0, turnSimD);
-  private double driveFFVolts = 0.0;
-  private double driveAppliedVolts = 0.0;
+
   private double turnAppliedVolts = 0.0;
 
-  public ModuleIOSim(SwerveModuleSimulation moduleSimulation) {
-    this.moduleSimulation = moduleSimulation;
-    this.driveMotor =
-            moduleSimulation.useGenericMotorControllerForDrive().withCurrentLimit(Amps.of(driveMotorCurrentLimit));
+  public ModuleIOHybridSim(int module, SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants, SwerveModuleSimulation simulation) {
+    super(module,constants);
+    this.moduleSimulation = simulation;
+    this.driveMotor = simulation.useDriveMotorController(
+            new PhoenixUtil.TalonFXMotorControllerSim(driveTalon, constants.DriveMotorInverted));
     this.turnMotor =
             moduleSimulation.useGenericControllerForSteer().withCurrentLimit(Amps.of(turnMotorCurrentLimit));
 
@@ -50,34 +54,9 @@ public class ModuleIOSim implements ModuleIO {
 
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
-    // Run closed-loop control
-    if (driveClosedLoop) {
-      driveAppliedVolts = driveFFVolts
-              + driveController.calculate(
-              moduleSimulation.getDriveWheelFinalSpeed().in(RadiansPerSecond));
-    } else {
-      driveController.reset();
-    }
-    if (turnClosedLoop) {
-      turnAppliedVolts = turnController.calculate(
-              moduleSimulation.getSteerAbsoluteFacing().getRadians());
-    } else {
-      turnController.reset();
-    }
 
-    // Update simulation state
-    driveMotor.requestVoltage(Volts.of(driveAppliedVolts));
+    super.updateInputs(inputs);
     turnMotor.requestVoltage(Volts.of(turnAppliedVolts));
-
-    // Update drive inputs
-    inputs.driveConnected = true;
-    inputs.drivePositionRad = moduleSimulation.getDriveWheelFinalPosition().in(Radians);
-    inputs.driveVelocityRadPerSec =
-            moduleSimulation.getDriveWheelFinalSpeed().in(RadiansPerSecond);
-    inputs.driveAppliedVolts = driveAppliedVolts;
-    inputs.driveCurrentAmps =
-            Math.abs(moduleSimulation.getDriveMotorStatorCurrent().in(Amps));
-
     // Update turn inputs
     inputs.turnConnected = true;
     inputs.turnPosition = moduleSimulation.getSteerAbsoluteFacing();
@@ -95,11 +74,6 @@ public class ModuleIOSim implements ModuleIO {
     inputs.odometryTurnPositions = moduleSimulation.getCachedSteerAbsolutePositions();
   }
 
-  @Override
-  public void setDriveOpenLoop(double output) {
-    driveClosedLoop = false;
-    driveAppliedVolts = output;
-  }
 
   @Override
   public void setTurnOpenLoop(double output) {
@@ -107,12 +81,6 @@ public class ModuleIOSim implements ModuleIO {
     turnAppliedVolts = output;
   }
 
-  @Override
-  public void setDriveVelocity(double velocityRadPerSec) {
-    driveClosedLoop = true;
-    driveFFVolts = driveSimKs * Math.signum(velocityRadPerSec) + driveSimKv * velocityRadPerSec;
-    driveController.setSetpoint(velocityRadPerSec);
-  }
 
   @Override
   public void setTurnPosition(Rotation2d rotation) {
