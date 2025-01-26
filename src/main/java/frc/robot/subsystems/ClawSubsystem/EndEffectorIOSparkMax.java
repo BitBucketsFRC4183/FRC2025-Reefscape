@@ -9,6 +9,8 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     private final SparkMax gripperWheels; //hold object
     private final SparkMax centralWheel; //open and close claw
     private final EndEffectorEncoderIO encoder;
+    private boolean hasAlgae = false;
+    private boolean hasCoral = false;
 
     public EndEffectorIOSparkMax(int canID, int smallCanID, EndEffectorEncoderIOSim encoder) {
         setupPID(pid, 3.0, 5.0, -0.5, 0.5); //change pid setting
@@ -53,6 +55,8 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     public void updateInputs(EndEffectorInputsAutoLogged inputs) {
         //inputs.centralVolts = getVoltage();
         //inputs.gripperVolts = getVoltage();
+        inputs.hasCoral = this.hasCoral;
+        inputs.hasAlgae = this.hasAlgae;
     }
 
 }

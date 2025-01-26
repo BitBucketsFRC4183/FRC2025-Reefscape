@@ -10,6 +10,8 @@ public interface EndEffectorIO {
     public class EndEffectorInputsAutoLogged {  //autolog volts
         public double centralVolts = 0.0;
         public double gripperVolts = 0.0;
+        public boolean hasCoral = false;
+        public boolean hasAlgae = false;
     }
 
     public default void setupPID(PIDController pid, double errorTolerance, double errorDerivativeTolerance, double minimumIntegral, double maximumIntegral) {

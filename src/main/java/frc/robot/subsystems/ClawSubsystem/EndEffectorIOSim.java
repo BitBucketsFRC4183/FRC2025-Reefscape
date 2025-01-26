@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.constants.ClawConstants;
 
 public class EndEffectorIOSim implements EndEffectorIO {
+    private boolean hasAlgae = false;
+    private boolean hasCoral = false;
 
     private final DCMotorSim centralWheel = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(ClawConstants.bigGearBox, 0.1, ClawConstants.gearing),
@@ -59,5 +61,7 @@ public class EndEffectorIOSim implements EndEffectorIO {
     public void updateInputs(EndEffectorInputsAutoLogged inputs) {
         inputs.centralVolts = centralWheel.getInputVoltage();
         inputs.gripperVolts = gripperWheels.getInputVoltage();
+        inputs.hasCoral = this.hasAlgae;
+        inputs.hasAlgae = this.hasCoral;
     }
 }
