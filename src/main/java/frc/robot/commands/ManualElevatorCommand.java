@@ -13,19 +13,28 @@ public class ManualElevatorCommand extends Command {
     public ElevatorSubsystem elevator;
     DoubleSupplier yStickDistanceSupplier;
 
-    public ManualElevatorCommand(ElevatorSubsystem elevator, DoubleSupplier yDoubleSupplier){
+    public ManualElevatorCommand(ElevatorSubsystem elevator, DoubleSupplier yDoubleSupplier) {
         this.elevator = elevator;
         addRequirements(elevator);
         this.yStickDistanceSupplier = yDoubleSupplier;
     }
 
     @Override
-    public void execute(){
-        double manualVelocity = yStickDistanceSupplier.getAsDouble() * 5.0;
+    public void execute() {
+        double manualVelocity = yStickDistanceSupplier.getAsDouble() * -1.0;
         double calculatedVolts = elevator.elevatorFF.calculate(manualVelocity);
         Logger.recordOutput("ElevatorSubsystem/target_voltage", calculatedVolts);
         this.elevator.setElevatorVoltage(calculatedVolts);
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            double calculatedVolts = 0;
+            Logger.recordOutput("ElevatorSubsystem/target_voltage", calculatedVolts);
+            this.elevator.setElevatorVoltage(calculatedVolts);
         }
+    }
+}
 
 
