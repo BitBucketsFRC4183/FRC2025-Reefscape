@@ -15,32 +15,36 @@ import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 
 
 public class ElevatorIOSim implements ElevatorIO {
-    ElevatorIO elevatorIO = new ElevatorIO() {};
-    ElevatorEncoderIO elevatorEncoderIO = new ElevatorEncoderIO() {};
-    ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(elevatorIO, elevatorEncoderIO);
-    private static final double LOOP_PERIOD_SECS = 1;
+    private static final double LOOP_PERIOD_SECS = 0.02;
 
     private final ElevatorSim elevatorMotor1Sim = new ElevatorSim(
             ElevatorConstants.elevator1Gearbox,
-            ElevatorConstants.elevator1MotorReduction,
+            ElevatorConstants.gearingRatio,
             ElevatorConstants.carriageMass,
-            pulleyRadius,
+            ElevatorConstants.pulleyRadius,
             ElevatorConstants.minHeight,
             ElevatorConstants.maxHeight,
-            true,0,0,0);
+            false,
+            0,
+            0,0);
 
     @Override
     public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
         elevatorMotor1Sim.update(LOOP_PERIOD_SECS);
         inputs.loadHeight = elevatorMotor1Sim.getPositionMeters();
         inputs.elevatorCurrentAmps = new double[]{Math.abs(elevatorMotor1Sim.getCurrentDrawAmps())};
-        elevatorMotor1Sim.setInputVoltage(elevatorSubsystem.calculateVolts(elevatorMotor1Sim.getVelocityMetersPerSecond(),elevatorMotor1Sim.getPositionMeters() - inputs.loadHeight));
+        inputs.elevatorSpeed = elevatorMotor1Sim.getVelocityMetersPerSecond();
 
         Logger.recordOutput("ElevatorSubsystem/loadHeight", inputs.loadHeight);
     }
     @Override
     public void setElevatorMotorVoltage(double volts) {
         double elevatorAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-        elevatorMotor1Sim.setInputVoltage(elevatorAppliedVolts);
+        elevatorMotor1Sim.setInputVoltage(volts);
+    }
+
+    @Override
+    public void setEncoderHeightValue(double height) {
+        elevatorMotor1Sim.setState(0, 0);
     }
 }

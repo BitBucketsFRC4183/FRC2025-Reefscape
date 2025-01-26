@@ -23,6 +23,8 @@ public class OperatorInput {
   final Trigger elevatorsetpoint2 = operatorControl.y();
   final Trigger elevatorsetpoint3 = operatorControl.b();
 
+  final Trigger manualElevator = operatorControl.leftTrigger(0.1);
+
   final Trigger IntakeOn = driver.a();
 
   final Trigger xNotDesired =

@@ -1,7 +1,6 @@
 package frc.robot.subsystems.ElevatorSubsystem;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,9 +9,9 @@ import frc.robot.constants.ElevatorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorIO elevatorIO;
-    public ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS,ElevatorConstants.kG,ElevatorConstants.kV,ElevatorConstants.kA);
-    public final TrapezoidProfile elevatorProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5,5));
-    public final ProfiledPIDController elevatorFeedback = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(5,5));
+    public ElevatorFeedforward elevatorFF = new ElevatorFeedforward(ElevatorConstants.kS,ElevatorConstants.kG,ElevatorConstants.kV,ElevatorConstants.kA);
+    public final ProfiledPIDController elevatorPID = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(5,5));
+
     double maxVoltage = 12.0;
     private final ElevatorEncoderIO elevatorEncoderIO;
     private final ElevatorIOInputsAutoLogged elevatorIOInputs;
@@ -25,7 +24,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.elevatorIOInputs = new ElevatorIOInputsAutoLogged();
         this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
 
-        elevatorFeedback.setTolerance(ElevatorConstants.kShooterToleranceRPS);
+        elevatorPID.setTolerance(0.001, ElevatorConstants.kShooterToleranceRPS);
         //elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
         setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
     }
@@ -35,10 +34,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorIO.updateInputs(elevatorIOInputs);
         elevatorEncoderIO.updateInputs(encoderIOInputs);
     }
-    public double calculateVolts(double velocity, double positionError){
-        return elevatorFeedforward.calculate(velocity) + elevatorFeedback.calculate(positionError);
+
+    public void resetLoadHeightEncoderValue() {
+        elevatorIO.setEncoderHeightValue(0);
     }
 
+    public double getLoadHeight() {
+        return elevatorIOInputs.loadHeight;
+    }
+
+    public double getElevatorSpeed() {
+        return elevatorIOInputs.elevatorSpeed;
+    }
     public void setElevatorVoltage(double volts) {
         elevatorIO.setElevatorMotorVoltage(volts);
     }

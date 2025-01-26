@@ -16,14 +16,15 @@ public interface ElevatorIO {
 
 
         public boolean elevatorConnected;
+        public double elevatorSpeed;
     }
 
     public default void setInverted(boolean b) {};
     public default void disable() {};
     public default void stopMotor() {};
 
-    public default void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {}
-
+    public default void updateInputs(ElevatorIOInputs inputs) {}
+    public default void setEncoderHeightValue(double height) {}
     public default void setElevatorMotorVoltage(double volts) {
 
 

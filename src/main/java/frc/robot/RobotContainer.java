@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ManualElevatorCommand;
 import frc.robot.commands.ResetEncoderCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
@@ -44,6 +45,8 @@ import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
+import java.util.function.DoubleSupplier;
+
 public class RobotContainer {
   // Subsystems
   public final DriveSubsystem drive;
@@ -59,8 +62,10 @@ public class RobotContainer {
 
 
 
+
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController driveController = new CommandXboxController(0);
+  private final CommandXboxController elevatorController = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -189,17 +194,25 @@ public class RobotContainer {
    */
   void loadCommands() {
     operatorInput.elevatorsetpoint1.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L1));
-    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
-    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
+    operatorInput.elevatorsetpoint2.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
+    operatorInput.elevatorsetpoint3.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
 
-    operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem, ElevatorIO.ElevatorIOInputs));
+    operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
+
+    operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, new DoubleSupplier() {
+      @Override
+      public double getAsDouble() {
+        elevatorController.getLeftY();
+        return elevatorController.getLeftY();
+      }
+    }));
 
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> -driveController.getLeftY(),
+            () -> -driveController.getLeftX(),
+            () -> -driveController.getRightX()));
   } // TODO FIX COMMAND THIS WILL BREAK DO NOT RUN IT
 
   /**

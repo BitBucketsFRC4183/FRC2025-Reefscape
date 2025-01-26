@@ -97,7 +97,6 @@ import static frc.robot.util.SparkUtil.*;
         ifOk(elevatorSpark1, elevatorSpark1::getOutputCurrent, (value) -> inputs.elevatorCurrentAmps = new double[]{value});
         inputs.elevatorConnected = elevatorConnectedDebounce.calculate(!sparkStickyFault);
         inputs.loadHeight = (2 * Math.PI * pulleyRadius) / ((elevatorEncoder.getPosition() - inputs.lastEncoderPosition) * ElevatorConstants.gearingRatio);
-
         inputs.odometryTimestamps =
                 timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
         inputs.odometryElevatorPositionsRad =
