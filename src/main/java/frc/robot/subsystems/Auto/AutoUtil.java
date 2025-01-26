@@ -21,14 +21,15 @@ public class AutoUtil {
     public static void initAuto() {
         setupFactory();
         setupChooser();
-
     }
 
     public static AutoChooser getChooser() {
+
         return chooser;
     }
 
     public static AutoFactory getAutoFactory() {
+
         return factory;
     }
 
