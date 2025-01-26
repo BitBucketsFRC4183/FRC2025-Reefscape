@@ -180,13 +180,13 @@ public class RobotContainer {
 
 
     autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
-
+//
     autoChooser = new AutoChooser();
-    autoChooser.addRoutine(
-           "FourL4CoralBottomRoutine",
-            AutoSubsystem::FourL4CoralBottomRoutine);
-    autoChooser.addCmd("drive",
-            AutoSubsystem::drive);
+//    autoChooser.addRoutine(
+//            "FourL4CoralBottomRoutine",
+//            AutoSubsystem::FourL4CoralBottomRoutine);
+//    autoChooser.addCmd("drive",
+//            AutoSubsystem::drive);
 
 
 //    SmartDashboard.putData(autoChooser);
