@@ -15,8 +15,8 @@ import java.util.function.Supplier;
 
 
 public class AutoUtil {
-    private static AutoFactory factory;
-    private static AutoChooser chooser;
+    private static AutoFactory AutoFactory;
+    private static AutoChooser AutoChooser;
 
     public static void initAuto() {
         setupFactory();
@@ -25,16 +25,16 @@ public class AutoUtil {
 
     public static AutoChooser getChooser() {
 
-        return chooser;
+        return AutoChooser;
     }
 
     public static AutoFactory getAutoFactory() {
 
-        return factory;
+        return AutoFactory;
     }
 
     private static void setupFactory() {
-        factory.bind("Marker", Commands.print(
+        AutoFactory.bind("Marker", Commands.print(
                 "Marker Passed"));
     }
 
@@ -49,15 +49,15 @@ public class AutoUtil {
 //        // Default
 //        chooser.select("Straight");
 
-        AutoChooser autoChooser = new AutoChooser();
-        autoChooser.addRoutine("FourL4CoralBottomRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
-        autoChooser.addCmd("drive",
+        AutoChooser AutoChooser = new AutoChooser();
+        AutoChooser.addRoutine("FourL4CoralBottomRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
+        AutoChooser.addCmd("drive",
                 AutoSubsystem::drive);
-        autoChooser.addCmd("deposit",
+        AutoChooser.addCmd("deposit",
                 AutoSubsystem::deposit);
-        autoChooser.addCmd("claw",
+        AutoChooser.addCmd("claw",
                 AutoSubsystem::claw);
-        SmartDashboard.putData(autoChooser);
+        SmartDashboard.putData(AutoChooser);
 
 
     }

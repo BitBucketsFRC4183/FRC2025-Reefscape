@@ -6,36 +6,36 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public class AutoSim extends AutoUtil{
-    private static AutoFactory factorySim;
-    private static AutoChooser chooserSim;
+    private static AutoFactory AutoFactorySim;
+    private static AutoChooser AutoChooserSim;
 
     public static AutoChooser getChooser() {
 
-        return chooserSim;
+        return AutoChooserSim;
     }
 
     public static AutoFactory getAutoFactory() {
 
-        return factorySim;
+        return AutoFactorySim;
     }
 
     private static void setupFactory() {
-        factorySim.bind("Marker", Commands.print(
+        AutoFactorySim.bind("Marker", Commands.print(
                 "Marker Passed"));
     }
 
     private static void setupChooser() {
 
-        AutoChooser autoChooserSim =
+        AutoChooser AutoChooserSim =
                 new AutoChooser();
-        autoChooserSim.addRoutine("FourL4CoralBottomRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
-        autoChooserSim.addCmd("drive",
+        AutoChooserSim.addRoutine("FourL4CoralBottomRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
+        AutoChooserSim.addCmd("drive",
                 AutoSubsystem::drive);
-        autoChooserSim.addCmd("deposit",
+        AutoChooserSim.addCmd("deposit",
                 AutoSubsystem::deposit);
-        autoChooserSim.addCmd("claw",
+        AutoChooserSim.addCmd("claw",
                 AutoSubsystem::claw);
-        SmartDashboard.putData(autoChooserSim);
+        SmartDashboard.putData(AutoChooserSim);
 
 
     }
