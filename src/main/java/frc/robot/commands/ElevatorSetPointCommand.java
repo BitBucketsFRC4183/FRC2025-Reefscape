@@ -32,9 +32,13 @@ public class ElevatorSetPointCommand extends Command {
     @Override
     public void execute(){
 
-        double calculatedVolts = elevator.elevatorFF.calculate(elevator.elevatorPID.getSetpoint().velocity) +
-                elevator.elevatorPID.calculate(elevator.getLoadHeight());
+        double voltsPID = elevator.elevatorPID.calculate(elevator.getLoadHeight());
+        double calculatedVolts = elevator.elevatorFF.calculate(elevator.elevatorPID.getSetpoint().velocity) + voltsPID;
+
+
+
         Logger.recordOutput("ElevatorSubsystem/target_voltage", calculatedVolts);
+        Logger.recordOutput("ElevatorSubsystem/desired_position", elevator.elevatorPID.getSetpoint().position);
 
         this.elevator.setElevatorVoltage(calculatedVolts);
 
@@ -43,8 +47,7 @@ public class ElevatorSetPointCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            elevator.elevatorPID.setGoal(0);
-            elevator.setElevatorVoltage(0);
+            elevator.setElevatorVoltage(ElevatorConstants.kG);
 
         }
     }

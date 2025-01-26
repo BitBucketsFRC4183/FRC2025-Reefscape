@@ -16,19 +16,15 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.DriveCommands;
-import frc.robot.commands.ManualElevatorCommand;
-import frc.robot.commands.ResetEncoderCommand;
+import frc.robot.commands.*;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.*;
-import frc.robot.commands.ElevatorSetPointCommand;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
@@ -197,7 +193,9 @@ public class RobotContainer {
     operatorInput.elevatorsetpoint2.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
     operatorInput.elevatorsetpoint3.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
 
-    operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
+    operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
+
+    operatorInput.resetEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
 
     operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, new DoubleSupplier() {
       @Override
@@ -206,6 +204,7 @@ public class RobotContainer {
         return elevatorController.getLeftY();
       }
     }));
+
 
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(

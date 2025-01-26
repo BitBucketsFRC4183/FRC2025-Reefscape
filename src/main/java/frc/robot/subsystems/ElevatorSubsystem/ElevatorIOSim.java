@@ -24,7 +24,7 @@ public class ElevatorIOSim implements ElevatorIO {
             ElevatorConstants.pulleyRadius,
             ElevatorConstants.minHeight,
             ElevatorConstants.maxHeight,
-            false,
+            true,
             0,
             0,0);
 

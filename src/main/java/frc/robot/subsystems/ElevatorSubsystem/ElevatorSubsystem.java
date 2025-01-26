@@ -10,7 +10,7 @@ import frc.robot.constants.ElevatorConstants;
 public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorIO elevatorIO;
     public ElevatorFeedforward elevatorFF = new ElevatorFeedforward(ElevatorConstants.kS,ElevatorConstants.kG,ElevatorConstants.kV,ElevatorConstants.kA);
-    public final ProfiledPIDController elevatorPID = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(5,5));
+    public final ProfiledPIDController elevatorPID = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(ElevatorConstants.maxVelocity,ElevatorConstants.maxAcceleration));
 
     double maxVoltage = 12.0;
     private final ElevatorEncoderIO elevatorEncoderIO;
