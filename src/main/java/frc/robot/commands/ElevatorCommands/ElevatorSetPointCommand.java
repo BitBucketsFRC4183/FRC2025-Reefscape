@@ -1,9 +1,5 @@
-package frc.robot.commands;
+package frc.robot.commands.ElevatorCommands;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;

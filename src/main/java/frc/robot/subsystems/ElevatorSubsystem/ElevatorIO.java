@@ -7,6 +7,7 @@ public interface ElevatorIO {
 
     @AutoLog
     class ElevatorIOInputs{
+        public double unfilteredLoadHeight;
         public double loadHeight = 0.0;
         public double elevatorAppliedVolts = 0.0;
         public double[] elevatorCurrentAmps = new double[] {};

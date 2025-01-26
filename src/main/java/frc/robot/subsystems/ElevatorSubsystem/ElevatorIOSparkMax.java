@@ -21,7 +21,7 @@ import java.util.function.DoubleSupplier;
 import static frc.robot.constants.DriveConstants.odometryFrequency;
 import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 import static frc.robot.util.SparkUtil.*;
- public class ElevatorIOSparkMax implements ElevatorIO {
+public class ElevatorIOSparkMax implements ElevatorIO {
     private SparkBase elevatorSpark1;
     private SparkBase elevatorSpark2;
     private final RelativeEncoder elevatorEncoder;

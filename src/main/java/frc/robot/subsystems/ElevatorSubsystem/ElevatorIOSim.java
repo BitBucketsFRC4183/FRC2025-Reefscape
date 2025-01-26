@@ -1,23 +1,17 @@
 package frc.robot.subsystems.ElevatorSubsystem;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.ElevatorSetPointCommand;
 import frc.robot.constants.ElevatorConstants;
 import org.littletonrobotics.junction.Logger;
-import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
-
-import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 
 
 public class ElevatorIOSim implements ElevatorIO {
     private static final double LOOP_PERIOD_SECS = 0.02;
+    LinearFilter elevatorFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
 
-    private final ElevatorSim elevatorMotor1Sim = new ElevatorSim(
+    public static final ElevatorSim elevatorMotor1Sim = new ElevatorSim(
             ElevatorConstants.elevator1Gearbox,
             ElevatorConstants.gearingRatio,
             ElevatorConstants.carriageMass,
@@ -26,21 +20,23 @@ public class ElevatorIOSim implements ElevatorIO {
             ElevatorConstants.maxHeight,
             true,
             0,
-            0,0);
+            0.01,0);
+
 
     @Override
     public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
         elevatorMotor1Sim.update(LOOP_PERIOD_SECS);
-        inputs.loadHeight = elevatorMotor1Sim.getPositionMeters();
+        inputs.unfilteredLoadHeight = elevatorMotor1Sim.getPositionMeters();
+        inputs.loadHeight = elevatorFilter.calculate(inputs.unfilteredLoadHeight);
         inputs.elevatorCurrentAmps = new double[]{Math.abs(elevatorMotor1Sim.getCurrentDrawAmps())};
         inputs.elevatorSpeed = elevatorMotor1Sim.getVelocityMetersPerSecond();
-
         Logger.recordOutput("ElevatorSubsystem/loadHeight", inputs.loadHeight);
+        Logger.recordOutput("ElevatorSubsystem/unfilteredLoadHeight", inputs.unfilteredLoadHeight);
     }
     @Override
     public void setElevatorMotorVoltage(double volts) {
-        double elevatorAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-        elevatorMotor1Sim.setInputVoltage(volts);
+        double appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        elevatorMotor1Sim.setInputVoltage(appliedVolts);
     }
 
     @Override
