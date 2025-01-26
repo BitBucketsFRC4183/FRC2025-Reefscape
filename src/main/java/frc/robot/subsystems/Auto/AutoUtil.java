@@ -23,15 +23,15 @@ public class AutoUtil {
         setupChooser();
     }
 
-    public static AutoChooser getChooser() {
+    /*public static AutoChooser getChooser() {
 
-        return AutoChooser;
+        return
     }
 
     public static AutoFactory getAutoFactory() {
 
         return AutoFactory;
-    }
+    }*/
 
     private static void setupFactory() {
         AutoFactory.bind("Marker", Commands.print(
