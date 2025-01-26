@@ -147,6 +147,8 @@ public class AutoSubsystem extends SubsystemBase {
                 W8toW9toDeposit,
                 W10toW11toDeposit).whileTrue(deposit());
 
+        System.out.println(W1toW2toDeposit.getInitialPose().get());
+
 
         return FourL4CoralBottomRoutine;
     }

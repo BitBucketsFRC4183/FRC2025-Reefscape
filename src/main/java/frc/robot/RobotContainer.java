@@ -179,16 +179,16 @@ public class RobotContainer {
 //    // Set up auto routines
 
     autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
-
+//
     autoChooser = new AutoChooser();
-    autoChooser.addRoutine(
-            "FourL4CoralBottomRoutine",
-            AutoSubsystem::FourL4CoralBottomRoutine);
-    autoChooser.addCmd("drive",
-            AutoSubsystem::drive);
+//    autoChooser.addRoutine(
+//            "FourL4CoralBottomRoutine",
+//            AutoSubsystem::FourL4CoralBottomRoutine);
+//    autoChooser.addCmd("drive",
+//            AutoSubsystem::drive);
 
 
-    SmartDashboard.putData(autoChooser);
+//    SmartDashboard.putData(autoChooser);
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
 
