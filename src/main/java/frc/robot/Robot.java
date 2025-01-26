@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.BuildConstants;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.Auto.AutoUtil;
 import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -151,6 +152,8 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
 
+       AutoUtil.initAuto();
+
         System.out.println(Arrays.toString(Choreo.availableTrajectories()));
         var trajectory = loadTrajectory(
                 "FourL4CoralBottom");
@@ -162,6 +165,8 @@ public class Robot extends LoggedRobot {
           Logger.recordOutput("monkey", true);
           if (initialPose.isPresent()) {
             // Reset odometry to the start of the trajectory
+            AutoUtil.getAutoFactory();
+            AutoUtil.getChooser();
             robotContainer.drive.setPose(initialPose.get());
           }
         }
