@@ -1,5 +1,6 @@
 package frc.robot.subsystems.ClawSubsystem;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.constants.ClawConstants;
@@ -16,20 +17,22 @@ public class EndEffectorIOSim implements EndEffectorIO {
             ClawConstants.smallGearBox
     );
 
+    final PIDController pid = new PIDController(ClawConstants.kP, ClawConstants.kI, ClawConstants.kD);
+
     public EndEffectorIOSim() {
-        setupPID(3.0, 5.0, -0.5, 0.5); //change pid settings
+        setupPID(pid, 3.0, 5.0, -0.5, 0.5); //change pid settings
     }
 
     private final EndEffectorEncoderIOSim encoder = new EndEffectorEncoderIOSim();
 
     @Override
     public void centralToSetpoint(double setpoint) { //move wheels to setpoint
-        setCentralVelocity(pidCalculate(encoder, setpoint));
+        setCentralVelocity(pidCalculate(pid, encoder, setpoint));
     }
 
     @Override
     public void grippersToSetpoint(double setpoint) {
-        setGrippersVelocity(pidCalculate(encoder, setpoint));
+        setGrippersVelocity(pidCalculate(pid, encoder, setpoint));
     }
 
     @Override
