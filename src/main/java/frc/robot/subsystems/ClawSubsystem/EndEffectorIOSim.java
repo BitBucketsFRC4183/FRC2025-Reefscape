@@ -8,6 +8,7 @@ import frc.robot.constants.ClawConstants;
 public class EndEffectorIOSim implements EndEffectorIO {
     private boolean hasAlgae = false;
     private boolean hasCoral = false;
+    private boolean isOpen;
 
     private final DCMotorSim centralWheel = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(ClawConstants.bigGearBox, 0.1, ClawConstants.gearing),
@@ -27,23 +28,20 @@ public class EndEffectorIOSim implements EndEffectorIO {
 
     private final EndEffectorEncoderIOSim encoder = new EndEffectorEncoderIOSim();
 
-    @Override
-    public void setHasCoral(boolean setting) {
-        this.hasCoral = setting;
-    }
+    public boolean getHasCoral() { return this.hasCoral; }
 
-    public boolean getHasCoral() {
-        return this.hasCoral;
-    }
+    public boolean getHasAlgae() { return this.hasAlgae; }
+
+    public boolean getIsOpen() { return this.isOpen; }
 
     @Override
-    public void setHasAlgae(boolean setting) {
-        this.hasAlgae = setting;
-    }
+    public void setHasCoral(boolean setting) { this.hasCoral = setting; }
 
-    public boolean getHasAlgae() {
-        return this.hasAlgae;
-    }
+    @Override
+    public void setHasAlgae(boolean setting) { this.hasAlgae = setting; }
+
+    @Override
+    public void setIsOpen(boolean setting) { this.isOpen = setting; }
 
     @Override
     public void centralToSetpoint(double setpoint) { //move wheels to setpoint
@@ -81,5 +79,6 @@ public class EndEffectorIOSim implements EndEffectorIO {
         inputs.gripperVolts = gripperWheels.getInputVoltage();
         inputs.hasCoral = getHasAlgae();
         inputs.hasAlgae = getHasCoral();
+        inputs.isOpen = getIsOpen();
     }
 }

@@ -11,6 +11,7 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     private final EndEffectorEncoderIO encoder;
     private boolean hasAlgae = false;
     private boolean hasCoral = false;
+    private boolean isOpen = false;
 
     public EndEffectorIOSparkMax(int canID, int smallCanID, EndEffectorEncoderIOSim encoder) {
         setupPID(pid, 3.0, 5.0, -0.5, 0.5); //change pid setting
@@ -21,23 +22,20 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
 
     final PIDController pid = new PIDController(ClawConstants.kP, ClawConstants.kI, ClawConstants.kD);
 
-    @Override
-    public void setHasCoral(boolean setting) {
-        this.hasCoral = setting;
-    }
+    public boolean getHasCoral() { return this.hasCoral; }
 
-    public boolean getHasCoral() {
-        return this.hasCoral;
-    }
+    public boolean getHasAlgae() { return this.hasAlgae; }
+
+    public boolean getIsOpen() { return this.isOpen; }
 
     @Override
-    public void setHasAlgae(boolean setting) {
-        this.hasAlgae = setting;
-    }
+    public void setHasCoral(boolean setting) { this.hasCoral = setting; }
 
-    public boolean getHasAlgae() {
-        return this.hasAlgae;
-    }
+    @Override
+    public void setHasAlgae(boolean setting) { this.hasAlgae = setting; }
+
+    @Override
+    public void setIsOpen(boolean setting) {this.isOpen = setting; }
 
     @Override
     public void centralToSetpoint(double setpoint) { //move wheels to setpoint
@@ -73,8 +71,9 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     public void updateInputs(EndEffectorInputsAutoLogged inputs) {
         //inputs.centralVolts = getVoltage();
         //inputs.gripperVolts = getVoltage();
-        inputs.hasCoral = this.hasCoral;
-        inputs.hasAlgae = this.hasAlgae;
+        inputs.hasCoral = this.getHasCoral();
+        inputs.hasAlgae = getHasAlgae();
+        inputs.isOpen = getIsOpen();
     }
 
 }

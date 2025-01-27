@@ -12,6 +12,7 @@ public interface EndEffectorIO {
         public double gripperVolts = 0.0;
         public boolean hasCoral = false;
         public boolean hasAlgae = false;
+        public boolean isOpen = false;
     }
 
     public default void setupPID(PIDController pid, double errorTolerance, double errorDerivativeTolerance, double minimumIntegral, double maximumIntegral) {
@@ -26,6 +27,8 @@ public interface EndEffectorIO {
     public default void setHasAlgae(boolean setting) {}
 
     public default void setHasCoral(boolean setting) {}
+
+    public default void setIsOpen(boolean setting) {}
 
     public default void updateInputs(EndEffectorInputsAutoLogged inputs) {}
 
