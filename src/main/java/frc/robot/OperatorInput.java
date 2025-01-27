@@ -23,6 +23,9 @@ public class OperatorInput {
   final Trigger elevatorsetpoint2 = driver.y();
   final Trigger elevatorsetpoint3 = driver.b();
 
+  final Trigger openClaw = driver.leftStick();
+  final Trigger closeClaw = driver.rightStick();
+
   final Trigger IntakeOn = driver.a();
 
   final Trigger xNotDesired =

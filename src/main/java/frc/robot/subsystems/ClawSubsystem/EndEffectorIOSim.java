@@ -79,7 +79,7 @@ public class EndEffectorIOSim implements EndEffectorIO {
     public void updateInputs(EndEffectorInputsAutoLogged inputs) {
         inputs.centralVolts = centralWheel.getInputVoltage();
         inputs.gripperVolts = gripperWheels.getInputVoltage();
-        inputs.hasCoral = this.hasAlgae;
-        inputs.hasAlgae = this.hasCoral;
+        inputs.hasCoral = getHasAlgae();
+        inputs.hasAlgae = getHasCoral();
     }
 }
