@@ -23,6 +23,10 @@ public interface EndEffectorIO {
         return pid.calculate(encoder.getDistance(), setpoint);
     }
 
+    public default void setHasAlgae(boolean setting) {}
+
+    public default void setHasCoral(boolean setting) {}
+
     public default void updateInputs(EndEffectorInputsAutoLogged inputs) {}
 
     public default void setCentralVelocity(double velocity) {}

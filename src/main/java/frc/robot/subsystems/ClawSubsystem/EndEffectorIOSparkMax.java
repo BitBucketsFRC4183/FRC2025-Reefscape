@@ -22,6 +22,24 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     final PIDController pid = new PIDController(ClawConstants.kP, ClawConstants.kI, ClawConstants.kD);
 
     @Override
+    public void setHasCoral(boolean setting) {
+        this.hasCoral = setting;
+    }
+
+    public boolean getHasCoral() {
+        return this.hasCoral;
+    }
+
+    @Override
+    public void setHasAlgae(boolean setting) {
+        this.hasAlgae = setting;
+    }
+
+    public boolean getHasAlgae() {
+        return this.hasAlgae;
+    }
+
+    @Override
     public void centralToSetpoint(double setpoint) { //move wheels to setpoint
         setCentralVelocity(pidCalculate(pid, encoder, setpoint));
     }

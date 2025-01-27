@@ -28,6 +28,24 @@ public class EndEffectorIOSim implements EndEffectorIO {
     private final EndEffectorEncoderIOSim encoder = new EndEffectorEncoderIOSim();
 
     @Override
+    public void setHasCoral(boolean setting) {
+        this.hasCoral = setting;
+    }
+
+    public boolean getHasCoral() {
+        return this.hasCoral;
+    }
+
+    @Override
+    public void setHasAlgae(boolean setting) {
+        this.hasAlgae = setting;
+    }
+
+    public boolean getHasAlgae() {
+        return this.hasAlgae;
+    }
+
+    @Override
     public void centralToSetpoint(double setpoint) { //move wheels to setpoint
         setCentralVelocity(pidCalculate(pid, encoder, setpoint));
     }
