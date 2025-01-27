@@ -1,36 +1,65 @@
 package frc.robot.subsystems.ElevatorSubsystem;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.ElevatorConstants;
 
 
 public class ElevatorSubsystem extends SubsystemBase {
-    private static final double maxRotationalSpeed = Units.feetToMeters(0);
-    private final ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0,0,0,0);
-    public final PIDController elevatorFeedback = new PIDController(ElevatorConstants.kP, 0.0, 0.0);
-    private Double speedSetpoint = null;
+    public ElevatorIO elevatorIO;
+    public ElevatorFeedforward elevatorFF = new ElevatorFeedforward(ElevatorConstants.kS,ElevatorConstants.kG,ElevatorConstants.kV,ElevatorConstants.kA);
+    public final ProfiledPIDController elevatorPID = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(ElevatorConstants.maxVelocity,ElevatorConstants.maxAcceleration));
 
-    private final SparkMax elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort, SparkLowLevel.MotorType.kBrushless);
-    // private final Encoder elevatorEncoder = new Encoder(ElevatorConstants.kEncoderPorts[0], ElevatorConstants.kEncoderPorts[1],ElevatorConstants.kEncoderReversed);
+    double maxVoltage = 12.0;
+    private final ElevatorEncoderIO elevatorEncoderIO;
+    private final ElevatorIOInputsAutoLogged elevatorIOInputs;
+    private final ElevatorEncoderIOInputsAutoLogged encoderIOInputs;
 
-    public ElevatorSubsystem() {
-        elevatorFeedback.setTolerance(ElevatorConstants.kShooterToleranceRPS);
-       //  elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
-
-        setDefaultCommand(runOnce(() ->{
-            elevatorMotor.disable();
-        }).andThen(run(() -> {})).withName("Idle"));
+    private final Mechanism2d elevator2D = new Mechanism2d(2, 2);
+    private final MechanismRoot2d elevator2dRoot = elevator2D.getRoot("Elevator Root", 1, 0);
+    private final MechanismLigament2d elevatorMech2d;
+    // add a method to get profileGoal = new TrapezoidProfile.State(5, 0); based on where you want the robot to switch setpoints to
+    //after that, add a method to setpoint = m_profile.calculate(kDt, elevator Heights (L1,L2,etc), profile);
+    public ElevatorSubsystem(ElevatorIO elevatorIO, ElevatorEncoderIO elevatorEncoderIO) {
+        this.elevatorIO = elevatorIO;
+        this.elevatorEncoderIO = elevatorEncoderIO;
+        this.elevatorIOInputs = new ElevatorIOInputsAutoLogged();
+        this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
+        this.elevatorMech2d = elevator2dRoot.append(new MechanismLigament2d("Elevator", elevatorIOInputs.loadHeight, 90));
+        elevatorPID.setTolerance(0.001, ElevatorConstants.kShooterToleranceRPS);
+        //elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
+        setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
+        SmartDashboard.putData("ElevatorSubsystem/mechanism", elevator2D);
 
     }
-    public void MoveElevator(int setpoint) {
-        System.out.println();
+
+
+    @Override
+    public void periodic(){
+        elevatorIO.updateInputs(elevatorIOInputs);
+        elevatorEncoderIO.updateInputs(encoderIOInputs);
+        elevatorMech2d.setLength(elevatorIOInputs.loadHeight);
+
+    }
+
+    public void resetLoadHeightEncoderValue() {
+        elevatorIO.setEncoderHeightValue(0);
+    }
+
+    public double getLoadHeight() {
+        return elevatorIOInputs.loadHeight;
+    }
+
+    public double getElevatorSpeed() {
+        return elevatorIOInputs.elevatorSpeed;
+    }
+    public void setElevatorVoltage(double volts) {
+        elevatorIO.setElevatorMotorVoltage(volts);
     }
 }

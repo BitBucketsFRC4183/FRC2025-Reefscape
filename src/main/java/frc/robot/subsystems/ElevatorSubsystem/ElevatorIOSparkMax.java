@@ -4,12 +4,15 @@ package frc.robot.subsystems.ElevatorSubsystem;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.DriveSubsystem.SparkOdometryThread;
+import org.littletonrobotics.junction.AutoLog;
 
 import java.util.Map;
 import java.util.Queue;
@@ -18,26 +21,23 @@ import java.util.function.DoubleSupplier;
 import static frc.robot.constants.DriveConstants.odometryFrequency;
 import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 import static frc.robot.util.SparkUtil.*;
-
 public class ElevatorIOSparkMax implements ElevatorIO {
-    private final SparkBase elevatorSpark1;
-    private final SparkBase elevatorSpark2;
+    private SparkBase elevatorSpark1;
+    private SparkBase elevatorSpark2;
     private final RelativeEncoder elevatorEncoder;
 
     private final SparkClosedLoopController elevatorController;
 
-    private final Queue<Double> timestampQueue;
-    private final Queue<Double> elevatorPositionQueue;
+    public static Queue<Double> timestampQueue;
+    public static Queue<Double> elevatorPositionQueue;
 
     private final Debouncer elevatorConnectedDebounce = new Debouncer(0.5);
 
-    public ElevatorIOSparkMax(SparkBase elevatorSpark1, SparkBase elevatorSpark2, Queue<Double> timestampQueue, Queue<Double> elevatorPositionQueue) {
+    public ElevatorIOSparkMax() {
+        elevatorSpark1 = new SparkMax(9, SparkLowLevel.MotorType.kBrushless);
+        elevatorSpark2 = new SparkMax(10, SparkLowLevel.MotorType.kBrushless);
         elevatorEncoder = elevatorSpark1.getEncoder();
-        this.elevatorSpark1 = elevatorSpark1;
         elevatorController = elevatorSpark1.getClosedLoopController();
-        this.elevatorSpark2 = elevatorSpark2;
-        this.timestampQueue = timestampQueue;
-        this.elevatorPositionQueue = elevatorPositionQueue;
 
         var elevatorConfig = new SparkFlexConfig();
         elevatorConfig
@@ -54,8 +54,8 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 .closedLoop
                 .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
                 .pidf(
-                        ElevatorConstants.SparkkP, 0.0,
-                        ElevatorConstants.SparkkD, 0.0);
+                        ElevatorConstants.SparkP, 0.0,
+                        ElevatorConstants.SparkD, 0.0);
         elevatorConfig
                 .signals
                 .primaryEncoderPositionAlwaysOn(true)
@@ -97,7 +97,6 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         ifOk(elevatorSpark1, elevatorSpark1::getOutputCurrent, (value) -> inputs.elevatorCurrentAmps = new double[]{value});
         inputs.elevatorConnected = elevatorConnectedDebounce.calculate(!sparkStickyFault);
         inputs.loadHeight = (2 * Math.PI * pulleyRadius) / ((elevatorEncoder.getPosition() - inputs.lastEncoderPosition) * ElevatorConstants.gearingRatio);
-
         inputs.odometryTimestamps =
                 timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
         inputs.odometryElevatorPositionsRad =
@@ -106,8 +105,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         elevatorPositionQueue.clear();
         inputs.lastEncoderPosition = elevatorEncoder.getPosition();
     }
-    @Override
-    public void setBothElevatorMotorVoltages(double volts){
+    public void setElevatorMotorVoltage(double volts){
         elevatorSpark1.setVoltage(volts);
         elevatorSpark2.setVoltage(volts);
     }

@@ -19,11 +19,15 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.ResetEncoderCommand;
+import frc.robot.commands.*;
+import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
+import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
+import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
+import frc.robot.constants.Constants;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
@@ -31,14 +35,12 @@ import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
 import frc.robot.subsystems.Auto.AutoSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.*;
-import frc.robot.commands.ElevatorSetPointCommand;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
-import frc.robot.subsystems.ElevatorSubsystem.ElevatorIOSparkMax;
-import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem.*;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
@@ -52,6 +54,8 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import frc.robot.commands.*;
+
+import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
   // Subsystems
@@ -69,8 +73,10 @@ public class RobotContainer {
   private final AutoSubsystem autoSubsystem;
 
 
+
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController driveController = new CommandXboxController(0);
+  private final CommandXboxController elevatorController = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -94,7 +100,7 @@ public class RobotContainer {
                 new ModuleIOHybrid(3, TunerConstants.BackRight));
 
         elevatorSubsystem =
-                new ElevatorSubsystem(); //TODO
+                new ElevatorSubsystem(new ElevatorIOSparkMax(), new ElevatorEncoderIOSim()); //TODO
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
@@ -128,7 +134,7 @@ public class RobotContainer {
 //                new ModuleIOHybridSim(3, TunerConstants.BackRight,driveSimulation.getModules()[3]));
         // flywheel = new Flywheel(new FlywheelIOSim());
         elevatorSubsystem =
-                new ElevatorSubsystem(); //TODO
+                new ElevatorSubsystem(new ElevatorIOSim(), new ElevatorEncoderIOSim()); //TODO
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
@@ -153,7 +159,7 @@ public class RobotContainer {
                 new ModuleIO() {});
         // flywheel = new Flywheel(new FlywheelIO() {});
         elevatorSubsystem =
-                new ElevatorSubsystem(); //TODO
+                new ElevatorSubsystem(new ElevatorIO() {}, new ElevatorEncoderIO() {}); //TODO
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
@@ -197,18 +203,29 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   void loadCommands() {
-    operatorInput.elevatorsetpoint1.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 1));
-    operatorInput.elevatorsetpoint2.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 2));
-    operatorInput.elevatorsetpoint3.onTrue(new ElevatorSetPointCommand(elevatorSubsystem, 3));
+    operatorInput.elevatorsetpoint1.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L1));
+    operatorInput.elevatorsetpoint2.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
+    operatorInput.elevatorsetpoint3.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
 
-    operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
+    operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
+
+    operatorInput.resetEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
+
+    operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, new DoubleSupplier() {
+      @Override
+      public double getAsDouble() {
+        elevatorController.getLeftY();
+        return elevatorController.getLeftY();
+      }
+    }));
+
 
     operatorInput.movementDesired.whileTrue(
             new BaseDriveCommand(
                 drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> -controller.getRightX()));
+                () -> -driveController.getLeftY(),
+                () -> -driveController.getLeftX(),
+                () -> -driveController.getRightX()));
   } // TODO FIX COMMAND THIS WILL BREAK DO NOT RUN IT
 
   /**
