@@ -206,6 +206,9 @@ public class RobotContainer {
 
     operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
 
+    operatorInput.openClaw.onTrue(new OpenClawCommand(clawSubsystem));
+    operatorInput.closeClaw.onTrue(new CloseClawCommand(clawSubsystem));
+
     operatorInput.movementDesired.whileTrue(
             new BaseDriveCommand(
                 drive,
