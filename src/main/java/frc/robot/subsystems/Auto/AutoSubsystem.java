@@ -153,6 +153,113 @@ public class AutoSubsystem extends SubsystemBase {
         return FourL4CoralBottomRoutine;
     }
 
+    public static AutoRoutine FourL4CoralTopRoutine() {
+
+        var trajectory = loadTrajectory(
+                "FourL4CoralTop");
+
+        AutoRoutine FourL4CoralTopRoutine =
+                autoFactory.newRoutine(
+                        "FourL4CoralTopRoutine");
+
+        // Initialize
+        AutoTrajectory A1toA2toDeposit =
+                FourL4CoralTopRoutine.trajectory("A1toA2toDeposit");
+
+        AutoTrajectory A2toA3toA4toClaw =
+                FourL4CoralTopRoutine.trajectory("A2toA3toA4toClaw");
+
+        //** AutoTrajectory W3toW4 = routine
+        // .trajectory();
+        //        AutoTrajectory W4toClaw =
+        //                routine.trajectory();
+
+        AutoTrajectory A4toA5toA6toDeposit =
+                FourL4CoralTopRoutine.trajectory("A4toA5toA6toDeposit");
+        //AutoTrajectory W5toW6 =
+        //                routine.trajectory();
+        //        AutoTrajectory W6toDeposit =
+        //                routine.trajectory();
+
+        AutoTrajectory A6toA7toA8toClaw =
+                FourL4CoralTopRoutine.trajectory(
+                        "A6toA7toA8toClaw");
+
+        //AutoTrajectory W7toW8 =
+        //                routine.trajectory();
+        //        AutoTrajectory W8toClaw =
+        //                routine.trajectory();
+
+        AutoTrajectory A8toA9toDeposit =
+                FourL4CoralTopRoutine.trajectory("A8toA9toDeposit");
+
+        //AutoTrajectory W9toDeposit =
+        //                routine.trajectory();
+
+        AutoTrajectory A9toA10toClaw =
+                FourL4CoralTopRoutine.trajectory("A9toW10toClaw");
+
+        //AutoTrajectory W10toClaw =
+        //                routine.trajectory();
+
+        AutoTrajectory A10toA11toDeposit =
+                FourL4CoralTopRoutine.trajectory("A10toA11toDeposit");
+
+        //AutoTrajectory W11toDeposit =
+        //                routine.trajectory();
+//
+//
+//
+//
+        FourL4CoralTopRoutine.active().onTrue(
+                Commands.sequence(
+                        Commands.print("Started" +
+                                " the routine!"),
+                        A1toA2toDeposit.resetOdometry(),
+                        A1toA2toDeposit.cmd(),
+                        A2toA3toA4toClaw.cmd(),
+                        A4toA5toA6toDeposit.cmd(),
+                        A6toA7toA8toClaw.cmd(),
+                        A8toA9toDeposit.cmd(),
+                        A9toA10toClaw.cmd(),
+                        A10toA11toDeposit.cmd()
+                )
+        );
+        A1toA2toDeposit.active().whileTrue(drive());
+        A1toA2toDeposit.done().onTrue(deposit().andThen(A2toA3toA4toClaw.cmd()));
+
+        A2toA3toA4toClaw.active().whileTrue(drive());
+        A2toA3toA4toClaw.done().onTrue(claw().andThen(A4toA5toA6toDeposit.cmd()));
+
+        A4toA5toA6toDeposit.active().whileTrue(drive());
+        A4toA5toA6toDeposit.done().onTrue(deposit().andThen(A6toA7toA8toClaw.cmd()));
+
+        A6toA7toA8toClaw.active().whileTrue(drive());
+        A6toA7toA8toClaw.done().onTrue(claw().andThen(A8toA9toDeposit.cmd()));
+
+        A8toA9toDeposit.active().whileTrue(drive());
+        A8toA9toDeposit.done().onTrue(deposit().andThen(A9toA10toClaw.cmd()));
+
+        A9toA10toClaw.active().whileTrue(drive());
+        A9toA10toClaw.done().onTrue(claw().andThen(A10toA11toDeposit.cmd()));
+
+        A10toA11toDeposit.active().whileTrue(drive());
+        A10toA11toDeposit.done().onTrue(deposit());
+
+        //TODO
+
+
+        FourL4CoralTopRoutine.anyActive(A1toA2toDeposit,
+                A4toA5toA6toDeposit,
+                A8toA9toDeposit,
+                A10toA11toDeposit).whileTrue(deposit());
+
+        System.out.println(A1toA2toDeposit.getInitialPose().get());
+
+
+        return FourL4CoralTopRoutine;
+    }
+
 //    public AutoRoutine WaitTaxiBottom(){
 //
 //    }
