@@ -28,7 +28,6 @@ import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
-import frc.robot.commands.ResetEncoderCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
@@ -224,9 +223,9 @@ public class RobotContainer {
     operatorInput.movementDesired.whileTrue(
             new BaseDriveCommand(
                 drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> -controller.getRightX()));
+                () -> -driveController.getLeftY(),
+                () -> -driveController.getLeftX(),
+                () -> -driveController.getRightX()));
   } // TODO FIX COMMAND THIS WILL BREAK DO NOT RUN IT
 
   /**
