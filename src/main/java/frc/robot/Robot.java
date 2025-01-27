@@ -155,6 +155,7 @@ public class Robot extends LoggedRobot {
         var trajectory = loadTrajectory(
                 "FourL4CoralBottom");
 
+
         if (trajectory.isPresent()) {
           System.out.print("THANK");
           // Get the initial pose of the trajectory
