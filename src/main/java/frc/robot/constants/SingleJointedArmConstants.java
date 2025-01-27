@@ -27,4 +27,7 @@ public class SingleJointedArmConstants {
     public static int armSparkMotorCurrentLimit = 0;
     public static double armSparkEncoderPositionFactor;
     public static double armSparkEncoderVelocityFactor;
+    public static double maxVelocity;
+    public static double maxAcceleration;
+
 }

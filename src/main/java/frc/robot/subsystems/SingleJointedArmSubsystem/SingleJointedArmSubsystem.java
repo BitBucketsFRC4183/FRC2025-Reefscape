@@ -6,7 +6,9 @@ import com.revrobotics.spark.SparkLowLevel;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,9 +25,9 @@ public class SingleJointedArmSubsystem extends SubsystemBase {
     private final ArmIOInputsAutoLogged armIOInputs;
     private final SparkMax armMotor = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless);
     //private final Encoder armEncoder = new Encoder();
-    private final ArmFeedforward armFeedForward = new ArmFeedforward(SingleJointedArmConstants.kS, SingleJointedArmConstants.kG, SingleJointedArmConstants.kV );
+    public final ArmFeedforward armFeedForward = new ArmFeedforward(SingleJointedArmConstants.kS, SingleJointedArmConstants.kG, SingleJointedArmConstants.kV );
     // add soleniod thingy
-    private final PIDController armFeedback = new PIDController(SingleJointedArmConstants.kP, SingleJointedArmConstants.kI, SingleJointedArmConstants.kD);
+    public final ProfiledPIDController armFeedback = new ProfiledPIDController(SingleJointedArmConstants.kP, SingleJointedArmConstants.kI, SingleJointedArmConstants.kD, new TrapezoidProfile.Constraints(SingleJointedArmConstants.maxVelocity,SingleJointedArmConstants.maxAcceleration));
 
     public SingleJointedArmSubsystem() {
         this.armIOInputs = new ArmIOInputsAutoLogged();
@@ -35,10 +37,14 @@ public class SingleJointedArmSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic(){
-        SingleJointedArmIO.updateInputs(armIOInputs);
+        singleJointedArm.updateInputs(armIOInputs);
+    }
+
+    public double getCurrentAngle(){
+        return armIOInputs.armAngle;
     }
     public void setArmVoltage(double volts){
-        SingleJointedArmIO.setArmMotorVoltage(volts);
+        singleJointedArm.setArmMotorVoltage(volts);
     }
 }
 

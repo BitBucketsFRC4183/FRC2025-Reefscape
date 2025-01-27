@@ -3,6 +3,7 @@ package frc.robot.subsystems.SingleJointedArmSubsystem;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface SingleJointedArmIO {
+
     @AutoLog
     class ArmIOInputs {
         public double armAngle = 0.0;
@@ -14,7 +15,7 @@ public interface SingleJointedArmIO {
         public double encoderPosition;
     }
     public default void disable(){}
-    public static void updateInputs(ArmIOInputs inputs){}
+    public default void updateInputs(ArmIOInputs inputs){}
 
-    public static void setArmMotorVoltage(double volts) {}
+    public default void setArmMotorVoltage(double volts) {}
 }

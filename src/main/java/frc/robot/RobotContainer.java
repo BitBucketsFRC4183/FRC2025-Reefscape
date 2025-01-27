@@ -24,6 +24,7 @@ import frc.robot.commands.BendCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ResetEncoderCommand;
 import frc.robot.constants.Constants;
+import frc.robot.constants.SingleJointedArmConstants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.*;
@@ -195,8 +196,8 @@ public class RobotContainer {
 
     operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
 
-    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem));
-    operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem));
+    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, SingleJointedArmConstants.MAX_ANGLE));
+    operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, SingleJointedArmConstants.MIN_ANGLE));
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
             drive,
