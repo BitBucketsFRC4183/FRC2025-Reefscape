@@ -13,11 +13,20 @@
 
 package frc.robot;
 
+import choreo.Choreo;
+import choreo.auto.AutoTrajectory;
+import choreo.trajectory.SwerveSample;
+import choreo.trajectory.Trajectory;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.BuildConstants;
 import frc.robot.constants.Constants;
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -25,6 +34,10 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
+import static choreo.Choreo.loadTrajectory;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -82,11 +95,46 @@ public class Robot extends LoggedRobot {
 
     // Start AdvantageKit logger
     Logger.start();
-
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
   }
+
+  private final Timer timer = new Timer();
+
+  @Override
+  public void autonomousInit() {
+
+    System.out.println(Arrays.toString(Choreo.availableTrajectories()));
+    var trajectory = loadTrajectory("test");
+    if (trajectory.isPresent()) {
+      System.out.print("THANK");
+      // Get the initial pose of the trajectory
+      Optional<Pose2d> initialPose = trajectory.get().getInitialPose(isRedAlliance());
+      Logger.recordOutput("monkey", true);
+      if (initialPose.isPresent()) {
+        // Reset odometry to the start of the trajectory
+        robotContainer.drive.setPose(initialPose.get());
+      }
+    }
+    // Reset and start the timer when the autonomous period begins
+    timer.restart();
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+      Optional<Trajectory<SwerveSample>> trajectory = loadTrajectory("test");
+      if (trajectory.isPresent()) {
+        Optional<SwerveSample> sample = trajectory.get().sampleAt(timer.get(), isRedAlliance());
+
+          sample.ifPresent(swerveSample -> robotContainer.drive.followTrajectorySample(swerveSample));
+      }
+  }
+
+  private boolean isRedAlliance() {
+    return DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue).equals(DriverStation.Alliance.Red);
+  }
+
 
   /** This function is called periodically during all modes. */
   @Override
@@ -107,26 +155,14 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    robotContainer.resetSimulationField();
+  }
 
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {}
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-  @Override
-  public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
-    }
-  }
-
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {}
 
   /** This function is called once when teleop is enabled. */
   @Override
@@ -157,9 +193,14 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    robotContainer.resetSimulationField();
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    SimulatedArena.getInstance().simulationPeriodic();
+    robotContainer.displaySimFieldToAdvantageScope();
+  }
 }
