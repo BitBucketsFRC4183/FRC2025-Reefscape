@@ -74,7 +74,7 @@ public class RobotContainer {
   private SwerveDriveSimulation driveSimulation = null;
   private final AutoSubsystem autoSubsystem;
 
-  //private final AutoUtil autoChooser;
+ private final AutoChooser autoChooser;
 
 
   // Controller
@@ -117,6 +117,7 @@ public class RobotContainer {
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
+        autoChooser = new AutoChooser();
         break;
 
       case SIM:
@@ -145,7 +146,7 @@ public class RobotContainer {
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
-        AutoUtil.initAuto();
+        autoChooser = new AutoChooser();
         break;
       default:
         // Replayed robot, disable IO implementations
@@ -177,7 +178,7 @@ public class RobotContainer {
         visionSubsystem =
                 new VisionSubsystem(new VisionIO() {
                 }); //TODO
-
+autoChooser = new AutoChooser();
         break;
     }
 
@@ -189,15 +190,15 @@ public class RobotContainer {
 
 //
 
-        //autoChooser.addRoutine(
-//            "FourL4CoralBottomRoutine",
-//            AutoSubsystem::FourL4CoralBottomRoutine);
-//    autoChooser.addCmd("drive",
-//            AutoSubsystem::drive);
+autoChooser.addRoutine(
+          "FourL4CoralBottomRoutine",
+          AutoSubsystem::FourL4CoralBottomRoutine);
+    autoChooser.addCmd("drive",
+           AutoSubsystem::drive);
 
 
-//    SmartDashboard.putData(autoChooser);
-    //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+   SmartDashboard.putData(autoChooser);
+RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
 
     loadCommands();
