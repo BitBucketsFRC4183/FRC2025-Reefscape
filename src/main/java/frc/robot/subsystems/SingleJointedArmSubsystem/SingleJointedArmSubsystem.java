@@ -4,6 +4,7 @@ package frc.robot.subsystems.SingleJointedArmSubsystem;
 
 import com.revrobotics.spark.SparkLowLevel;
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Encoder;
@@ -15,21 +16,29 @@ import frc.robot.constants.SingleJointedArmConstants;
 
 
 
+
 public class SingleJointedArmSubsystem extends SubsystemBase {
     public static int canID;
+    public SingleJointedArmIO singleJointedArm;
+    private final ArmIOInputsAutoLogged armIOInputs;
     private final SparkMax armMotor = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless);
     //private final Encoder armEncoder = new Encoder();
-    private final SimpleMotorFeedforward armFeedForward = new SimpleMotorFeedforward(SingleJointedArmConstants.kSVolts, SingleJointedArmConstants.kVVoltsSecondsPerRotation);
+    private final ArmFeedforward armFeedForward = new ArmFeedforward(SingleJointedArmConstants.kS, SingleJointedArmConstants.kG, SingleJointedArmConstants.kV );
     // add soleniod thingy
     private final PIDController armFeedback = new PIDController(SingleJointedArmConstants.kP, SingleJointedArmConstants.kI, SingleJointedArmConstants.kD);
 
     public SingleJointedArmSubsystem() {
+        this.armIOInputs = new ArmIOInputsAutoLogged();
         armFeedback.setTolerance(SingleJointedArmConstants.kArmToleranceRPS);
         //armEncoder.setDistancePerPulse(SingleJointedArmConstants.kEncoderDistancePerPulse);
-        setDefaultCommand(runOnce(() -> {
-            armMotor.disable();
-        }).andThen(run(() -> {
-        })).withName("Idle"));
+
+    }
+    @Override
+    public void periodic(){
+        SingleJointedArmIO.updateInputs(armIOInputs);
+    }
+    public void setArmVoltage(double volts){
+        SingleJointedArmIO.setArmMotorVoltage(volts);
     }
 }
 

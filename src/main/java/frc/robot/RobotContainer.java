@@ -195,8 +195,8 @@ public class RobotContainer {
 
     operatorInput.resetEncoder.onTrue(new ResetEncoderCommand(elevatorSubsystem));
 
-    operatorInput.armbendup.whileTrue(new BendCommand());
-    operatorInput.armbenddown.whileTrue(new BendCommand());
+    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem));
+    operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem));
     operatorInput.movementDesired.whileTrue(
         DriveCommands.BaseDriveCommand(
             drive,

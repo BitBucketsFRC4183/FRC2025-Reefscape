@@ -9,7 +9,12 @@ public interface SingleJointedArmIO {
         public double armAppliedVoltage = 0.0;
         public double armCurrentAmps = 0.0;
         public boolean armConnected;
+        public double[] odometryTimestamps;
+        public double[] odometryArmPositionsRad;
+        public double encoderPosition;
     }
-    public default void setArmMotorVoltage(double volts) {
-    }
+    public default void disable(){}
+    public static void updateInputs(ArmIOInputs inputs){}
+
+    public static void setArmMotorVoltage(double volts) {}
 }

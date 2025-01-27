@@ -12,7 +12,7 @@ public class BendCommand extends Command{
     public BendCommand(SingleJointedArmSubsystem subsystem){
         m_singleJointedArmSubsystem = new SingleJointedArmSubsystem();
     }
-
+    @Override
     public void initialize(){
 
     }

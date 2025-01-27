@@ -14,21 +14,20 @@ import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
 import static frc.robot.constants.DriveConstants.odometryFrequency;
-import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 import static frc.robot.util.SparkUtil.*;
 
 public class SingleJointedArmSparkMax implements SingleJointedArmIO{
-    private SparkBase armSpark = null;
-    private RelativeEncoder armEncoder = null;
+    private SparkBase armSpark;
+    private RelativeEncoder armEncoder;
 
-    private SparkClosedLoopController armController = null;
+    private SparkClosedLoopController armController;
 
-    private Queue<Double> timestampQueue = null;
-    private final Queue<Double> elevatorPositionQueue = null;
+    private Queue<Double> timestampQueue;
+    private Queue<Double> armPositionQueue;
 
     private final Debouncer armConnectedDebounce = new Debouncer(0);
 
-    public void ArmIOSparkMax(SparkBase armSpark1, SparkBase armSpark2, Queue<Double> timestampQueue, Queue<Double> armPositionQueue){
+    public void ArmIOSparkMax(SparkBase armSpark1, SparkBase armSpark2, Queue<Double> timestampQueue, Queue<Double> armPositionQueue) {
         armEncoder = armSpark.getEncoder();
         this.armSpark = armSpark;
         armController = armSpark.getClosedLoopController();
@@ -49,7 +48,7 @@ public class SingleJointedArmSparkMax implements SingleJointedArmIO{
         armConfig
                 .closedLoop
                 .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
-                .pidf(  SingleJointedArmConstants.SparkkP, 0.0,
+                .pidf(SingleJointedArmConstants.SparkkP, 0.0,
                         SingleJointedArmConstants.SparkkD, 0.0);
         armConfig
                 .signals
@@ -60,25 +59,26 @@ public class SingleJointedArmSparkMax implements SingleJointedArmIO{
                 .appliedOutputPeriodMs(20)
                 .busVoltagePeriodMs(20)
                 .outputCurrentPeriodMs(20);
-        tryUntil10k(
+        tryUntilOk(
                 armSpark,
                 5,
                 () ->
                         armSpark.configure(
                                 armConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
-        tryUntil10k(armSpark, 5, () -> armEncoder.setPosition(0.0));
+        tryUntilOk(armSpark, 5, () -> armEncoder.setPosition(0.0));
         timestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
         armPositionQueue = SparkOdometryThread.getInstance().registerSignal(armSpark, armEncoder::getPosition);
+    }
 
-        public void updateInputs (ArmIOInputs inputs){
+        @Override
+        public void updateInputs(SingleJointedArmIO.ArmIOInputs inputs) {
             sparkStickyFault = false;
-            if0k(
+            ifOk(
                     armSpark,
                     new DoubleSupplier[]{armSpark::getAppliedOutput, armSpark::getBusVoltage},
                     (values) -> inputs.armAppliedVoltage = values[0] * values[1]);
-            ifOk(armSpark, armSpark::getOutputCurrent, (value) -> SingleJointedArmIO.armCurrentAmps = new double[]{value});
+            ifOk(armSpark, armSpark::getOutputCurrent, (value) -> inputs.armCurrentAmps = value);
             inputs.armConnected = armConnectedDebounce.calculate(!sparkStickyFault);
-            inputs.loadHeight = (2 * Math.PI * pulleyRadius) / ((armEncoder.getPosition() - inputs.lastEncoderPosition) * SingleJointedArmConstants.gearingRatio);
 
             inputs.odometryTimestamps =
                     timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
@@ -86,15 +86,12 @@ public class SingleJointedArmSparkMax implements SingleJointedArmIO{
                     armPositionQueue.stream().mapToDouble((Double value) -> value).toArray();
             timestampQueue.clear();
             armPositionQueue.clear();
-            inputs.lastEncoderPosition = armEncoder.getPosition();
+            inputs.encoderPosition = armEncoder.getPosition();
         }
+
         @Override
-        public void armMotorVoltage(double volts){
+        public void setArmMotorVoltage(double volts) {
             armSpark.setVoltage(volts);
         }
     }
-            )
-        }
-    }
 
-}
