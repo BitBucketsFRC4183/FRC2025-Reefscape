@@ -33,6 +33,7 @@ import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
 import frc.robot.subsystems.Auto.AutoSubsystem;
+import frc.robot.subsystems.Auto.AutoUtil;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.*;
 import frc.robot.commands.ElevatorSetPointCommand;
@@ -73,12 +74,14 @@ public class RobotContainer {
   private SwerveDriveSimulation driveSimulation = null;
   private final AutoSubsystem autoSubsystem;
 
+  //private final AutoUtil autoChooser;
+
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
   // Dashboard inputs
-  private final AutoChooser autoChooser;
+
   private final LoggedDashboardNumber flywheelSpeedInput =
           new LoggedDashboardNumber("Flywheel Speed", 1500.0);
 
@@ -142,6 +145,7 @@ public class RobotContainer {
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
+        AutoUtil.initAuto();
         break;
       default:
         // Replayed robot, disable IO implementations
@@ -173,6 +177,7 @@ public class RobotContainer {
         visionSubsystem =
                 new VisionSubsystem(new VisionIO() {
                 }); //TODO
+
         break;
     }
 
@@ -180,9 +185,11 @@ public class RobotContainer {
 
 
     autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
+
+
 //
-    autoChooser = new AutoChooser();
-//    autoChooser.addRoutine(
+
+        //autoChooser.addRoutine(
 //            "FourL4CoralBottomRoutine",
 //            AutoSubsystem::FourL4CoralBottomRoutine);
 //    autoChooser.addCmd("drive",
@@ -190,7 +197,7 @@ public class RobotContainer {
 
 
 //    SmartDashboard.putData(autoChooser);
-    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+    //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
 
     loadCommands();

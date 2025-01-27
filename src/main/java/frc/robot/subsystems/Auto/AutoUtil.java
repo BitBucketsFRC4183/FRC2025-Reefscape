@@ -49,7 +49,7 @@ public class AutoUtil {
 //        // Default
 //        chooser.select("Straight");
 
-        AutoChooser AutoChooser = new AutoChooser();
+        AutoChooser autoChooser = new AutoChooser();
         AutoChooser.addRoutine("FourL4CoralBottomRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
         AutoChooser.addCmd("drive",
                 AutoSubsystem::drive);
