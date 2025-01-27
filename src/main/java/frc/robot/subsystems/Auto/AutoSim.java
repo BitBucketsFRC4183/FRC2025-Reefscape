@@ -29,6 +29,7 @@ public class AutoSim extends AutoUtil{
         AutoChooser AutoChooserSim =
                 new AutoChooser();
         AutoChooserSim.addRoutine("FourL4CoralBottomRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
+        AutoChooserSim.addRoutine("FourL4CoralTopRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
         AutoChooserSim.addCmd("drive",
                 AutoSubsystem::drive);
         AutoChooserSim.addCmd("deposit",

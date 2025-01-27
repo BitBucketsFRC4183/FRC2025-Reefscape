@@ -41,7 +41,7 @@ public class AutoUtil {
     private static void setupChooser() {
         // interface for choreo
 
-        // Made sendable, use SmartDashbaord now
+        // Made sendable, use SmartDashboard now
 //        chooser.addCmd("My Routine", () -> Autos.getMyRoutine());
 //        chooser.addCmd("Print", () -> Autos.getPrint());
 //        chooser.addCmd("Split", () -> Autos.getSplitRoutine());
@@ -51,6 +51,7 @@ public class AutoUtil {
 
         AutoChooser autoChooser = new AutoChooser();
         AutoChooser.addRoutine("FourL4CoralBottomRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
+        AutoChooser.addRoutine("FourL4CoralTopRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
         AutoChooser.addCmd("drive",
                 AutoSubsystem::drive);
         AutoChooser.addCmd("deposit",
