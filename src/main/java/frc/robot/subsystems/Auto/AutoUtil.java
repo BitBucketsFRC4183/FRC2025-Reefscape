@@ -52,6 +52,7 @@ public class AutoUtil {
         AutoChooser autoChooser = new AutoChooser();
         AutoChooser.addRoutine("FourL4CoralBottomRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
         AutoChooser.addRoutine("FourL4CoralTopRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
+        AutoChooser.addRoutine("OneL4CoralMidRoutine", AutoSubsystem::FourL4CoralBottomRoutine);
         AutoChooser.addCmd("drive",
                 AutoSubsystem::drive);
         AutoChooser.addCmd("deposit",

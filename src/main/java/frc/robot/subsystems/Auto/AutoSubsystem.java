@@ -260,6 +260,50 @@ public class AutoSubsystem extends SubsystemBase {
         return FourL4CoralTopRoutine;
     }
 
+    public static AutoRoutine OneL4CoralMid() {
+
+        var trajectory = loadTrajectory(
+                "OneL4CoralMid");
+
+        AutoRoutine OneL4CoralMidRoutine =
+                autoFactory.newRoutine(
+                        "OneL4CoralMid");
+
+        // Initialize
+        AutoTrajectory B1toB2toDeposit =
+                OneL4CoralMidRoutine.trajectory("B1toB2toDeposit");
+
+
+        //AutoTrajectory W11toDeposit =
+        //                routine.trajectory();
+//
+//
+//
+//
+        OneL4CoralMidRoutine.active().onTrue(
+                Commands.sequence(
+                        Commands.print("Started" +
+                                " the routine!"),
+                        B1toB2toDeposit.resetOdometry(),
+                        B1toB2toDeposit.cmd()
+
+                )
+        );
+        B1toB2toDeposit.active().whileTrue(drive());
+        B1toB2toDeposit.done().onTrue(deposit());
+
+
+        //TODO
+
+
+        OneL4CoralMidRoutine.anyActive(B1toB2toDeposit).whileTrue(deposit());
+
+        System.out.println(B1toB2toDeposit.getInitialPose().get());
+
+
+        return OneL4CoralMidRoutine;
+    }
+
 //    public AutoRoutine WaitTaxiBottom(){
 //
 //    }
