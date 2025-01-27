@@ -13,15 +13,13 @@ public class ClawSubsystem extends SubsystemBase {
     }
     public void open() {
         endEffector.centralToSetpoint(ClawConstants.mainSetpoint); //rotate big wheel at center
-        endEffector.setHasCoral(false);
         endEffector.setIsOpen(true);
     }
 
     public void close() {
         endEffector.centralToSetpoint(-ClawConstants.mainSetpoint);
         endEffector.grippersToSetpoint(0.2); //rotate grippers for better hold
-        endEffector.setHasCoral(true); //assumes the object is always coral
-        endEffector.setIsOpen((false));
+        endEffector.setIsOpen(false);
 
     }
 

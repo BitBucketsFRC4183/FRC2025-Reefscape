@@ -46,12 +46,16 @@ public class EndEffectorIOSim implements EndEffectorIO {
     @Override
     public void centralToSetpoint(double setpoint) { //move wheels to setpoint
         setCentralVelocity(pidCalculate(pid, encoder, setpoint));
+        if (setpoint == -ClawConstants.mainSetpoint) { //closing
+            setHasCoral(true);
+        } else if (setpoint == ClawConstants.mainSetpoint) { //opening
+            setHasCoral(false); //assmumes object is always coral
+        }
+
     }
 
     @Override
-    public void grippersToSetpoint(double setpoint) {
-        setGrippersVelocity(pidCalculate(pid, encoder, setpoint));
-    }
+    public void grippersToSetpoint(double setpoint) { setGrippersVelocity(pidCalculate(pid, encoder, setpoint)); }
 
     @Override
     public void setCentralVelocity(double velocity) {

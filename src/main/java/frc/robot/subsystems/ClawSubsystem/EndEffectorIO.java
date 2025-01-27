@@ -32,6 +32,10 @@ public interface EndEffectorIO {
 
     public default void updateInputs(EndEffectorInputsAutoLogged inputs) {}
 
+    public default void open() {}
+
+    public default void close() {}
+
     public default void setCentralVelocity(double velocity) {}
 
     public default void setGrippersVelocity(double velocity) {}

@@ -40,6 +40,11 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     @Override
     public void centralToSetpoint(double setpoint) { //move wheels to setpoint
         setCentralVelocity(pidCalculate(pid, encoder, setpoint));
+        if (setpoint == -ClawConstants.mainSetpoint) { //closing
+            setHasCoral(true);
+        } else if (setpoint == ClawConstants.mainSetpoint) { //opening
+            setHasCoral(false);
+        }
     }
 
     @Override
