@@ -1,4 +1,14 @@
 {
+  "FMS": {
+    "window": {
+      "visible": false
+    }
+  },
+  "Keyboard 0 Settings": {
+    "window": {
+      "visible": true
+    }
+  },
   "keyboardJoysticks": [
     {
       "axisConfig": [
@@ -20,13 +30,20 @@
           "incKey": 82
         }
       ],
-      "axisCount": 5,
-      "buttonCount": 4,
+      "axisCount": 3,
+      "buttonCount": 9,
       "buttonKeys": [
         90,
         88,
         67,
-        86
+        86,
+        80,
+        73,
+        85,
+        89,
+        84,
+        -1,
+        -1
       ],
       "povConfig": [
         {
@@ -49,7 +66,6 @@
           "incKey": 76
         },
         {
-          "decKey": 73,
           "incKey": 75
         }
       ],
