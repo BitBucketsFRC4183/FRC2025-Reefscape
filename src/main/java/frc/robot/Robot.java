@@ -115,6 +115,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotInit() {
 
+
   }
 
   /**
@@ -161,32 +162,35 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
 
-        System.out.println(Arrays.toString(Choreo.availableTrajectories()));
-        var trajectory = loadTrajectory(
-                "FourL4CoralBottom");
-
-        if (trajectory.isPresent()) {
-          System.out.print("THANK");
-          // Get the initial pose of the trajectory
-          Optional<Pose2d> initialPose = trajectory.get().getInitialPose(isRedAlliance());
-          Logger.recordOutput("monkey", true);
-          if (initialPose.isPresent()) {
-            // Reset odometry to the start of the trajectory
-            robotContainer.drive.setPose(initialPose.get());
-          }
-        }
-//     Reset and start the timer when the autonomous period begins
-        timer.restart();
+//        System.out.println(Arrays.toString(Choreo.availableTrajectories()));
+//        var trajectory = loadTrajectory(
+//                "FourL4CoralBottom");
+//
+//        if (trajectory.isPresent()) {
+//          System.out.print("THANK");
+//          // Get the initial pose of the trajectory
+//          Optional<Pose2d> initialPose =
+//          trajectory.get().getInitialPose
+//          (isRedAlliance());
+//          Logger.recordOutput("monkey", true);
+//          if (initialPose.isPresent()) {
+//            // Reset odometry to the start of the trajectory
+//            robotContainer.drive.setPose(initialPose.get());
+//          }
+//        }
+////     Reset and start the timer when the autonomous period begins
+//        timer.restart();
+    robotContainer.getAutonomousCommand().execute();
   }
 
   @Override
   public void autonomousPeriodic() {
-    Optional<Trajectory<SwerveSample>> trajectory = loadTrajectory("FourL4CoralBottom");
-    if (trajectory.isPresent()) {
-      Optional<SwerveSample> sample = trajectory.get().sampleAt(timer.get(), isRedAlliance());
-
-      sample.ifPresent(swerveSample -> robotContainer.drive.followTrajectorySample(swerveSample));
-    }
+//    Optional<Trajectory<SwerveSample>> trajectory = loadTrajectory("FourL4CoralBottom");
+//    if (trajectory.isPresent()) {
+//      Optional<SwerveSample> sample = trajectory.get().sampleAt(timer.get(), isRedAlliance());
+//
+//      sample.ifPresent(swerveSample -> robotContainer.drive.followTrajectorySample(swerveSample));
+//    }
   }
 
   private boolean isRedAlliance() {

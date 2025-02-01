@@ -18,6 +18,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -79,15 +81,8 @@ public class RobotContainer {
   private AutoChooser autoChooser;
 
 
-
-
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
-
-  // Dashboard inputs
-
-  private final LoggedDashboardNumber flywheelSpeedInput =
-          new LoggedDashboardNumber("Flywheel Speed", 1500.0);
 
 
   /**
@@ -100,8 +95,7 @@ public class RobotContainer {
     autoChooser.addRoutine("FourL4CoralBottom", AutoSubsystem::FourL4CoralBottomRoutine);
     autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
     autoChooser.addRoutine("FourL4CoralMid", AutoSubsystem::OneL4CoralMid);
-   SmartDashboard.putData("autochooser", autoChooser);
-    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+    SmartDashboard.putData("autochooser", autoChooser);
 
     switch (Constants.currentMode) {
       case REAL:
@@ -194,12 +188,7 @@ public class RobotContainer {
     }
 
 //    // Set up auto routines
-
-
     autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
-
-
-//
 
     loadCommands();
   }
@@ -232,9 +221,9 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-//  public Command getAutonomousCommand() {
-//    return autoChooser.get();
-//  }
+  public Command getAutonomousCommand() {
+    return autoChooser.selectedCommand();
+  }
 
   public void resetSimulationField() {
     if (Constants.currentMode != Constants.Mode.SIM) return;
