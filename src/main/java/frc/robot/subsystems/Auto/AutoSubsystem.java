@@ -46,6 +46,10 @@ public class AutoSubsystem extends SubsystemBase {
         );
     }
 
+
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------~
+
     public static AutoRoutine FourL4CoralBottomRoutine() {
 
         var trajectory = loadTrajectory(
@@ -100,10 +104,7 @@ public class AutoSubsystem extends SubsystemBase {
 
         //AutoTrajectory W11toDeposit =
         //                routine.trajectory();
-//
-//
-//
-//
+
         FourL4CoralBottomRoutine.active().onTrue(
                 Commands.sequence(
                         Commands.print("Started" +
@@ -152,6 +153,8 @@ public class AutoSubsystem extends SubsystemBase {
 
         return FourL4CoralBottomRoutine;
     }
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
     public static AutoRoutine FourL4CoralTopRoutine() {
 
@@ -207,10 +210,8 @@ public class AutoSubsystem extends SubsystemBase {
 
         //AutoTrajectory W11toDeposit =
         //                routine.trajectory();
-//
-//
-//
-//
+
+
         FourL4CoralTopRoutine.active().onTrue(
                 Commands.sequence(
                         Commands.print("Started" +
@@ -260,6 +261,9 @@ public class AutoSubsystem extends SubsystemBase {
         return FourL4CoralTopRoutine;
     }
 
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
+
     public static AutoRoutine OneL4CoralMid() {
 
         var trajectory = loadTrajectory(
@@ -276,10 +280,8 @@ public class AutoSubsystem extends SubsystemBase {
 
         //AutoTrajectory W11toDeposit =
         //                routine.trajectory();
-//
-//
-//
-//
+
+
         OneL4CoralMidRoutine.active().onTrue(
                 Commands.sequence(
                         Commands.print("Started" +
