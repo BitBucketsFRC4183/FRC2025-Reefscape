@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -54,7 +55,9 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+import org.littletonrobotics.junction.networktables.LoggedNetworkInput;
 
 import java.io.IOException;
 
@@ -73,8 +76,9 @@ public class RobotContainer {
   private final VisionSubsystem visionSubsystem;
   private SwerveDriveSimulation driveSimulation = null;
   private final AutoSubsystem autoSubsystem;
+  private AutoChooser autoChooser;
 
-  //private final AutoUtil autoChooser;
+
 
 
   // Controller
@@ -85,12 +89,19 @@ public class RobotContainer {
   private final LoggedDashboardNumber flywheelSpeedInput =
           new LoggedDashboardNumber("Flywheel Speed", 1500.0);
 
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
 
     this.operatorInput = new OperatorInput();
+    autoChooser = new AutoChooser();
+    autoChooser.addRoutine("FourL4CoralBottom", AutoSubsystem::FourL4CoralBottomRoutine);
+    autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
+    autoChooser.addRoutine("FourL4CoralMid", AutoSubsystem::OneL4CoralMid);
+   SmartDashboard.putData("autochooser", autoChooser);
+    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
     switch (Constants.currentMode) {
       case REAL:
@@ -117,6 +128,7 @@ public class RobotContainer {
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
+        autoChooser = new AutoChooser();
         break;
 
       case SIM:
@@ -145,7 +157,6 @@ public class RobotContainer {
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
-        AutoUtil.initAuto();
         break;
       default:
         // Replayed robot, disable IO implementations
@@ -178,6 +189,7 @@ public class RobotContainer {
                 new VisionSubsystem(new VisionIO() {
                 }); //TODO
 
+        //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
         break;
     }
 
@@ -188,17 +200,6 @@ public class RobotContainer {
 
 
 //
-
-        //autoChooser.addRoutine(
-//            "FourL4CoralBottomRoutine",
-//            AutoSubsystem::FourL4CoralBottomRoutine);
-//    autoChooser.addCmd("drive",
-//            AutoSubsystem::drive);
-
-
-//    SmartDashboard.putData(autoChooser);
-    //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
-
 
     loadCommands();
   }
