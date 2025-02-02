@@ -47,6 +47,11 @@ public class AutoSubsystem extends SubsystemBase {
 
     public static AutoRoutine FourL4CoralBottomRoutine() {
 
+        autoFactory
+                .bind("Start4L4B",
+                        drive())
+                .bind("Deposit14L4B", deposit());
+
         var trajectory = loadTrajectory(
                 "FourL4CoralBottom");
 
@@ -54,95 +59,88 @@ public class AutoSubsystem extends SubsystemBase {
                 autoFactory.newRoutine(
                         "FourL4CoralBottomRoutine");
 
-        // Initialize
-        AutoTrajectory Start4L4BtoDeposit14L4B =
-                FourL4CoralBottomRoutine.trajectory("Start4L4BtoDeposit14L4B");
 
-        AutoTrajectory Deposit14L4BtoIntake14L4B =
-                FourL4CoralBottomRoutine.trajectory("Deposit14L4BtoIntake14L4B");
+        //Initialize
+        AutoTrajectory Start4L4B =
+                FourL4CoralBottomRoutine.trajectory("Start4L4B");
 
-        //** AutoTrajectory W3toW4 = routine
-        // .trajectory();
-        //        AutoTrajectory W4toClaw =
-        //                routine.trajectory();
+        AutoTrajectory Deposit14L4B =
+                FourL4CoralBottomRoutine.trajectory("Start4L4B_to_Deposit14L4B");
 
-        AutoTrajectory Intake14L4BtoDeposit24L4B =
-                FourL4CoralBottomRoutine.trajectory("Intake14L4BtoDeposit24L4B");
-        //AutoTrajectory W5toW6 =
-        //                routine.trajectory();
-        //        AutoTrajectory W6toDeposit =
-        //                routine.trajectory();
+        AutoTrajectory Intake14L4B =
+                FourL4CoralBottomRoutine.trajectory("Deposit14L4B_to_Intake14L4B");
 
-        AutoTrajectory Deposit24L4BtoIntake24L4B =
+        AutoTrajectory Deposit24L4B =
+                FourL4CoralBottomRoutine.trajectory("Intake14L4B_to_Deposit24L4B");
+
+        AutoTrajectory Intake24L4B =
                 FourL4CoralBottomRoutine.trajectory(
-                        "Deposit24L4BtoIntake24L4B");
+                        "Deposit24L4B_to_Intake24L4B");
 
-        //AutoTrajectory W7toW8 =
-        //                routine.trajectory();
-        //        AutoTrajectory W8toClaw =
-        //                routine.trajectory();
+        AutoTrajectory Deposit34L4B =
+                FourL4CoralBottomRoutine.trajectory("Intake24L4B_to_Deposit34L4B");
 
-        AutoTrajectory Intake24L4BtoDeposit34L4B =
-                FourL4CoralBottomRoutine.trajectory("Intake24L4BtoDeposit34L4B");
 
-        //AutoTrajectory W9toDeposit =
-        //                routine.trajectory();
+        AutoTrajectory Intake34L4B =
+                FourL4CoralBottomRoutine.trajectory("Deposit34L4B_to_Intake34L4B");
 
-        AutoTrajectory Deposit34L4BtoIntake34L4B =
-                FourL4CoralBottomRoutine.trajectory("Deposit34L4BtoIntake34L4B");
+        AutoTrajectory Deposit44L4B =
+                FourL4CoralBottomRoutine.trajectory("Intake34L4B_to_Deposit44L4B");
 
-        //AutoTrajectory W10toClaw =
-        //                routine.trajectory();
-
-        AutoTrajectory Intake34L4BtoDeposit44L4B =
-                FourL4CoralBottomRoutine.trajectory("Intake34L4BtoDeposit44L4B");
-
-        //AutoTrajectory W11toDeposit =
-        //                routine.trajectory();
 
         FourL4CoralBottomRoutine.active().onTrue(
                 Commands.sequence(
                         Commands.print("Started" +
                                 " the routine!"),
-                        Start4L4BtoDeposit14L4B.resetOdometry(),
-                        Deposit14L4BtoIntake14L4B.cmd(),
-                        Intake14L4BtoDeposit24L4B.cmd(),
-                        Deposit24L4BtoIntake24L4B.cmd(),
-                        Intake24L4BtoDeposit34L4B.cmd(),
-                        Deposit34L4BtoIntake34L4B.cmd(),
-                        Intake34L4BtoDeposit44L4B.cmd()
+                        FourL4CoralBottom.resetOdometry(),
+//                        Deposit14L4B.cmd(),
+//                        Intake14L4B.cmd(),
+//                        Deposit24L4B.cmd(),
+//                        Intake24L4B.cmd(),
+//                        Deposit34L4B.cmd(),
+//                        Intake34L4B.cmd(),
+//                        Deposit44L4B.cmd()
                 )
         );
-        Start4L4BtoDeposit14L4B.active().whileTrue(drive());
-        Start4L4BtoDeposit14L4B.done().onTrue(deposit().andThen(Deposit14L4BtoIntake14L4B.cmd()));
+        //prepare drive + claw subsystem
+//        Start4L4B.active().whileTrue(drive());
+//        Start4L4B.active().whileTrue(claw());
+//        Start4L4B.active().whileTrue(deposit());
+        //whileTrue is to do something together
 
-        Deposit14L4BtoIntake14L4B.active().whileTrue(drive());
-        Deposit14L4BtoIntake14L4B.done().onTrue(claw().andThen(Intake14L4BtoDeposit24L4B.cmd()));
 
-        Intake14L4BtoDeposit24L4B.active().whileTrue(drive());
-        Intake14L4BtoDeposit24L4B.done().onTrue(deposit().andThen(Deposit24L4BtoIntake24L4B.cmd()));
+        Start4L4B.atTime("Start4L4B").onTrue(drive());
+        Start4L4B.done().onTrue(drive().andThen(Deposit14L4B.cmd()));
 
-        Deposit24L4BtoIntake24L4B.active().whileTrue(drive());
-        Deposit24L4BtoIntake24L4B.done().onTrue(claw().andThen(Intake24L4BtoDeposit34L4B.cmd()));
+        Deposit14L4B.atTime("Deposit14L4B").onTrue(deposit());
+        Deposit14L4B.done().onTrue(drive().andThen(Intake14L4B.cmd()));
 
-        Intake24L4BtoDeposit34L4B.active().whileTrue(drive());
-        Intake24L4BtoDeposit34L4B.done().onTrue(deposit().andThen(Deposit34L4BtoIntake34L4B.cmd()));
+        Intake14L4B.atTime("Intake14L4B").onTrue(claw());
+        Intake14L4B.done().onTrue(drive().andThen(Deposit24L4B.cmd()));
 
-        Deposit34L4BtoIntake34L4B.active().whileTrue(drive());
-        Deposit34L4BtoIntake34L4B.done().onTrue(claw().andThen(Intake34L4BtoDeposit44L4B.cmd()));
+        Deposit24L4B.atTime("Deposit24L4B").onTrue(deposit());
+        Deposit24L4B.done().onTrue(drive().andThen(Intake24L4B.cmd()));
 
-        Intake34L4BtoDeposit44L4B.active().whileTrue(drive());
-        Intake34L4BtoDeposit44L4B.done().onTrue(deposit());
+        Intake24L4B.atTime("Intake24L4B").onTrue(claw());
+        Intake24L4B.done().onTrue(drive().andThen(Deposit34L4B.cmd()));
+
+        Deposit34L4B.atTime("Deposit34L4B").onTrue(deposit());
+        Deposit34L4B.done().onTrue(drive().andThen(Intake34L4B.cmd()));
+
+        Intake34L4B.atTime("Intake34L4B").onTrue(claw());
+        Intake34L4B.done().onTrue(drive().andThen(Deposit44L4B.cmd()));
+//
+        Deposit44L4B.atTime("Deposit44L4B").onTrue(deposit());
 
         //TODO
 
 
-        FourL4CoralBottomRoutine.anyActive(Start4L4BtoDeposit14L4B,
-                Intake14L4BtoDeposit24L4B,
-                Intake24L4BtoDeposit34L4B,
-                Intake34L4BtoDeposit44L4B).whileTrue(deposit());
+//        FourL4CoralBottomRoutine.anyActive(Start4L4BtoDeposit14L4B,
+//                Intake14L4BtoDeposit24L4B,
+//                Intake24L4BtoDeposit34L4B,
+//                Intake34L4BtoDeposit44L4B).whileTrue(deposit());
 
-        System.out.println(Start4L4BtoDeposit14L4B.getInitialPose().get());
+        System.out.println(Start4L4B.getInitialPose().get());
 
 
         return FourL4CoralBottomRoutine;
