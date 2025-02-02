@@ -48,9 +48,36 @@ public class AutoSubsystem extends SubsystemBase {
     public static AutoRoutine FourL4CoralBottomRoutine() {
 
         autoFactory
-                .bind("Start4L4B",
-                        drive())
-                .bind("Deposit14L4B", deposit());
+                .bind("Start4L4B", drive())
+
+                .bind("Deposit14L4B", deposit())
+
+                .bind("Deposit14L4B", drive())
+
+                .bind("Intake14L4B", claw())
+
+                .bind("Intake14L4B", drive())
+
+                .bind("Deposit24L4B", deposit())
+
+                .bind("Deposit24L4B", drive())
+
+                .bind("Intake24L4B", claw())
+
+                .bind("Intake24L4B", drive())
+
+                .bind("Deposit34L4B", deposit())
+
+                .bind("Deposit34L4B", drive())
+
+                .bind("Intake34L4B", claw())
+
+                .bind("Intake34L4B", drive())
+
+                .bind("Deposit44L4B", deposit())
+
+                .bind("Deposit44L4B", drive());
+
 
         var trajectory = loadTrajectory(
                 "FourL4CoralBottom");
@@ -92,7 +119,7 @@ public class AutoSubsystem extends SubsystemBase {
                 Commands.sequence(
                         Commands.print("Started" +
                                 " the routine!"),
-                        FourL4CoralBottom.resetOdometry(),
+                        Start4L4B.resetOdometry()
 //                        Deposit14L4B.cmd(),
 //                        Intake14L4B.cmd(),
 //                        Deposit24L4B.cmd(),
@@ -321,13 +348,12 @@ public class AutoSubsystem extends SubsystemBase {
 }
 
 
-//         │＼＿＿╭╭╭╭╭＿＿／│
-//        │　　　　　　　　　　│
-//        │　　　　　　　　　　│
-//        │　＞　　　　　　　●　│
-//        │≡　　╰┬┬┬╯　　≡   │
-//        │　　　 ╰—╯　　　　 │
+//         │＼＿＿╭╭╭╭╭＿＿／ │
+//        │　　　　　　　　　 　│
+//        │　　　　　　　　　  　│
+//        │　＞　　　　　　　●　 │
+//        │≡　　╰┬┬┬╯　　≡    │
+//        │　　　 ╰—╯　　　　  │
 //        ╰——┬  ｏ ——————ｏ┬—╯
 //        　　　│世界赛!│
 //　　　        ╰┬———┬ ╯
-
