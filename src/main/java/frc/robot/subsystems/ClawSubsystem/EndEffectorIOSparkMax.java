@@ -76,7 +76,7 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     public void updateInputs(EndEffectorInputsAutoLogged inputs) {
         //inputs.centralVolts = getVoltage();
         //inputs.gripperVolts = getVoltage();
-        inputs.hasCoral = this.getHasCoral();
+        inputs.hasCoral = getHasCoral();
         inputs.hasAlgae = getHasAlgae();
         inputs.isOpen = getIsOpen();
     }
