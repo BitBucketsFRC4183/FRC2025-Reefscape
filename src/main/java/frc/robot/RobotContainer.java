@@ -96,6 +96,7 @@ public class RobotContainer {
     autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
     autoChooser.addRoutine("FourL4CoralMid", AutoSubsystem::OneL4CoralMid);
     SmartDashboard.putData("autochooser", autoChooser);
+    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
     switch (Constants.currentMode) {
       case REAL:
