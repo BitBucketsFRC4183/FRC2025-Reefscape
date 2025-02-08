@@ -180,8 +180,8 @@ public class Robot extends LoggedRobot {
 //        }
 ////     Reset and start the timer when the autonomous period begins
 //        timer.restart();
-//
-}
+//    robotContainer.getAutonomousCommand().execute();
+  }
 
   @Override
   public void autonomousPeriodic() {

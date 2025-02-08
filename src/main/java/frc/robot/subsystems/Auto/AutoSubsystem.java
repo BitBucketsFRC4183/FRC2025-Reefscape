@@ -78,11 +78,8 @@ public class AutoSubsystem extends SubsystemBase {
 //
 //                .bind("Deposit44L4B", drive());
 
-
-        var trajectory = loadTrajectory(
-                "StarttoR8");
-        trajectory = loadTrajectory(
-                "");
+//        var trajectory = loadTrajectory(
+//                "FourL4CoralBottom");
 
         AutoRoutine FourL4CoralBottomRoutine =
                 autoFactory.newRoutine(
@@ -90,45 +87,44 @@ public class AutoSubsystem extends SubsystemBase {
 
 
         //Initialize
-        AutoTrajectory Start4L4B =
-                FourL4CoralBottomRoutine.trajectory("Start4L4B");
-
-        AutoTrajectory Deposit14L4B =
-                FourL4CoralBottomRoutine.trajectory("Start4L4B_to_Deposit14L4B");
-
-        AutoTrajectory Intake14L4B =
-                FourL4CoralBottomRoutine.trajectory("Deposit14L4B_to_Intake14L4B");
-
-        AutoTrajectory Deposit24L4B =
-                FourL4CoralBottomRoutine.trajectory("Intake14L4B_to_Deposit24L4B");
-
-        AutoTrajectory Intake24L4B =
-                FourL4CoralBottomRoutine.trajectory(
-                        "Deposit24L4B_to_Intake24L4B");
-
-        AutoTrajectory Deposit34L4B =
-                FourL4CoralBottomRoutine.trajectory("Intake24L4B_to_Deposit34L4B");
-
-
-        AutoTrajectory Intake34L4B =
-                FourL4CoralBottomRoutine.trajectory("Deposit34L4B_to_Intake34L4B");
-
-        AutoTrajectory Deposit44L4B =
-                FourL4CoralBottomRoutine.trajectory("Intake34L4B_to_Deposit44L4B");
+//1
+        AutoTrajectory StarttoR8 =
+                FourL4CoralBottomRoutine.trajectory("StarttoR8");
+//2
+        AutoTrajectory R8toSource =
+                FourL4CoralBottomRoutine.trajectory("R8toSource");
+//3
+        AutoTrajectory SourcetoR7 =
+                FourL4CoralBottomRoutine.trajectory("SourcetoR7");
+//4
+        AutoTrajectory R7toSource =
+                FourL4CoralBottomRoutine.trajectory("R7toSource");
+//5
+        AutoTrajectory SourcetoR6 =
+                FourL4CoralBottomRoutine.trajectory("SourcetoR6");
+//6
+        AutoTrajectory R6toSource =
+                FourL4CoralBottomRoutine.trajectory("R6toSource");
+//7
+        AutoTrajectory SourcetoR5 =
+                FourL4CoralBottomRoutine.trajectory("SourcetoR5");
+//8
+        AutoTrajectory R5toSource =
+                FourL4CoralBottomRoutine.trajectory("R5toSource");
 
 
         FourL4CoralBottomRoutine.active().onTrue(
                 Commands.sequence(
                         Commands.print("Started" +
                                 " the routine!"),
-                        Start4L4B.resetOdometry(),
-                        Deposit14L4B.cmd(),
-                        Intake14L4B.cmd(),
-                        Deposit24L4B.cmd(),
-                        Intake24L4B.cmd(),
-                        Deposit34L4B.cmd(),
-                        Intake34L4B.cmd(),
-                        Deposit44L4B.cmd()
+                        StarttoR8.resetOdometry(),
+                        R8toSource.cmd(),
+                        SourcetoR7.cmd(),
+                        R7toSource.cmd(),
+                        SourcetoR6.cmd(),
+                        R6toSource.cmd(),
+                        SourcetoR5.cmd(),
+                        R5toSource.cmd()
                 )
         );
         //prepare drive + claw subsystem
@@ -138,9 +134,40 @@ public class AutoSubsystem extends SubsystemBase {
         //whileTrue is to do something together
 
 
-//        Start4L4B.atTime("Start4L4B").onTrue(drive());
-//        Start4L4B.done().onTrue(drive().andThen(Deposit14L4B.cmd()));
-//
+        //4L4BottomCoral Chrono:
+//1 StarttoR8
+//2 R8toSource
+//3 SourcetoR7
+//4 R7toSource
+//5 SourcetoR6
+//6 R6toSource
+//7 SourcetoR5
+//8 R5toSource
+
+        StarttoR8.atTime("StarttoR8").onTrue(drive());
+        StarttoR8.done().onTrue(drive().andThen(R8toSource.cmd()));
+
+        R8toSource.atTime("R8toSource").onTrue(deposit());
+        R8toSource.done().onTrue(drive().andThen(SourcetoR7.cmd()));
+
+        SourcetoR7.atTime("SourcetoR7").onTrue(claw());
+        SourcetoR7.done().onTrue(drive().andThen(R7toSource.cmd()));
+
+        R7toSource.atTime("R7toSource").onTrue(deposit());
+        R7toSource.done().onTrue(drive().andThen(SourcetoR6.cmd()));
+
+        SourcetoR6.atTime("SourcetoR6").onTrue(claw());
+        SourcetoR6.done().onTrue(drive().andThen(R6toSource.cmd()));
+
+        R6toSource.atTime("R6toSource").onTrue(deposit());
+        R6toSource.done().onTrue(drive().andThen(SourcetoR5.cmd()));
+
+        SourcetoR5.atTime("SourcetoR5").onTrue(claw());
+        SourcetoR5.done().onTrue(drive().andThen(R5toSource.cmd()));
+
+        R5toSource.atTime("R5toSource").onTrue(deposit());
+        SourcetoR5.done();
+
 //        Deposit14L4B.atTime("Deposit14L4B").onTrue(deposit());
 //        Deposit14L4B.done().onTrue(drive().andThen(Intake14L4B.cmd()));
 //
@@ -169,19 +196,12 @@ public class AutoSubsystem extends SubsystemBase {
 //                Intake24L4BtoDeposit34L4B,
 //                Intake34L4BtoDeposit44L4B).whileTrue(deposit());
 
-//        System.out.println(Start4L4B.getInitialPose().get());
+        System.out.println(StarttoR8.getInitialPose().get());
 
 
         return FourL4CoralBottomRoutine;
     }
 
-
-
-
-
-////----------------------------------------------------------------------------
-////----------------------------------------------------------------------------
-//
 //    public static AutoRoutine FourL4CoralTopRoutine() {
 //
 //        var trajectory = loadTrajectory(
@@ -331,38 +351,26 @@ public class AutoSubsystem extends SubsystemBase {
 //
 //        return OneL4CoralMidRoutine;
 //    }
-
-//    public AutoRoutine WaitTaxiBottom(){
 //
-//    }
-//    public AutoRoutine TwoL4CoralTop(){
-//
-//    }
-//    public AutoRoutine TwoL4CoralBottom(){
-//
-//    }
-//    public AutoRoutine ThreeL4CoralTop(){
-//
-//    }
-//    public AutoRoutine ThreeL4CoralBottom(){
-//
-//    }
-//    public AutoRoutine ThreeL4CoralTop(){
-//
-//    }
-
-
+////    public AutoRoutine WaitTaxiBottom(){
+////
+////    }
+////    public AutoRoutine TwoL4CoralTop(){
+////
+////    }
+////    public AutoRoutine TwoL4CoralBottom(){
+////
+////    }
+////    public AutoRoutine ThreeL4CoralTop(){
+////
+////    }
+////    public AutoRoutine ThreeL4CoralBottom(){
+////
+////    }
+////    public AutoRoutine ThreeL4CoralTop(){
+////
+////    }
 }
-
-//4L4BottomCoral Chrono:
-// StarttoR8
-// R8toSource
-// SourcetoR7
-// R7toSource
-// SourcetoR6
-// R6toSource
-// SourcetoR5
-// R5toSource
 
 
 //         │＼＿＿╭╭╭╭╭＿＿／ │
