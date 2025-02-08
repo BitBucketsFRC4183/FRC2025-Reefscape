@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Auto;
+package frc.robot.subsystems.AutoSubsystem;
 
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-
-import static choreo.Choreo.loadTrajectory;
 
 public class AutoSubsystem extends SubsystemBase {
     private final DriveSubsystem drive;
@@ -23,6 +21,7 @@ public class AutoSubsystem extends SubsystemBase {
         this.drive = drive;
         this.claw = claw;
         this.autoFactory = new AutoFactory(drive::getPose, drive::setPose, drive::followTrajectorySample, true, drive);
+
     }
 
 
