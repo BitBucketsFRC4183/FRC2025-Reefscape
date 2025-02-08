@@ -81,7 +81,7 @@ public class AutoSubsystem extends SubsystemBase {
 
         var trajectory = loadTrajectory(
                 "StarttoR8");
-        var trajectory = loadTrajectory(
+        trajectory = loadTrajectory(
                 "");
 
         AutoRoutine FourL4CoralBottomRoutine =
@@ -353,6 +353,16 @@ public class AutoSubsystem extends SubsystemBase {
 
 
 }
+
+//4L4BottomCoral Chrono:
+// StarttoR8
+// R8toSource
+// SourcetoR7
+// R7toSource
+// SourcetoR6
+// R6toSource
+// SourcetoR5
+// R5toSource
 
 
 //         │＼＿＿╭╭╭╭╭＿＿／ │
