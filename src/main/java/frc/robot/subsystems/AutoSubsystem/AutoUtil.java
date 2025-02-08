@@ -1,18 +1,6 @@
-package frc.robot.subsystems.Auto;
+package frc.robot.subsystems.AutoSubsystem;
 
 import choreo.auto.AutoChooser;
-import choreo.auto.AutoFactory;
-import choreo.trajectory.SwerveSample;
-import choreo.trajectory.TrajectorySample;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 
 public class AutoUtil {
