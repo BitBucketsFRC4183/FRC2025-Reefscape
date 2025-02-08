@@ -4,6 +4,7 @@ import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,7 +41,19 @@ public class AutoSubsystem extends SubsystemBase {
         return Commands.sequence(
         );
     }
+    public static Command RaiseElevator() {
+        System.out.println("RaiseElevator");
+        return Commands.sequence(
 
+        );
+
+    }
+    public static Command LowerElevator() {
+        System.out.println("LowerElevator");
+        return Commands.sequence(
+
+        );
+    }
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------~
@@ -144,26 +157,28 @@ public class AutoSubsystem extends SubsystemBase {
 //7 SourcetoR5
 //8 R5toSource
 
+
         StarttoR8.atTime("StarttoR8").onTrue(drive());
-        StarttoR8.done().onTrue(drive().andThen(R8toSource.cmd()));
+        StarttoR8.done().onTrue(drive().andThen(R8toSource.cmd(), LowerElevator()));
 
         R8toSource.atTime("R8toSource").onTrue(deposit());
-        R8toSource.done().onTrue(drive().andThen(SourcetoR7.cmd()));
+        R8toSource.done().onTrue(drive().andThen(SourcetoR7.cmd(), RaiseElevator()));
+
 
         SourcetoR7.atTime("SourcetoR7").onTrue(claw());
-        SourcetoR7.done().onTrue(drive().andThen(R7toSource.cmd()));
+        SourcetoR7.done().onTrue(drive().andThen(R7toSource.cmd(), LowerElevator()));
 
         R7toSource.atTime("R7toSource").onTrue(deposit());
-        R7toSource.done().onTrue(drive().andThen(SourcetoR6.cmd()));
+        R7toSource.done().onTrue(drive().andThen(SourcetoR6.cmd(), RaiseElevator()));
 
         SourcetoR6.atTime("SourcetoR6").onTrue(claw());
-        SourcetoR6.done().onTrue(drive().andThen(R6toSource.cmd()));
+        SourcetoR6.done().onTrue(drive().andThen(R6toSource.cmd(), LowerElevator()));
 
         R6toSource.atTime("R6toSource").onTrue(deposit());
-        R6toSource.done().onTrue(drive().andThen(SourcetoR5.cmd()));
+        R6toSource.done().onTrue(drive().andThen(SourcetoR5.cmd(), RaiseElevator()));
 
         SourcetoR5.atTime("SourcetoR5").onTrue(claw());
-        SourcetoR5.done().onTrue(drive().andThen(R5toSource.cmd()));
+        SourcetoR5.done().onTrue(drive().andThen(R5toSource.cmd(), LowerElevator()));
 
         R5toSource.atTime("R5toSource").onTrue(deposit());
         SourcetoR5.done();
