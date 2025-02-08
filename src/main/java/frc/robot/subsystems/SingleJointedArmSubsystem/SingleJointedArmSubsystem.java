@@ -21,7 +21,7 @@ import frc.robot.constants.SingleJointedArmConstants;
 
 public class SingleJointedArmSubsystem extends SubsystemBase {
     public static int canID;
-    public SingleJointedArmIO singleJointedArm;
+    public SingleJointedArmIO singleJointedArm = new SingleJointedArmIOSim();
     private final ArmIOInputsAutoLogged armIOInputs;
     private final SparkMax armMotor = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless);
     //private final Encoder armEncoder = new Encoder();
@@ -37,11 +37,11 @@ public class SingleJointedArmSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic(){
-        singleJointedArm.updateInputs(armIOInputs);
+        this.singleJointedArm.updateInputs(armIOInputs);
     }
 
     public double getCurrentAngle(){
-        return armIOInputs.armAngle;
+        return armIOInputs.LoadAngle;
     }
     public void setArmVoltage(double volts){
         singleJointedArm.setArmMotorVoltage(volts);

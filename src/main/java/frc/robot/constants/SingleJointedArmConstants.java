@@ -1,6 +1,4 @@
 package frc.robot.constants;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 
 public class SingleJointedArmConstants {
@@ -17,12 +15,12 @@ public class SingleJointedArmConstants {
     public static final double kVVoltsSecondsPerRotation = 0;
     public static final double kArmToleranceRPS = 0;
     public static final double kEncoderDistancePerPulse = 0;
-    public static final double MAX_ANGLE = 90.0;
+    public static final double MAX_ANGLE = 3.14159/2;
     public static final double MIN_ANGLE = 0.0;
-    public static double SparkkP = 0.0;
-    public static double SparkkD = 0.0;
-    public static double gearingRatio = 0.0;
-    public static double armLength = 0.0;
+    public static double SparkKp = 0.0;
+    public static double SparkKd = 0.0;
+    public static double gearingRatio = 0.1;
+    public static double armLength = 2.6;
     public static DCMotor armGearbox = DCMotor.getNEO(1);
     public static int armSparkMotorCurrentLimit = 0;
     public static double armSparkEncoderPositionFactor;
