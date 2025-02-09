@@ -48,8 +48,8 @@ public class SingleJointedArmSparkMax implements SingleJointedArmIO{
         armConfig
                 .closedLoop
                 .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
-                .pidf(SingleJointedArmConstants.SparkkP, 0.0,
-                        SingleJointedArmConstants.SparkkD, 0.0);
+                .pidf(SingleJointedArmConstants.SparkKp, 0.0,
+                        SingleJointedArmConstants.SparkKd, 0.0);
         armConfig
                 .signals
                 .primaryEncoderPositionAlwaysOn(true)
@@ -70,7 +70,17 @@ public class SingleJointedArmSparkMax implements SingleJointedArmIO{
         armPositionQueue = SparkOdometryThread.getInstance().registerSignal(armSpark, armEncoder::getPosition);
     }
 
-        @Override
+    @Override
+    public void setArmVoltage(double volts) {
+
+    }
+
+    @Override
+    public void setEncoderAngleValue(double angle) {
+
+    }
+
+    @Override
         public void updateInputs(SingleJointedArmIO.ArmIOInputs inputs) {
             sparkStickyFault = false;
             ifOk(

@@ -10,10 +10,12 @@ public class BendCommand extends Command {
 
     private final SingleJointedArmSubsystem singleJointedArmSubsystem;
     public double targetAngle;
+    public double arclength;
 
     public BendCommand(SingleJointedArmSubsystem subsystem, double targetAngle) {
         this.singleJointedArmSubsystem = subsystem;
         this.targetAngle = targetAngle;
+         this.arclength = targetAngle * SingleJointedArmConstants.armLength;
     }
 
     @Override
@@ -30,6 +32,7 @@ public class BendCommand extends Command {
 
         Logger.recordOutput("SingleJointedArmSubsystem/target_voltage", calculatedVolts);
         Logger.recordOutput("SingleJointedArmSubsystem/desired_position", singleJointedArmSubsystem.armFeedback.getSetpoint().position);
+
 
         this.singleJointedArmSubsystem.setArmVoltage(calculatedVolts);
     }

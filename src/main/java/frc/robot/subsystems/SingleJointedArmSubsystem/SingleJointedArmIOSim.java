@@ -1,9 +1,6 @@
 package frc.robot.subsystems.SingleJointedArmSubsystem;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.constants.SingleJointedArmConstants;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorIO;
@@ -11,6 +8,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class SingleJointedArmIOSim implements SingleJointedArmIO {
     private static final double LOOP_PERIOD_SECS = 0.02;
+    LinearFilter armFilter = LinearFilter.singlePoleIIR(0.1,0.02);
     public static final SingleJointedArmSim armMotorSim = new SingleJointedArmSim(
             SingleJointedArmConstants.armGearbox,
             SingleJointedArmConstants.gearingRatio,

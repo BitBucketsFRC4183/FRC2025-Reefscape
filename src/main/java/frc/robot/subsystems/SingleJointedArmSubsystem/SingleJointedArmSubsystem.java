@@ -42,7 +42,7 @@ public class SingleJointedArmSubsystem extends SubsystemBase {
     }
 
     public double getCurrentAngle(){
-        return armIOInputs.armAngle;
+        return armIOInputs.LoadAngle;
     }
 
     public void setArmVoltage(double volts){
