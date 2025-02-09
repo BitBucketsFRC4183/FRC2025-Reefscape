@@ -234,6 +234,15 @@ public class AutoSubsystem extends SubsystemBase {
 
         return FourL4CoralTopRoutine;
     }
+//1 StarttoR11
+    //4L4TopCoral Chrono:
+//2 R11toSource
+//3 SourcetoR12
+//4 R12toSource
+//5 SourcetoR1
+//6 R1toSource
+//7 SourcetoR2
+//8 R2toSource
 }
 
 
