@@ -19,16 +19,16 @@ public class BendCommand extends Command {
     @Override
     public void initialize() {
         singleJointedArmSubsystem.armFeedback.setGoal(targetAngle);
-        Logger.recordOutput("SingleJointedArmSubsystem/target_Angle", targetAngle);
+        Logger.recordOutput("ArmSubsystem/target_Angle", targetAngle);
 
     }
 
     @Override
     public void execute() {
         double voltsPID = singleJointedArmSubsystem.armFeedback.calculate(singleJointedArmSubsystem.getCurrentAngle());
-        double calculatedVolts = singleJointedArmSubsystem.armFeedForward.calculate(singleJointedArmSubsystem.getCurrentAngle(), singleJointedArmSubsystem.armFeedback.getSetpoint().velocity) + voltsPID;
+        double calculatedVolts = singleJointedArmSubsystem.armFeedForward.calculate(singleJointedArmSubsystem.armFeedback.getSetpoint().position, singleJointedArmSubsystem.armFeedback.getSetpoint().velocity) + voltsPID;
 
-        Logger.recordOutput("SingleJointedArmSubsystem/target_Voltage", calculatedVolts);
+        Logger.recordOutput("SingleJointedArmSubsystem/target_voltage", calculatedVolts);
         Logger.recordOutput("SingleJointedArmSubsystem/desired_position", singleJointedArmSubsystem.armFeedback.getSetpoint().position);
 
         this.singleJointedArmSubsystem.setArmVoltage(calculatedVolts);
@@ -37,7 +37,7 @@ public class BendCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            singleJointedArmSubsystem.setArmVoltage(SingleJointedArmConstants.kG);
+            singleJointedArmSubsystem.setArmVoltage(SingleJointedArmConstants.kG * Math.cos(singleJointedArmSubsystem.getCurrentAngle()));
         }
     }
 }

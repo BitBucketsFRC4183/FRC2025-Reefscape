@@ -8,7 +8,7 @@ public interface SingleJointedArmIO {
     class ArmIOInputs {
         public double armAngle = 0.0;
         public double armAppliedVoltage = 0.0;
-        public double armCurrentAmps = 0.0;
+        public double[] armCurrentAmps = new double[] {};
         public boolean armConnected;
         public double[] odometryTimestamps;
         public double[] odometryArmPositionsRad;

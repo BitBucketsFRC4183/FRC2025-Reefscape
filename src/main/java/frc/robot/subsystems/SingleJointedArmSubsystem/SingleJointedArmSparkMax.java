@@ -77,7 +77,7 @@ public class SingleJointedArmSparkMax implements SingleJointedArmIO{
                     armSpark,
                     new DoubleSupplier[]{armSpark::getAppliedOutput, armSpark::getBusVoltage},
                     (values) -> inputs.armAppliedVoltage = values[0] * values[1]);
-            ifOk(armSpark, armSpark::getOutputCurrent, (value) -> inputs.armCurrentAmps = value);
+            ifOk(armSpark, armSpark::getOutputCurrent, (value) -> inputs.armCurrentAmps = new double[]{value});
             inputs.armConnected = armConnectedDebounce.calculate(!sparkStickyFault);
 
             inputs.odometryTimestamps =

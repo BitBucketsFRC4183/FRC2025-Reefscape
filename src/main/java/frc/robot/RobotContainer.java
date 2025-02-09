@@ -45,6 +45,9 @@ import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
 import frc.robot.subsystems.ElevatorSubsystem.*;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
+import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIO;
+import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOSim;
+import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSparkMax;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
@@ -112,7 +115,8 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(); //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmSparkMax()) {
+                }; //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
         break;
@@ -146,7 +150,7 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(); //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmIOSim()); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
         break;
@@ -171,7 +175,7 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(); //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmIOSim()); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIO() {}); //TODO
         break;
@@ -211,7 +215,7 @@ public class RobotContainer {
 
     operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
 
-    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, SingleJointedArmConstants.MAX_ANGLE));
+    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, 45));
     operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, SingleJointedArmConstants.MIN_ANGLE));
     operatorInput.resetEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
 
