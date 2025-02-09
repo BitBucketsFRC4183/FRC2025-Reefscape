@@ -53,7 +53,7 @@ public class AutoSubsystem extends SubsystemBase {
     }
 
 //----------------------------------------------------------------------------
-//----------------------------------------------------------------------------~
+//----------------------------------------------------------------------------
 
     public static AutoRoutine FourL4CoralBottomRoutine() {
 
@@ -148,7 +148,94 @@ public class AutoSubsystem extends SubsystemBase {
 
         return FourL4CoralBottomRoutine;
     }
+
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
+
+    public static AutoRoutine FourL4CoralTopRoutine() {
+
+        //        var trajectory = loadTrajectory(
+        //                "FourL4CoralBottom");
+
+        AutoRoutine FourL4CoralTopRoutine =
+                autoFactory.newRoutine(
+                        "FourL4CoralTopRoutine");
+
+
+        //Initialize
+        //1
+        AutoTrajectory StarttoR8 =
+                FourL4CoralTopRoutine.trajectory("StarttoR8");
+        //2
+        AutoTrajectory R8toSource =
+                FourL4CoralTopRoutine.trajectory("R8toSource");
+        //3
+        AutoTrajectory SourcetoR7 =
+                FourL4CoralTopRoutine.trajectory("SourcetoR7");
+        //4
+        AutoTrajectory R7toSource =
+                FourL4CoralTopRoutine.trajectory("R7toSource");
+        //5
+        AutoTrajectory SourcetoR6 =
+                FourL4CoralTopRoutine.trajectory("SourcetoR6");
+        //6
+        AutoTrajectory R6toSource =
+                FourL4CoralTopRoutine.trajectory("R6toSource");
+        //7
+        AutoTrajectory SourcetoR5 =
+                FourL4CoralTopRoutine.trajectory("SourcetoR5");
+        //8
+        AutoTrajectory R5toSource =
+                FourL4CoralTopRoutine.trajectory("R5toSource");
+
+
+        FourL4CoralTopRoutine.active().onTrue(
+                Commands.sequence(
+                        Commands.print("Started" +
+                                " the routine!"),
+                        StarttoR8.resetOdometry(),
+                        R8toSource.cmd(),
+                        SourcetoR7.cmd(),
+                        R7toSource.cmd(),
+                        SourcetoR6.cmd(),
+                        R6toSource.cmd(),
+                        SourcetoR5.cmd(),
+                        R5toSource.cmd()
+                )
+        );
+
+        StarttoR8.atTime("StarttoR8").onTrue(drive());
+        StarttoR8.done().onTrue(drive().andThen(R8toSource.cmd(), LowerElevator()));
+
+        R8toSource.atTime("R8toSource").onTrue(deposit());
+        R8toSource.done().onTrue(drive().andThen(SourcetoR7.cmd(), RaiseElevator()));
+
+
+        SourcetoR7.atTime("SourcetoR7").onTrue(claw());
+        SourcetoR7.done().onTrue(drive().andThen(R7toSource.cmd(), LowerElevator()));
+
+        R7toSource.atTime("R7toSource").onTrue(deposit());
+        R7toSource.done().onTrue(drive().andThen(SourcetoR6.cmd(), RaiseElevator()));
+
+        SourcetoR6.atTime("SourcetoR6").onTrue(claw());
+        SourcetoR6.done().onTrue(drive().andThen(R6toSource.cmd(), LowerElevator()));
+
+        R6toSource.atTime("R6toSource").onTrue(deposit());
+        R6toSource.done().onTrue(drive().andThen(SourcetoR5.cmd(), RaiseElevator()));
+
+        SourcetoR5.atTime("SourcetoR5").onTrue(claw());
+        SourcetoR5.done().onTrue(drive().andThen(R5toSource.cmd(), LowerElevator()));
+
+        R5toSource.atTime("R5toSource").onTrue(deposit());
+        SourcetoR5.done();
+
+        System.out.println(StarttoR8.getInitialPose().get());
+
+
+        return FourL4CoralTopRoutine;
+    }
 }
+
 
 
 //         │＼＿＿╭╭╭╭╭＿＿／ │
