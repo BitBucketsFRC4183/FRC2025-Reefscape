@@ -236,10 +236,11 @@ public class AutoSubsystem extends SubsystemBase {
         return FourL4CoralTopRoutine;
     }
 
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
-    public static AutoRoutine ThreeL4CoralBottom() {
 
-
+    public static AutoRoutine ThreeL4CoralBottomRoutine() {
 
         AutoRoutine ThreeL4CoralBottomRoutine =
                 autoFactory.newRoutine(
@@ -260,9 +261,6 @@ public class AutoSubsystem extends SubsystemBase {
         AutoTrajectory SourcetoR6 =
                 ThreeL4CoralBottomRoutine.trajectory("SourcetoR6");
 
-
-
-
         ThreeL4CoralBottomRoutine.active().onTrue(
                 Commands.sequence(
                         Commands.print("Started" +
@@ -276,15 +274,6 @@ public class AutoSubsystem extends SubsystemBase {
                 )
         );
 
-        //4L4TopCoral Chrono:
-//1 StarttoR11
-//2 R11toSource
-//3 SourcetoR12
-//4 R12toSource
-//5 SourcetoR1
-//6 R1toSource
-//7 SourcetoR2
-//8 R2toSource
 
         StarttoR8.atTime("StarttoR8").onTrue(drive());
         StarttoR8.done().onTrue(drive().andThen(R8toSource.cmd(), LowerElevator()));
@@ -307,6 +296,9 @@ public class AutoSubsystem extends SubsystemBase {
 
         return ThreeL4CoralBottomRoutine;
     }
+
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
     public static AutoRoutine ThreeL4CoralTopRoutine() {
 
