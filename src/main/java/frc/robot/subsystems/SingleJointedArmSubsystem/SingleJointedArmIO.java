@@ -13,6 +13,7 @@ public interface SingleJointedArmIO {
         public double[] odometryTimestamps;
         public double[] odometryArmPositionsRad;
         public double encoderPosition;
+        public double armVelocity;
     }
     public default void disable(){}
     public default void updateInputs(ArmIOInputs inputs){}

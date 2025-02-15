@@ -15,22 +15,21 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.BendCommand;
+import frc.robot.commands.ArmCommands.ArmHoverCommand;
+import frc.robot.commands.BaseDriveCommand;
+import frc.robot.commands.ArmCommands.BendCommand;
 import frc.robot.commands.*;
 import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
 import frc.robot.constants.Constants;
-import frc.robot.constants.SingleJointedArmConstants;
 import frc.robot.constants.ElevatorConstants;
-import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
@@ -45,7 +44,6 @@ import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
 import frc.robot.subsystems.ElevatorSubsystem.*;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
-import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIO;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOSim;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSparkMax;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
@@ -58,7 +56,6 @@ import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
-import frc.robot.commands.*;
 
 import java.util.function.DoubleSupplier;
 
@@ -209,14 +206,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   void loadCommands() {
+
+    singleJointedArmSubsystem.setDefaultCommand(new ArmHoverCommand(singleJointedArmSubsystem));
     operatorInput.elevatorsetpoint1.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L1));
     operatorInput.elevatorsetpoint2.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
     operatorInput.elevatorsetpoint3.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
 
     operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
 
-    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, 45));
-    operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, SingleJointedArmConstants.MIN_ANGLE));
+    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, Math.PI / 4));
+    operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, 0));
     operatorInput.resetEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
 
     operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, new DoubleSupplier() {
@@ -229,7 +228,7 @@ public class RobotContainer {
 
 
     operatorInput.movementDesired.whileTrue(
-            new BaseDriveCommand(
+            new BaseDriveCommand.basedrivecommand(
                 drive,
                 () -> -driveController.getLeftY(),
                 () -> -driveController.getLeftX(),

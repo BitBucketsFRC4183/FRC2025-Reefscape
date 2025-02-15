@@ -26,6 +26,7 @@ public class SingleJointedArmIOSim implements SingleJointedArmIO {
         armMotorSim.update(LOOP_PERIOD_SECS);
         inputs.armAngle = armMotorSim.getAngleRads();
         inputs.armCurrentAmps = new double[]{Math.abs(armMotorSim.getCurrentDrawAmps())};
+        inputs.armVelocity = armMotorSim.getVelocityRadPerSec();
         Logger.recordOutput("ArmSubsystem/armAngle", inputs.armAngle);
         Logger.recordOutput("ArmSubsystem/armCurrentAmps", inputs.armCurrentAmps);
 
