@@ -362,7 +362,53 @@ public class AutoSubsystem extends SubsystemBase {
 
         return ThreeL4CoralTopRoutine;
     }
-}
+
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
+public static AutoRoutine OneL4CoralMidRoutine() {
+
+    //        var trajectory = loadTrajectory(
+    //                "FourL4CoralBottom");
+
+    AutoRoutine OneL4CoralMidRoutine =
+            autoFactory.newRoutine(
+                    "OneL4CoralMidRoutine");
+
+    //Initialize
+    //1
+    AutoTrajectory StarttoR9 =
+            OneL4CoralMidRoutine.trajectory("StarttoR9");
+    //2
+    AutoTrajectory R9toStart =
+            OneL4CoralMidRoutine.trajectory("R9toStart");
+
+
+    OneL4CoralMidRoutine.active().onTrue(
+            Commands.sequence(
+                    Commands.print("Started" +
+                            "OneL4CoralMidRoutine" +
+                            " the routine!"),
+                    StarttoR9.resetOdometry(),
+                    R9toStart.cmd()
+
+            )
+    );
+
+
+    StarttoR9.atTime("StarttoR9").onTrue(drive());
+    StarttoR9.done().onTrue(drive().andThen(R9toStart.cmd(), LowerElevator()));
+
+    R9toStart.atTime("R9toStart").onTrue(deposit());
+    R9toStart.done();
+
+
+
+    System.out.println(StarttoR9.getInitialPose().get());
+
+
+    return OneL4CoralMidRoutine;
+
+}}
 
 
 
@@ -370,8 +416,8 @@ public class AutoSubsystem extends SubsystemBase {
 //        │　　　　　　　　　 　│
 //        │　　　　　　　　　  　│
 //        │　＞　　　　　　　●　 │
-//        │≡　　╰┬┬┬╯　　≡    │
-//        │　　　 ╰—╯　　　　  │
+//        │≡　  ╰┬┬┬╯　　≡    │
+//        │　　 　╰—╯  　　　  │
 //        ╰——┬  ｏ ——————ｏ┬—╯
 //        　　　│世界赛!│
 //　　　        ╰┬———┬ ╯
