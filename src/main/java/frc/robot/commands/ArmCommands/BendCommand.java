@@ -19,7 +19,9 @@ public class BendCommand extends Command {
 
     @Override
     public void initialize() {
+        singleJointedArmSubsystem.armFeedback.reset(singleJointedArmSubsystem.getCurrentAngle());
         singleJointedArmSubsystem.armFeedback.setGoal(targetAngle);
+
         Logger.recordOutput("ArmSubsystem/target_Angle", targetAngle);
 
     }
@@ -27,9 +29,8 @@ public class BendCommand extends Command {
     @Override
     public void execute() {
         double voltsPID = singleJointedArmSubsystem.armFeedback.calculate(singleJointedArmSubsystem.getCurrentAngle());
-        double calculatedVolts = singleJointedArmSubsystem.armFeedForward.calculateWithVelocities(singleJointedArmSubsystem.getCurrentAngle(), singleJointedArmSubsystem.armFeedback.getSetpoint().velocity, singleJointedArmSubsystem.armFeedback.getSetpoint().velocity) + voltsPID;
+        double calculatedVolts = singleJointedArmSubsystem.armFeedForward.calculate(singleJointedArmSubsystem.armFeedback.getSetpoint().position, singleJointedArmSubsystem.armFeedback.getSetpoint().velocity) + voltsPID;
         singleJointedArmSubsystem.hoverAngle = singleJointedArmSubsystem.getCurrentAngle();
-        Logger.recordOutput("ArmSubsystem/current_setpoint", singleJointedArmSubsystem.armFeedback.getSetpoint().position);
         Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
         Logger.recordOutput("ArmSubsystem/desired_position", singleJointedArmSubsystem.armFeedback.getSetpoint().position);
 

@@ -14,16 +14,22 @@ public class ArmHoverCommand extends Command {
         addRequirements(singleJointedArmSubsystem);
     }
 
-
+    @Override
+    public void initialize() {
+        singleJointedArmSubsystem.armFeedback.reset(singleJointedArmSubsystem.getCurrentAngle());
+        singleJointedArmSubsystem.armFeedback.setGoal(singleJointedArmSubsystem.hoverAngle);
+    }
     @Override
     public void execute(){
-
-        double appliedVolts = (
-                singleJointedArmSubsystem.armFeedForward.calculate(singleJointedArmSubsystem.hoverAngle, 0)+
-                singleJointedArmSubsystem.armFeedback.calculate(singleJointedArmSubsystem.getCurrentAngle(), singleJointedArmSubsystem.hoverAngle));
-        Logger.recordOutput("ArmSubsystem/appliedVolts", appliedVolts);
-        Logger.recordOutput("ArmSubsystem/target_Angle", singleJointedArmSubsystem.hoverAngle);
-        singleJointedArmSubsystem.setArmVoltage(appliedVolts);
+        if (singleJointedArmSubsystem.hoverAngle != 6969) {
+            double appliedVolts = (
+                    singleJointedArmSubsystem.armFeedForward.calculate(singleJointedArmSubsystem.hoverAngle, 0) +
+                            singleJointedArmSubsystem.armFeedback.calculate(singleJointedArmSubsystem.getCurrentAngle()));
+            singleJointedArmSubsystem.hoverAngle = singleJointedArmSubsystem.getCurrentAngle();
+            Logger.recordOutput("ArmSubsystem/appliedVolts", appliedVolts);
+            Logger.recordOutput("ArmSubsystem/target_Angle", singleJointedArmSubsystem.hoverAngle);
+            singleJointedArmSubsystem.setArmVoltage(appliedVolts);
+        }
 
     }
 }

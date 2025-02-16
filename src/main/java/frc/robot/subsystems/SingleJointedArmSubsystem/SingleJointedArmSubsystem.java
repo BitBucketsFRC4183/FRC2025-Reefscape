@@ -17,7 +17,7 @@ public class SingleJointedArmSubsystem extends SubsystemBase {
     public SingleJointedArmIO singleJointedArmIO;
     private final ArmIOInputsAutoLogged armIOInputs;
     //private final Encoder armEncoder = new Encoder();
-    public double hoverAngle = -Math.PI / 2;
+    public double hoverAngle = 6969;
     public final ArmFeedforward armFeedForward = new ArmFeedforward(SingleJointedArmConstants.kS, SingleJointedArmConstants.kG, SingleJointedArmConstants.kV, 0);
     public final ProfiledPIDController armFeedback = new ProfiledPIDController(SingleJointedArmConstants.kP, SingleJointedArmConstants.kI, SingleJointedArmConstants.kD, new TrapezoidProfile.Constraints(SingleJointedArmConstants.maxVelocity,SingleJointedArmConstants.maxAcceleration));
 

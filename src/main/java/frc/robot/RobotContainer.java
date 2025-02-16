@@ -214,8 +214,8 @@ public class RobotContainer {
 
     operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
 
-    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, Math.PI / 4));
-    operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, 0));
+    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, Math.PI/2));
+    operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, -Math.PI/2));
     operatorInput.resetEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
 
     operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, new DoubleSupplier() {

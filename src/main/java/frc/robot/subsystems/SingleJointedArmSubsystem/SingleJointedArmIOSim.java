@@ -18,7 +18,7 @@ public class SingleJointedArmIOSim implements SingleJointedArmIO {
             SingleJointedArmConstants.armLength,
             SingleJointedArmConstants.MIN_ANGLE,
             SingleJointedArmConstants.MAX_ANGLE,
-            true, 0, 0.01,0
+            true, -Math.PI/2, 0.01,0
             );
 
     @Override
