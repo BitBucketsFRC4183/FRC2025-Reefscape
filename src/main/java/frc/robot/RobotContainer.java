@@ -253,6 +253,7 @@ public class RobotContainer {
 
   public void addCoral() {
     SimulatedArena.getInstance().addGamePiece(new ReefscapeCoral(new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
+    Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
   }
 
   public void displaySimFieldToAdvantageScope() {
