@@ -59,6 +59,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import frc.robot.commands.*;
 
+import java.util.List;
 import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
@@ -260,5 +261,11 @@ public class RobotContainer {
     if (Constants.currentMode != Constants.Mode.SIM) return;
 
     Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
+  }
+
+  void periodic() {
+    Pose3d[] coralPoses = SimulatedArena.getInstance()
+            .getGamePiecesArrayByType("Coral");
+    Logger.recordOutput("FieldSimulation/CoralPositions", coralPoses);
   }
 }
