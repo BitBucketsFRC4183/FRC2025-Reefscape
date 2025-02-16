@@ -45,6 +45,7 @@ import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
 import frc.robot.subsystems.ElevatorSubsystem.*;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
+import frc.robot.subsystems.GroundIntakeSubsystem.IntakeIOSim;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
@@ -143,9 +144,9 @@ public class RobotContainer {
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIOSim(driveSimulation));
+                new ClawSubsystem(new EndEffectorIOSim());
         groundIntakeSubsystem =
-                new GroundIntakeSubsystem(); //TODO
+                new GroundIntakeSubsystem(new IntakeIOSim(driveSimulation)); //TODO
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
@@ -263,7 +264,7 @@ public class RobotContainer {
     Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
   }
 
-  void periodic() {
+  public void periodic() {
     Pose3d[] coralPoses = SimulatedArena.getInstance()
             .getGamePiecesArrayByType("Coral");
     Logger.recordOutput("FieldSimulation/CoralPositions", coralPoses);

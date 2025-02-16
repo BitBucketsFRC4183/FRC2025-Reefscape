@@ -1,5 +1,7 @@
 package frc.robot.subsystems.GroundIntakeSubsystem;
 
 public class GroundIntakeSubsystem {
-    public class intake{}
+    public GroundIntakeSubsystem(IntakeIO intake){
+
+    }
 }

@@ -14,8 +14,6 @@ public class EndEffectorIOSim implements EndEffectorIO {
     private boolean hasAlgae = false;
     private boolean hasCoral = false;
     private boolean isOpen;
-    private final SwerveDriveSimulation driveSimulation; //remove placeholder
-    private final IntakeSimulation intakeSimulation;
 
     private final DCMotorSim centralWheel = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(ClawConstants.bigGearBox, 0.1, ClawConstants.gearing),
@@ -29,14 +27,7 @@ public class EndEffectorIOSim implements EndEffectorIO {
 
     final PIDController pid = new PIDController(ClawConstants.kP, ClawConstants.kI, ClawConstants.kD);
 
-    public EndEffectorIOSim(SwerveDriveSimulation driveSimulation) {
-        this.driveSimulation = driveSimulation;
-        intakeSimulation = IntakeSimulation.OverTheBumperIntake("Coral",
-                driveSimulation,
-                Meters.of(ClawConstants.intakeWidth),
-                Meters.of(ClawConstants.extensionLengthBeyondFrame),
-                IntakeSimulation.IntakeSide.BACK,
-                1);
+    public EndEffectorIOSim() {
         setupPID(pid, 3.0, 5.0, -0.5, 0.5); //change pid settings
     }
 
