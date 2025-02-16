@@ -1,4 +1,8 @@
 package frc.robot.subsystems.GroundIntakeSubsystem;
 
-public class IntakeIOPlaceholder {
+public class IntakeIOPlaceholder implements IntakeIO{
+
+    public IntakeIOPlaceholder() {
+
+    }
 }

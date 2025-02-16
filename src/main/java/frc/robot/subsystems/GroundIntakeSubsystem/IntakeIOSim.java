@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Meters;
 public class IntakeIOSim implements IntakeIO{
     private final SwerveDriveSimulation driveSim;
     private final IntakeSimulation intakeSim;
+    private boolean isRunning = false;
 
 
     public IntakeIOSim(SwerveDriveSimulation driveSim) {
@@ -25,14 +26,27 @@ public class IntakeIOSim implements IntakeIO{
     public void setRunning(boolean state) {
         if (state) {
             intakeSim.startIntake();
+            isRunning = true;
         } else {
             intakeSim.stopIntake();
+            isRunning = false;
         }
     }
 
     @Override
     public boolean coralInside() {
         return intakeSim.getGamePiecesAmount() != 0;
+    }
+
+    @Override
+    public boolean getIsRunning() {
+        return isRunning;
+    }
+
+    @Override
+    public void updateInputs(IntakeInputsAutoLogged inputs) {
+        inputs.hasCoral = coralInside();
+        inputs.isRunning = getIsRunning();
     }
 
 
