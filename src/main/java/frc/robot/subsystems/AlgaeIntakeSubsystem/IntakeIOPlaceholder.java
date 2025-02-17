@@ -1,4 +1,4 @@
-package frc.robot.subsystems.GroundIntakeSubsystem;
+package frc.robot.subsystems.AlgaeIntakeSubsystem;
 
 public class IntakeIOPlaceholder implements IntakeIO{
 

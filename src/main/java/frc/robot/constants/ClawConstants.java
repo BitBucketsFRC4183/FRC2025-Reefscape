@@ -10,6 +10,4 @@ public class ClawConstants {
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double mainSetpoint = 1.0;
-    public static double intakeWidth = 0.2;
-    public static double extensionLengthBeyondFrame = 0.4;
 }

@@ -1,16 +1,9 @@
 package frc.robot.subsystems.Auto;
 
-import choreo.Choreo;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
-import choreo.auto.AutoTrajectory;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.*;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
-import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
-import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import static choreo.Choreo.loadTrajectory;
