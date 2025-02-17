@@ -10,16 +10,9 @@ public interface IntakeIO {
         public boolean hasCoral = false;
         public boolean isRunning = false;
         public double rollersVoltage = 0.0;
+        public double pivotVoltage = 0.0;
     }
 
-    public default void setupPID(PIDController pid, double errorTolerance, double errorDerivativeTolerance, double minimumIntegral, double maximumIntegral) {
-        pid.setTolerance(errorTolerance, errorDerivativeTolerance);
-        pid.setIntegratorRange(minimumIntegral, maximumIntegral);
-    }
-
-    public default double pidCalculate(PIDController pid, IntakeEncoderIO encoder, double setpoint) {
-        return pid.calculate(encoder.getPivotDistance(), setpoint);
-    }
     public default void setRunning(boolean state) {}
     public default void pivotDown() {}
     public default void pivotUp() {}

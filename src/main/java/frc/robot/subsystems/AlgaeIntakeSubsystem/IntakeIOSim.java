@@ -13,7 +13,6 @@ public class IntakeIOSim implements IntakeIO{
     private final SwerveDriveSimulation driveSim;
     private final IntakeSimulation intakeSim;
     private boolean isRunning = false;
-    private final PIDController pid = new PIDController(IntakeConstants.kP, IntakeConstants.kI, IntakeConstants.kD);
     private final IntakeEncoderIOSim encoder = new IntakeEncoderIOSim();
 
     private final DCMotorSim pivotWheel = new DCMotorSim(
@@ -35,8 +34,6 @@ public class IntakeIOSim implements IntakeIO{
                 Meters.of(0.2),
                 IntakeSimulation.IntakeSide.BACK, //where intake is attatched
                 1);
-        setupPID(pid, 3.0, 5.0, -0.5, 0.5); //change pid settings
-
     }
 
     @Override
@@ -54,14 +51,14 @@ public class IntakeIOSim implements IntakeIO{
 
     @Override
     public void pivotDown() {
-        pivotWheel.setAngularVelocity(pidCalculate(pid, encoder, IntakeConstants.pivotRotation));
+        pivotWheel.setInputVoltage(IntakeConstants.pivotVoltsTarget);
         setRunning(true);
     }
 
     @Override
     public void pivotUp() {
         setRunning(false);
-        pivotWheel.setAngularVelocity(pidCalculate(pid, encoder, -IntakeConstants.pivotRotation));
+        pivotWheel.setInputVoltage(IntakeConstants.pivotVoltsTarget);
     }
 
     @Override
@@ -79,6 +76,7 @@ public class IntakeIOSim implements IntakeIO{
         inputs.hasCoral = coralInside();
         inputs.isRunning = getIsRunning();
         inputs.rollersVoltage = rollers.getInputVoltage();
+        inputs.pivotVoltage = pivotWheel.getInputVoltage();
     }
 
 
