@@ -27,6 +27,9 @@ public class OperatorInput {
 
   final Trigger resetEncoder = operatorControl.leftBumper();
 
+  final Trigger openClaw = driver.leftStick();
+  final Trigger closeClaw = driver.rightStick();
+
   final Trigger IntakeOn = driver.a();
 
   final Trigger xNotDesired =
