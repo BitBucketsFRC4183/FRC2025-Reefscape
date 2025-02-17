@@ -22,11 +22,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
+import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.BaseDriveCommand;
 import frc.robot.commands.ArmCommands.BendCommand;
-import frc.robot.commands.*;
 import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
+import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
@@ -78,7 +79,7 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController driveController = new CommandXboxController(0);
-  private final CommandXboxController elevatorController = new CommandXboxController(1);
+  private final CommandXboxController elevatorAndArmController = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -216,15 +217,12 @@ public class RobotContainer {
 
     operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, Math.PI/2));
     operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, -Math.PI/2));
-    operatorInput.resetEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
 
-    operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, new DoubleSupplier() {
-      @Override
-      public double getAsDouble() {
-        elevatorController.getLeftY();
-        return elevatorController.getLeftY();
-      }
-    }));
+    operatorInput.manualArmCommand.whileTrue(new ManualArmCommand(singleJointedArmSubsystem, elevatorAndArmController::getRightY));
+
+    operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
+
+    operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, elevatorAndArmController::getLeftY));
 
 
     operatorInput.movementDesired.whileTrue(
