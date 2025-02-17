@@ -11,4 +11,5 @@ public class IntakeConstants {
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double rollerVoltsTarget = 1.0;
+    public static double pivotVoltsTarget = 1.0;
 }
