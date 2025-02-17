@@ -8,6 +8,7 @@ import static frc.robot.util.SparkUtil.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
@@ -43,6 +44,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.SparkUtil;
 
@@ -61,7 +63,6 @@ public class ModuleIOHybrid implements ModuleIO {
     // Hardware objects
     protected final TalonFX driveTalon;
     private final SparkBase turnSpark;
-    private final CANcoder cancoder;
     private final AbsoluteEncoder turnEncoder;
 
     // Closed loop controllers
@@ -107,33 +108,29 @@ public class ModuleIOHybrid implements ModuleIO {
                     case 3 -> backRightZeroRotation;
                     default -> new Rotation2d();
                 };
-        driveTalon = new TalonFX(constants.SteerMotorId, TunerConstants.DrivetrainConstants.CANBusName);
-        cancoder = new CANcoder(constants.EncoderId, TunerConstants.DrivetrainConstants.CANBusName);
+        driveTalon =
+                switch (module) {
+                    case 0 -> new TalonFX(frontLeftDriveCanId);
+                    case 1 -> new TalonFX(frontRightDriveCanId);
+                    case 2 -> new TalonFX(backLeftDriveCanId);
+                    case 3 -> new TalonFX(backRightDriveCanId);
+                    default -> new TalonFX(0);
+                };
 
         // Configure drive motor
-        var driveConfig = constants.DriveMotorInitialConfigs;
+        var driveConfig = new TalonFXConfiguration().withAudio(new AudioConfigs().withBeepOnBoot(true));
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         driveConfig.Slot0 = constants.DriveMotorGains;
-        driveConfig.Feedback.SensorToMechanismRatio = constants.DriveMotorGearRatio;
-        driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = constants.SlipCurrent;
-        driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -constants.SlipCurrent;
-        driveConfig.CurrentLimits.StatorCurrentLimit = constants.SlipCurrent;
+        driveConfig.Feedback.SensorToMechanismRatio = driveMotorReduction;
+        driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = driveMotorCurrentLimit;
+        driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -driveMotorCurrentLimit;
+        driveConfig.CurrentLimits.StatorCurrentLimit = driveMotorCurrentLimit;
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        driveConfig.MotorOutput.Inverted =
-                constants.DriveMotorInverted
-                        ? InvertedValue.Clockwise_Positive
-                        : InvertedValue.CounterClockwise_Positive;
+        driveConfig.MotorOutput.Inverted = driveInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
         tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
 
-        // Configure CANCoder
-        CANcoderConfiguration cancoderConfig = constants.EncoderInitialConfigs;
-        cancoderConfig.MagnetSensor.MagnetOffset = constants.EncoderOffset;
-        cancoderConfig.MagnetSensor.SensorDirection =
-                constants.EncoderInverted
-                        ? SensorDirectionValue.Clockwise_Positive
-                        : SensorDirectionValue.CounterClockwise_Positive;
-        cancoder.getConfigurator().apply(cancoderConfig);
+
 
         // Create timestamp queue
         timestampPhoenixQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();

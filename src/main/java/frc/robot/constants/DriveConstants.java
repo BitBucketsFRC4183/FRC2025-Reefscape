@@ -66,9 +66,10 @@ public class DriveConstants {
     public static final int backRightTurnCanId = 8;
 
     // Drive motor configuration
+    public static final boolean driveInverted = false;
     public static final int driveMotorCurrentLimit = 50;
-    public static final double wheelRadiusMeters = TunerConstants.FrontLeft.WheelRadius;
-    public static final double driveMotorReduction = TunerConstants.FrontLeft.DriveMotorGearRatio;
+    public static final double wheelRadiusMeters = 0.25;
+    public static final double driveMotorReduction = 1;
     public static final DCMotor driveGearbox = DCMotor.getKrakenX60(1);
 
     // Drive encoder configuration
