@@ -36,7 +36,7 @@ import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 public class ElevatorIOTalonFX implements ElevatorIO{
 
-    private TalonFX elevatorTalon;
+    private final TalonFX elevatorTalon;
 
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionVoltageRequest = new PositionVoltage(0.0);
@@ -62,8 +62,7 @@ public class ElevatorIOTalonFX implements ElevatorIO{
 
     public ElevatorIOTalonFX() {
 
-        TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
-        var elevatorConfig = talonFXConfiguration;
+        TalonFXConfiguration elevatorConfig = new TalonFXConfiguration();
 
         elevatorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         elevatorConfig.TorqueCurrent.PeakForwardTorqueCurrent = ElevatorConstants.elevatorMotorCurrentLimit;
