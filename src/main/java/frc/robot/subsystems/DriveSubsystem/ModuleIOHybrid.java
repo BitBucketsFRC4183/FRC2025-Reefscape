@@ -153,12 +153,12 @@ public class ModuleIOHybrid implements ModuleIO {
                 driveCurrent);
         ParentDevice.optimizeBusUtilizationForAll(driveTalon);
 
-        turnSpark = new SparkFlex(
+        turnSpark = new SparkMax(
                 switch (module) {
-                    case 0 -> frontLeftDriveCanId;
-                    case 1 -> frontRightDriveCanId;
-                    case 2 -> backLeftDriveCanId;
-                    case 3 -> backRightDriveCanId;
+                    case 0 -> frontLeftTurnCanId;
+                    case 1 -> frontRightTurnCanId;
+                    case 2 -> backLeftTurnCanId;
+                    case 3 -> backRightTurnCanId;
                     default -> 0;
                 },
                 MotorType.kBrushless);
