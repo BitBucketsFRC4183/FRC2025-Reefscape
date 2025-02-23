@@ -42,7 +42,7 @@ import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
 import frc.robot.subsystems.ElevatorSubsystem.*;
 import frc.robot.subsystems.AlgaeIntakeSubsystem.AlgaeIntakeSubsystem;
-import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOPlaceholder;
+import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSparkMax;
 import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSim;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
@@ -108,7 +108,7 @@ public class RobotContainer {
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSparkMax(4, 5, new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
-                new AlgaeIntakeSubsystem(new IntakeIOPlaceholder()); //TODO replace placeholder
+                new AlgaeIntakeSubsystem(new IntakeIOSparkMax()); //TODO replace placeholder
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
@@ -167,7 +167,7 @@ public class RobotContainer {
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSparkMax(4, 5, new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
-                new AlgaeIntakeSubsystem(new IntakeIOPlaceholder()); //TODO replace with real intake
+                new AlgaeIntakeSubsystem(new IntakeIOSparkMax()); //TODO replace with real intake
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
