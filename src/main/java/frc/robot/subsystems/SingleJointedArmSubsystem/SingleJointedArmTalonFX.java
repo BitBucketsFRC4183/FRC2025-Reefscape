@@ -78,8 +78,8 @@ public class SingleJointedArmTalonFX implements SingleJointedArmIO{
         singleJointedArmConfig.CurrentLimits.StatorCurrentLimit = ElevatorConstants.elevatorMotorCurrentLimit;
         singleJointedArmConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        armTalon1 = new TalonFX(ElevatorConstants.elevatorTalonID);
-        armTalon2 = new TalonFX();
+        armTalon1 = new TalonFX((int) ElevatorConstants.elevatorTalonID1);
+        armTalon2 = new TalonFX((int) ElevatorConstants.elevatorTalonID2);
 
         timestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
 

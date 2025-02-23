@@ -1,9 +1,9 @@
 package frc.robot.constants;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 
 public class SingleJointedArmConstants {
+
+    public static final int frontLeftDriveCanId = 1;
     public static final int MotorNumber = 0;
     public static final int EncoderNumber = 1;
     public static final double kP = 3;
