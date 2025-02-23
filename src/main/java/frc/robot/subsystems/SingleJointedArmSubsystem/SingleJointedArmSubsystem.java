@@ -15,7 +15,7 @@ import frc.robot.constants.SingleJointedArmConstants;
 
 public class SingleJointedArmSubsystem extends SubsystemBase {
     public SingleJointedArmIO singleJointedArmIO;
-    private final ArmIOInputsAutoLogged armIOInputs;
+    //private final ArmIOInputsAutoLogged armIOInputs;
     //private final Encoder armEncoder = new Encoder();
     public double hoverAngle = 6969;
     public final ArmFeedforward armFeedForward = new ArmFeedforward(SingleJointedArmConstants.kS, SingleJointedArmConstants.kG, SingleJointedArmConstants.kV, 0);
@@ -23,27 +23,28 @@ public class SingleJointedArmSubsystem extends SubsystemBase {
 
     public SingleJointedArmSubsystem(SingleJointedArmIO singleJointedArmIO) {
         this.singleJointedArmIO = singleJointedArmIO;
-        this.armIOInputs = new ArmIOInputsAutoLogged();
+        //this.armIOInputs = new ArmIOInputsAutoLogged();
 
         armFeedback.setTolerance(SingleJointedArmConstants.kArmToleranceRPS);
         //armEncoder.setDistancePerPulse(SingleJointedArmConstants.kEncoderDistancePerPulse);
     }
 
-    @Override
+    /*@Override
     public void periodic(){
-        singleJointedArmIO.updateInputs(armIOInputs);
-    }
-
+        singleJointedArmIO.updateInputs(SingleJointedArmIO inputs);
+    }*/
+/*
     public double getCurrentAngle(){
-        return armIOInputs.armAngle;
-    }
+
+        return SingleJointedArmIO.ArmIOInputs.armAngle;
+    }*/
 
     public void setArmVoltage(double volts){
         singleJointedArmIO.setArmMotorVoltage(volts);
     }
-
+/*
     public double getCurrentVelocity() {
-        return armIOInputs.armVelocity;
-    }
+
+    }*/
 }
 

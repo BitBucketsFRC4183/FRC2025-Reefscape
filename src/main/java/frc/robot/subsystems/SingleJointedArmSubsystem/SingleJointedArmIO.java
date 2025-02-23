@@ -6,7 +6,7 @@ public interface SingleJointedArmIO {
 
     @AutoLog
     class ArmIOInputs {
-        public double armAngle = 0.0;
+        public double armAngle;
         public double armAppliedVoltage = 0.0;
         public double[] armCurrentAmps = new double[] {};
         public boolean armConnected;
