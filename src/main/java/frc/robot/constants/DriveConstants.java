@@ -65,6 +65,14 @@ public class DriveConstants {
     public static final int frontRightTurnCanId = 6;
     public static final int backRightTurnCanId = 8;
 
+    // Encoder Ports
+
+    public static final int frontLeftEncoderPort = 3;
+    public static final int frontRightEncoderPort = 2;
+    public static final int backLeftEncoderPort = 0;
+    public static final int backRightEncoderPort = 1;
+
+
     // Drive motor configuration
     public static final int driveMotorCurrentLimit = 50;
     public static final double wheelRadiusMeters = TunerConstants.FrontLeft.WheelRadius;
