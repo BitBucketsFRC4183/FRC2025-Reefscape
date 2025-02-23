@@ -9,5 +9,6 @@ public class ClawConstants {
     public static double kP = 0.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
-    public static double mainSetpoint = 1.0;
+    public static double mainVoltageTarget = 2.0;
+    public static double grippersVoltageTarget = 1.0;
 }
