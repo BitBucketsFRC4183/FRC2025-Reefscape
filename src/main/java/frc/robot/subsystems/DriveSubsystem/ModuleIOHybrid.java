@@ -203,7 +203,7 @@ public class ModuleIOHybrid implements ModuleIO {
                                 turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
         // Create odometry queues
-        timestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
+        timestampSparkQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
 //        turnPositionQueue =
 //                SparkOdometryThread.getInstance().registerSignal(turnSpark, turnEncoder::getPosition);
 

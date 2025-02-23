@@ -250,6 +250,8 @@ public class RobotContainer {
   }
 
   public void addCoral() {
+    if (Constants.currentMode != Constants.Mode.SIM) return;
+
     SimulatedArena.getInstance().addGamePiece(new ReefscapeCoral(new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
     Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
   }
@@ -261,6 +263,8 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    if (Constants.currentMode != Constants.Mode.SIM) return;
+
     Pose3d[] coralPoses = SimulatedArena.getInstance()
             .getGamePiecesArrayByType("Coral");
     Logger.recordOutput("FieldSimulation/CoralPositions", coralPoses);
