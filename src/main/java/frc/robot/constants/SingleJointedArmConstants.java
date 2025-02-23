@@ -27,4 +27,11 @@ public class SingleJointedArmConstants {
     public static double maxVelocity = 3;
     public static double maxAcceleration = 3;
     public static double mass = 5;
+
+    public static int arm1CurrentLimit = 0;
+    public static int arm2CurrentLimit = 0;
+
+    public static int arm1TalonID;
+    public static int arm2TalonID;
+
 }
