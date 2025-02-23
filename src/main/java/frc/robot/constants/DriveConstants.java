@@ -65,6 +65,14 @@ public class DriveConstants {
     public static final int frontRightTurnCanId = 5;
     public static final int backRightTurnCanId = 4;
 
+    // Encoder Ports
+
+    public static final int frontLeftEncoderPort = 3;
+    public static final int frontRightEncoderPort = 2;
+    public static final int backLeftEncoderPort = 0;
+    public static final int backRightEncoderPort = 1;
+
+
     // Drive motor configuration
     public static final boolean driveInverted = false;
     public static final int driveMotorCurrentLimit = 50;

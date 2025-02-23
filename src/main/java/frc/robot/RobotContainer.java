@@ -28,12 +28,12 @@ import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
-import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
 import frc.robot.subsystems.Auto.AutoSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
+import frc.robot.subsystems.ClawSubsystem.*;
 import frc.robot.subsystems.DriveSubsystem.*;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.GyroIO;
@@ -41,7 +41,9 @@ import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
 import frc.robot.subsystems.ElevatorSubsystem.*;
-import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
+import frc.robot.subsystems.AlgaeIntakeSubsystem.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSparkMax;
+import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSim;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
@@ -50,10 +52,10 @@ import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoral;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
-import frc.robot.commands.*;
 
 import java.util.function.DoubleSupplier;
 
@@ -65,7 +67,7 @@ public class RobotContainer {
   private final ElevatorSubsystem elevatorSubsystem;
   private final AlgaeManagementSubsystem algaeManagementSubsystem;
   private final ClawSubsystem clawSubsystem;
-  private final GroundIntakeSubsystem groundIntakeSubsystem;
+  private final AlgaeIntakeSubsystem groundIntakeSubsystem;
   private final LEDSubsystem ledSubsystem;
   private final SingleJointedArmSubsystem singleJointedArmSubsystem;
   private final VisionSubsystem visionSubsystem;
@@ -104,9 +106,9 @@ public class RobotContainer {
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
-                new ClawSubsystem(); //TODO
+                new ClawSubsystem(new EndEffectorIOSparkMax(4, 5, new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
-                new GroundIntakeSubsystem(); //TODO
+                new AlgaeIntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace placeholder
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
@@ -138,9 +140,9 @@ public class RobotContainer {
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
-                new ClawSubsystem(); //TODO
+                new ClawSubsystem(new EndEffectorIOSim());
         groundIntakeSubsystem =
-                new GroundIntakeSubsystem(); //TODO
+                new AlgaeIntakeSubsystem(new IntakeIOSim(driveSimulation)); //TODO
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
@@ -163,9 +165,9 @@ public class RobotContainer {
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
-                new ClawSubsystem(); //TODO
+                new ClawSubsystem(new EndEffectorIOSparkMax(4, 5, new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
-                new GroundIntakeSubsystem(); //TODO
+                new AlgaeIntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace with real intake
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
@@ -220,6 +222,9 @@ public class RobotContainer {
     }));
 
 
+    operatorInput.openClaw.onTrue(new OpenClawCommand(clawSubsystem));
+    operatorInput.closeClaw.onTrue(new CloseClawCommand(clawSubsystem));
+
     operatorInput.movementDesired.whileTrue(
             new BaseDriveCommand(
                 drive,
@@ -244,9 +249,20 @@ public class RobotContainer {
     SimulatedArena.getInstance().resetFieldForAuto();
   }
 
+  public void addCoral() {
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoral(new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
+    Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
+  }
+
   public void displaySimFieldToAdvantageScope() {
     if (Constants.currentMode != Constants.Mode.SIM) return;
 
     Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
+  }
+
+  public void periodic() {
+    Pose3d[] coralPoses = SimulatedArena.getInstance()
+            .getGamePiecesArrayByType("Coral");
+    Logger.recordOutput("FieldSimulation/CoralPositions", coralPoses);
   }
 }
