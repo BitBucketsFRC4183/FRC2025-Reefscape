@@ -38,6 +38,21 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     public void setIsOpen(boolean setting) {this.isOpen = setting; }
 
     @Override
+    public void centralToSetpoint(double setpoint) { //move wheels to setpoint
+        setCentralVelocity(pidCalculate(pid, encoder, setpoint));
+        if (setpoint == -ClawConstants.mainSetpoint) { //closing
+            setHasCoral(true);
+        } else if (setpoint == ClawConstants.mainSetpoint) { //opening
+            setHasCoral(false);
+        }
+    }
+
+    @Override
+    public void grippersToSetpoint(double setpoint) {
+        setGrippersVelocity(pidCalculate(pid, encoder, setpoint));
+    }
+
+    @Override
     public void setGrippersVelocity(double velocity) {
         gripperWheels.set(velocity);
     }
@@ -50,11 +65,6 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     @Override
     public void setCentralVoltage(double volts) {
         centralWheel.setVoltage(volts);
-        if (volts == ClawConstants.mainVoltageTarget) {
-            setHasCoral(false);
-        } else if (volts == 0) { //if closing
-            setHasCoral(true);
-        }
     }
 
     @Override
@@ -64,8 +74,8 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
 
     @Override
     public void updateInputs(EndEffectorInputsAutoLogged inputs) {
-        inputs.centralVolts = centralWheel.getBusVoltage();
-        inputs.gripperVolts = gripperWheels.getBusVoltage();
+        //inputs.centralVolts = getVoltage();
+        //inputs.gripperVolts = getVoltage();
         inputs.hasCoral = getHasCoral();
         inputs.hasAlgae = getHasAlgae();
         inputs.isOpen = getIsOpen();

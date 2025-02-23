@@ -12,13 +12,13 @@ public class ClawSubsystem extends SubsystemBase {
         this.endEffector = endEffector;
     }
     public void open() {
-        endEffector.setCentralVoltage(ClawConstants.mainVoltageTarget); //rotate big wheel at center
+        endEffector.centralToSetpoint(ClawConstants.mainSetpoint); //rotate big wheel at center
         endEffector.setIsOpen(true);
     }
 
     public void close() {
-        endEffector.setCentralVoltage(ClawConstants.mainVoltageTarget);
-        endEffector.setGrippersVoltage(ClawConstants.grippersVoltageTarget); //rotate grippers for better hold
+        endEffector.centralToSetpoint(-ClawConstants.mainSetpoint);
+        endEffector.grippersToSetpoint(0.2); //rotate grippers for better hold
         endEffector.setIsOpen(false);
 
     }
