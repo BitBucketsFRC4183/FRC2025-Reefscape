@@ -2,16 +2,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeIntakeSubsystem.AlgaeIntakeSubsystem;
 
-public class IntakePickupCommand extends Command {
+public class IntakeSetRollersCommand extends Command {
     private final AlgaeIntakeSubsystem intakeSubsystem;
 
-    public IntakePickupCommand(AlgaeIntakeSubsystem intakeSubsystem) {
+    public IntakeSetRollersCommand(AlgaeIntakeSubsystem intakeSubsystem) {
         this.intakeSubsystem = intakeSubsystem;
         addRequirements(intakeSubsystem);
     }
 
     public void initialize() {
-        intakeSubsystem.pickup();
+        intakeSubsystem.setRollersToVoltage();
     }
 
     public boolean isFinished() {

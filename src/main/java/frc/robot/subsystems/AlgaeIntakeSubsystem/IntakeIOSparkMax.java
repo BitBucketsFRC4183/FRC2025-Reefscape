@@ -40,6 +40,14 @@ public class IntakeIOSparkMax implements IntakeIO {
         setRunning(false);
     }
 
+    public void setPivotVoltage(double volts) {
+        pivot.setVoltage(volts);
+    }
+
+    public void setRollersVoltage(double volts) {
+        rollers.setVoltage(volts);
+    }
+
     @Override
     public void updateInputs(IntakeInputsAutoLogged inputs) {
         inputs.isRunning = isRunning;

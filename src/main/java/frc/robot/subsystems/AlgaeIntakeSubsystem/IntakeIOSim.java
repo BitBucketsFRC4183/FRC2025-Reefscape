@@ -62,6 +62,16 @@ public class IntakeIOSim implements IntakeIO{
     }
 
     @Override
+    public void setPivotVoltage(double volts) {
+        pivotWheel.setInputVoltage(volts);
+    }
+
+    @Override
+    public void setRollersVoltage(double volts) {
+        rollers.setInputVoltage(volts);
+    }
+
+    @Override
     public boolean coralInside() {
         return intakeSim.getGamePiecesAmount() != 0;
     }
