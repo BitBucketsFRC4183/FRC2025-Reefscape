@@ -22,6 +22,9 @@ public class ThriftyEncoder extends AnalogEncoder {
         this.input = input;
     }
 
+    public boolean getConnected() {
+        return (input.getVoltage() != 0);
+    }
     public double getRotationsPerSeconds() {
         double deltaRotation = getRotations() - lastRotation;
         return deltaRotation / dt;
@@ -36,7 +39,7 @@ public class ThriftyEncoder extends AnalogEncoder {
     }
 
     public double getRadiansPerSeconds() {
-        return Units.rotationsToRadians(getRotations()) / dt;
+        return Units.rotationsToRadians(getRotationsPerSeconds());
     }
 
     public double getVoltage() {
@@ -48,7 +51,6 @@ public class ThriftyEncoder extends AnalogEncoder {
     public void periodic() {
         lastTime = Timer.getFPGATimestamp();
         lastRotation = getRotations();
-        dt = MathSharedStore.getTimestamp() - lastTime;
-
+        dt = Timer.getFPGATimestamp() - lastTime;
     }
 }

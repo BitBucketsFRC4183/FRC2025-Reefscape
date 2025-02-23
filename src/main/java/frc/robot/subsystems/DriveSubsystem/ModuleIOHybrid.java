@@ -29,6 +29,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -57,7 +58,7 @@ public class ModuleIOHybrid implements ModuleIO {
     private final ThriftyEncoder turnEncoder;
 
     // Closed loop controllers
-    private final SparkClosedLoopController turnController;
+    // private final SparkClosedLoopController turnController;
 
     // Queue inputs from odometry thread
     private final Queue<Double> timestampSparkQueue;
@@ -122,7 +123,6 @@ public class ModuleIOHybrid implements ModuleIO {
         tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
 
 
-
         // Create timestamp queue
         timestampPhoenixQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
 
@@ -156,15 +156,15 @@ public class ModuleIOHybrid implements ModuleIO {
 
         int turnEncoderID =
                 switch (module) {
-                        case 0 -> frontLeftEncoderPort;
-                        case 1 -> frontRightEncoderPort;
-                        case 2 -> backLeftEncoderPort;
-                        case 3 -> backRightEncoderPort;
-                        default -> 0;
+                    case 0 -> frontLeftEncoderPort;
+                    case 1 -> frontRightEncoderPort;
+                    case 2 -> backLeftEncoderPort;
+                    case 3 -> backRightEncoderPort;
+                    default -> 0;
                 };
 
         turnEncoder = new ThriftyEncoder(new AnalogInput(turnEncoderID));
-        turnController = turnSpark.getClosedLoopController();
+        // turnController = new PIDController(1, 0 ,0, 0.02);
 
         // Configure turn motor
         var turnConfig = new SparkMaxConfig();
@@ -179,21 +179,21 @@ public class ModuleIOHybrid implements ModuleIO {
 //                .positionConversionFactor(turnEncoderPositionFactor)
 //                .velocityConversionFactor(turnEncoderVelocityFactor)
 //                .averageDepth(2);
-        turnConfig
-                .closedLoop
-                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                .positionWrappingEnabled(true)
-                .positionWrappingInputRange(turnPIDMinInput, turnPIDMaxInput)
-                .pidf(turnKp, 0.0, turnKd, 0.0);
-        turnConfig
-                .signals
-                .absoluteEncoderPositionAlwaysOn(true)
-                .absoluteEncoderPositionPeriodMs((int) (1000.0 / odometryFrequency))
-                .absoluteEncoderVelocityAlwaysOn(true)
-                .absoluteEncoderVelocityPeriodMs(20)
-                .appliedOutputPeriodMs(20)
-                .busVoltagePeriodMs(20)
-                .outputCurrentPeriodMs(20);
+//        turnConfig
+//                .closedLoop
+//                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+//                .positionWrappingEnabled(true)
+//                .positionWrappingInputRange(turnPIDMinInput, turnPIDMaxInput)
+//                .pidf(turnKp, 0.0, turnKd, 0.0);
+//        turnConfig
+//                .signals
+//                .absoluteEncoderPositionAlwaysOn(true)
+//                .absoluteEncoderPositionPeriodMs((int) (1000.0 / odometryFrequency))
+//                .absoluteEncoderVelocityAlwaysOn(true)
+//                .absoluteEncoderVelocityPeriodMs(20)
+//                .appliedOutputPeriodMs(20)
+//                .busVoltagePeriodMs(20)
+//                .outputCurrentPeriodMs(20);
 
         SparkUtil.tryUntilOk(
                 turnSpark,
@@ -217,6 +217,9 @@ public class ModuleIOHybrid implements ModuleIO {
                 BaseStatusSignal.refreshAll(drivePosition, driveVelocity, driveAppliedVolts, driveCurrent);
 
         turnEncoder.periodic();
+
+        // if v = 0 lol
+        inputs.turnEncoderConnected = turnEncoder.getConnected();
         // Update drive inputs
         inputs.driveConnected = driveConnectedDebounce.calculate(driveStatus.isOK());
         inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble());
@@ -287,9 +290,10 @@ public class ModuleIOHybrid implements ModuleIO {
 
     @Override
     public void setTurnPosition(Rotation2d rotation) {
-        double setpoint =
-                MathUtil.inputModulus(
-                        rotation.plus(zeroRotation).getRadians(), turnPIDMinInput, turnPIDMaxInput);
-        turnController.setReference(setpoint, ControlType.kPosition);
+//        double setpoint =
+//                MathUtil.inputModulus(
+//                        rotation.plus(zeroRotation).getRadians(), turnPIDMinInput, turnPIDMaxInput);
+//        turnController.setReference(setpoint, ControlType.kPosition);
+        setTurnOpenLoop(1);
     }
 }

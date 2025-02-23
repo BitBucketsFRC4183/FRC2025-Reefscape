@@ -50,7 +50,8 @@ public class Module {
     // Calculate positions for odometry
     // int sampleCount = inputs.odometryPhoenixTimestamps.length; // All signals are sampled together
 
-    int sampleCount = Math.min(inputs.odometryPhoenixTimestamps.length, inputs.odometrySparkTimestamps.length);
+    // int sampleCount = Math.min(inputs.odometryPhoenixTimestamps.length, inputs.odometrySparkTimestamps.length);
+    int sampleCount = 1;
     // System.out.println(inputs.odometrySparkTimestamps.length + "  " + inputs.odometryPhoenixTimestamps.length);
     odometryPositions = new SwerveModulePosition[sampleCount];
     for (int i = 0; i < sampleCount; i++) {

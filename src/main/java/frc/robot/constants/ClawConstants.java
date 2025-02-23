@@ -4,8 +4,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 
 public class ClawConstants {
 
-    public static final int centralID = 0;
-    public static final int wheelID = 0;
+    public static final int centralID = 29;
+    public static final int wheelID = 32;
     public final static DCMotor bigGearBox = DCMotor.getNEO(1);
     public final static DCMotor smallGearBox = DCMotor.getNEO(1);
     public  final static double gearing = 0.1;
