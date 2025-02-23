@@ -40,10 +40,12 @@ public class IntakeIOSparkMax implements IntakeIO {
         setRunning(false);
     }
 
+    @Override
     public void setPivotVoltage(double volts) {
         pivot.setVoltage(volts);
     }
 
+    @Override
     public void setRollersVoltage(double volts) {
         rollers.setVoltage(volts);
     }
