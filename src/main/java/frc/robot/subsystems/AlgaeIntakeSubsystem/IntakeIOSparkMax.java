@@ -11,9 +11,9 @@ public class IntakeIOSparkMax implements IntakeIO {
     private boolean isRunning = false;
     private boolean hasCoral = false;
 
-    public IntakeIOSparkMax(int canID_left, int canID_right) {
-        this.pivot = new SparkMax(canID_left, SparkLowLevel.MotorType.kBrushless);
-        this.rollers = new SparkMax(canID_right, SparkLowLevel.MotorType.kBrushless);
+    public IntakeIOSparkMax(int pivotID, int rollersID) {
+        this.pivot = new SparkMax(pivotID, SparkLowLevel.MotorType.kBrushless);
+        this.rollers = new SparkMax(rollersID, SparkLowLevel.MotorType.kBrushless);
     }
 
     @Override

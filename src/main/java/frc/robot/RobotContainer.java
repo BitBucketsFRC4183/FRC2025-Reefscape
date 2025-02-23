@@ -108,7 +108,7 @@ public class RobotContainer {
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSparkMax(4, 5, new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
-                new AlgaeIntakeSubsystem(new IntakeIOSparkMax()); //TODO replace placeholder
+                new AlgaeIntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace placeholder
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
@@ -167,7 +167,7 @@ public class RobotContainer {
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSparkMax(4, 5, new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
-                new AlgaeIntakeSubsystem(new IntakeIOSparkMax()); //TODO replace with real intake
+                new AlgaeIntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace with real intake
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
