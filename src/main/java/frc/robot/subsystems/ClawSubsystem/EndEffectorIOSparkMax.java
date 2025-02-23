@@ -13,14 +13,15 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     private boolean hasCoral = false;
     private boolean isOpen = false;
 //this should be fine? we'll see
-    public EndEffectorIOSparkMax(int canID, int smallCanID, EndEffectorEncoderIOSim encoder) {
+    public EndEffectorIOSparkMax(EndEffectorEncoderIO encoder) {
         setupPID(pid, 3.0, 5.0, -0.5, 0.5); //change pid setting
-        centralWheel = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless); //big
-        gripperWheels = new SparkMax(smallCanID, SparkLowLevel.MotorType.kBrushless); //small
+        centralWheel = new SparkMax(ClawConstants.centralID, SparkLowLevel.MotorType.kBrushless); //big
+        gripperWheels = new SparkMax(ClawConstants.wheelID, SparkLowLevel.MotorType.kBrushless); //small
         this.encoder = encoder;
     }
 
     final PIDController pid = new PIDController(ClawConstants.kP, ClawConstants.kI, ClawConstants.kD);
+
 
     public boolean getHasCoral() { return this.hasCoral; }
 

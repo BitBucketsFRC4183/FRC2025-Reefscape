@@ -30,7 +30,6 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
 import frc.robot.subsystems.Auto.AutoSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.ClawSubsystem.*;
@@ -65,7 +64,6 @@ public class RobotContainer {
   // private final Flywheel flywheel;
   public final OperatorInput operatorInput;
   private final ElevatorSubsystem elevatorSubsystem;
-  private final AlgaeManagementSubsystem algaeManagementSubsystem;
   private final ClawSubsystem clawSubsystem;
   private final AlgaeIntakeSubsystem groundIntakeSubsystem;
   private final LEDSubsystem ledSubsystem;
@@ -103,10 +101,8 @@ public class RobotContainer {
 
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIOTalonFX(), new ElevatorEncoderIOSim()); //TODO
-        algaeManagementSubsystem =
-                new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIOSparkMax(4, 5, new EndEffectorEncoderIOSim()));
+                new ClawSubsystem(new EndEffectorIOSparkMax(new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
                 new AlgaeIntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace placeholder
         ledSubsystem =
@@ -128,17 +124,8 @@ public class RobotContainer {
                     new ModuleIOSim(driveSimulation.getModules()[1]),
                     new ModuleIOSim(driveSimulation.getModules()[2]),
                     new ModuleIOSim(driveSimulation.getModules()[3]));
-//        new DriveSubsystem(
-//                new GyroIOSim(driveSimulation.getGyroSimulation()),
-//                new ModuleIOHybridSim(0, TunerConstants.FrontLeft, driveSimulation.getModules()[0]),
-//                new ModuleIOHybridSim(1, TunerConstants.FrontRight,driveSimulation.getModules()[1]),
-//                new ModuleIOHybridSim(2, TunerConstants.BackLeft,driveSimulation.getModules()[2]),
-//                new ModuleIOHybridSim(3, TunerConstants.BackRight,driveSimulation.getModules()[3]));
-        // flywheel = new Flywheel(new FlywheelIOSim());
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIOSim(), new ElevatorEncoderIOSim()); //TODO
-        algaeManagementSubsystem =
-                new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSim());
         groundIntakeSubsystem =
@@ -159,13 +146,10 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        // flywheel = new Flywheel(new FlywheelIO() {});
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIO() {}, new ElevatorEncoderIO() {}); //TODO
-        algaeManagementSubsystem =
-                new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIOSparkMax(4, 5, new EndEffectorEncoderIOSim()));
+                new ClawSubsystem(new EndEffectorIO() {});
         groundIntakeSubsystem =
                 new AlgaeIntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace with real intake
         ledSubsystem =

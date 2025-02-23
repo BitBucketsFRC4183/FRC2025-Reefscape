@@ -216,6 +216,7 @@ public class ModuleIOHybrid implements ModuleIO {
         var driveStatus =
                 BaseStatusSignal.refreshAll(drivePosition, driveVelocity, driveAppliedVolts, driveCurrent);
 
+        turnEncoder.periodic();
         // Update drive inputs
         inputs.driveConnected = driveConnectedDebounce.calculate(driveStatus.isOK());
         inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble());
