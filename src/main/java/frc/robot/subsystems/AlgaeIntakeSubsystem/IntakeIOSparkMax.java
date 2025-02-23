@@ -25,13 +25,13 @@ public class IntakeIOSparkMax implements IntakeIO {
             isRunning = false;
             rollers.setVoltage(0.0);
         }
-
     }
 
     @Override
     public void pivotDown() {
         pivot.setVoltage(IntakeConstants.pivotVoltsTarget);
         setRunning(true);
+        hasCoral = true;
     }
 
     @Override
