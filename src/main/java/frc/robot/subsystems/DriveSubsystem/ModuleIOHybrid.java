@@ -12,28 +12,21 @@ import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
-import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
@@ -43,9 +36,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import frc.robot.constants.DriveConstants;
-import frc.robot.generated.TunerConstants;
 import frc.robot.util.SparkUtil;
 
 import java.util.Queue;
@@ -69,7 +59,7 @@ public class ModuleIOHybrid implements ModuleIO {
     private final SparkClosedLoopController turnController;
 
     // Queue inputs from odometry thread
-    private final Queue<Double> timestampQueue;
+    private final Queue<Double> timestampSparkQueue;
     private final Queue<Double> drivePositionQueue;
     private final Queue<Double> turnPositionQueue;
 
@@ -145,7 +135,7 @@ public class ModuleIOHybrid implements ModuleIO {
 
         // Configure periodic frames
         BaseStatusSignal.setUpdateFrequencyForAll(
-                DriveSubsystem.ODOMETRY_FREQUENCY, drivePosition);
+                100, drivePosition);
         BaseStatusSignal.setUpdateFrequencyForAll(
                 50.0,
                 driveVelocity,
@@ -194,6 +184,7 @@ public class ModuleIOHybrid implements ModuleIO {
                 .appliedOutputPeriodMs(20)
                 .busVoltagePeriodMs(20)
                 .outputCurrentPeriodMs(20);
+
         SparkUtil.tryUntilOk(
                 turnSpark,
                 5,
@@ -202,7 +193,7 @@ public class ModuleIOHybrid implements ModuleIO {
                                 turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
         // Create odometry queues
-        timestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
+        timestampSparkQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
         turnPositionQueue =
                 SparkOdometryThread.getInstance().registerSignal(turnSpark, turnEncoder::getPosition);
 
@@ -237,8 +228,11 @@ public class ModuleIOHybrid implements ModuleIO {
         inputs.turnConnected = turnConnectedDebounce.calculate(!sparkStickyFault);
 
         // Update odometry inputs
-        inputs.odometryTimestamps =
-                timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
+        inputs.odometryPhoenixTimestamps =
+                timestampPhoenixQueue.stream().mapToDouble((Double value) -> value).toArray();
+        inputs.odometrySparkTimestamps =
+                timestampSparkQueue.stream().mapToDouble((Double value) -> value).toArray();
+
         inputs.odometryDrivePositionsRad =
                 drivePositionQueue.stream()
                         .mapToDouble(Units::rotationsToRadians)
@@ -247,7 +241,7 @@ public class ModuleIOHybrid implements ModuleIO {
                 turnPositionQueue.stream()
                         .map((Double value) -> new Rotation2d(value).minus(zeroRotation))
                         .toArray(Rotation2d[]::new);
-        timestampQueue.clear();
+        timestampSparkQueue.clear();
         timestampPhoenixQueue.clear();
         drivePositionQueue.clear();
         turnPositionQueue.clear();

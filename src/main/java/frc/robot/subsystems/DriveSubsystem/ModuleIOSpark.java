@@ -205,7 +205,7 @@ public class ModuleIOSpark implements ModuleIO {
         inputs.turnConnected = turnConnectedDebounce.calculate(!sparkStickyFault);
 
         // Update odometry inputs
-        inputs.odometryTimestamps =
+        inputs.odometryPhoenixTimestamps =
                 timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
         inputs.odometryDrivePositionsRad =
                 drivePositionQueue.stream().mapToDouble((Double value) -> value).toArray();

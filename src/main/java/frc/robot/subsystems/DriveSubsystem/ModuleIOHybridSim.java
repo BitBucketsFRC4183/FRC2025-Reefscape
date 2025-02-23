@@ -67,7 +67,7 @@ public class ModuleIOHybridSim extends ModuleIOHybrid {
             Math.abs(moduleSimulation.getSteerMotorStatorCurrent().in(Amps));
 
     // Update odometry inputs
-    inputs.odometryTimestamps = SparkUtil.getSimulationOdometryTimeStamps();
+    inputs.odometryPhoenixTimestamps = SparkUtil.getSimulationOdometryTimeStamps();
     inputs.odometryDrivePositionsRad = Arrays.stream(moduleSimulation.getCachedDriveWheelFinalPositions())
             .mapToDouble(angle -> angle.in(Radians))
             .toArray();
