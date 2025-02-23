@@ -18,7 +18,7 @@ public class AutoSubsystem extends SubsystemBase {
     public AutoSubsystem(ClawSubsystem claw,
                          DriveSubsystem drive) {
         this.drive = drive;
-        this.claw = claw;
+        this.claw = claw; //TODO!!!!!! (fix to end effector)
         this.autoFactory = new AutoFactory(drive::getPose, drive::setPose, drive::followTrajectorySample, true, drive);
 
     }

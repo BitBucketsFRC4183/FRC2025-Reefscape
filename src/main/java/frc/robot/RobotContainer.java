@@ -112,6 +112,7 @@ public class RobotContainer {
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
+        autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
         autoChooser = new AutoChooser();
         break;
 
@@ -141,6 +142,7 @@ public class RobotContainer {
                 new SingleJointedArmSubsystem(); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
+        autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
         break;
       default:
         // Replayed robot, disable IO implementations
@@ -172,13 +174,14 @@ public class RobotContainer {
         visionSubsystem =
                 new VisionSubsystem(new VisionIO() {
                 }); //TODO
+        autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
 
         //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
         break;
     }
 
 //    // Set up auto routines
-    autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
+   //TODO FIX CLAW TO END EFFECTOR
 
     loadCommands();
   }
