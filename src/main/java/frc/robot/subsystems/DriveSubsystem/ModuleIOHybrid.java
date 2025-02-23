@@ -58,7 +58,7 @@ public class ModuleIOHybrid implements ModuleIO {
     private final ThriftyEncoder turnEncoder;
 
     // Closed loop controllers
-    // private final SparkClosedLoopController turnController;
+    private final PIDController turnController;
 
     // Queue inputs from odometry thread
     private final Queue<Double> timestampSparkQueue;
@@ -89,6 +89,7 @@ public class ModuleIOHybrid implements ModuleIO {
     // Connection debouncers
     private final Debouncer driveConnectedDebounce = new Debouncer(0.5);
     private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
+    private Rotation2d currentTurnPosition = new Rotation2d();
 
     public ModuleIOHybrid(int module, SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants) {
         this.constants = constants;
@@ -164,7 +165,7 @@ public class ModuleIOHybrid implements ModuleIO {
                 };
 
         turnEncoder = new ThriftyEncoder(new AnalogInput(turnEncoderID));
-        // turnController = new PIDController(1, 0 ,0, 0.02);
+        turnController = new PIDController(turnKp, 0 ,turnKd);
 
         // Configure turn motor
         var turnConfig = new SparkMaxConfig();
@@ -231,6 +232,7 @@ public class ModuleIOHybrid implements ModuleIO {
         sparkStickyFault = false;
 
         inputs.turnPosition = new Rotation2d(turnEncoder.getRadians()).minus(zeroRotation);
+        currentTurnPosition = inputs.turnPosition;
         inputs.turnVelocityRadPerSec = turnEncoder.getRadiansPerSeconds();
 
         ifOk(
@@ -290,10 +292,8 @@ public class ModuleIOHybrid implements ModuleIO {
 
     @Override
     public void setTurnPosition(Rotation2d rotation) {
-//        double setpoint =
-//                MathUtil.inputModulus(
-//                        rotation.plus(zeroRotation).getRadians(), turnPIDMinInput, turnPIDMaxInput);
-//        turnController.setReference(setpoint, ControlType.kPosition);
-        setTurnOpenLoop(1);
+        double range = turnPIDMaxInput - turnPIDMinInput;
+        double setpoint = rotation.getRadians() % range;
+        turnController.calculate(currentTurnPosition.getRadians(), setpoint);
     }
 }
