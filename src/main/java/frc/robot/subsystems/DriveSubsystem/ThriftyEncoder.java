@@ -14,6 +14,11 @@ public class ThriftyEncoder extends AnalogEncoder {
         this.input = input;
     }
 
+    public ThriftyEncoder(AnalogInput input, int returnValue, int returnHalfway) {
+        super(input, returnValue, returnHalfway);
+        this.input = input;
+    }
+
     public double getAngularVelocity() {
         double deltaTime = MathSharedStore.getTimestamp() - lastTime;
         double deltaRotation = getRotation() - lastRotation;
