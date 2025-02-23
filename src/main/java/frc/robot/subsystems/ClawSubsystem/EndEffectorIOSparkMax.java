@@ -12,7 +12,7 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     private boolean hasAlgae = false;
     private boolean hasCoral = false;
     private boolean isOpen = false;
-
+//this should be fine? we'll see
     public EndEffectorIOSparkMax(int canID, int smallCanID, EndEffectorEncoderIOSim encoder) {
         setupPID(pid, 3.0, 5.0, -0.5, 0.5); //change pid setting
         centralWheel = new SparkMax(canID, SparkLowLevel.MotorType.kBrushless); //big
