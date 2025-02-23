@@ -68,8 +68,8 @@ public class DriveConstants {
     // Drive motor configuration
     public static final boolean driveInverted = false;
     public static final int driveMotorCurrentLimit = 50;
-    public static final double wheelRadiusMeters = 0.25;
-    public static final double driveMotorReduction = 1;
+    public static final double wheelRadiusMeters = 0.0508;
+    public static final double driveMotorReduction = 6.75;
     public static final DCMotor driveGearbox = DCMotor.getKrakenX60(1);
 
     // Drive encoder configuration

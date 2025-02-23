@@ -100,7 +100,7 @@ public class RobotContainer {
                 new ModuleIOHybrid(3, TunerConstants.BackRight));
 
         elevatorSubsystem =
-                new ElevatorSubsystem(new ElevatorIOSparkMax(), new ElevatorEncoderIOSim()); //TODO
+                new ElevatorSubsystem(new ElevatorIOTalonFX(), new ElevatorEncoderIOSim()); //TODO
         algaeManagementSubsystem =
                 new AlgaeManagementSubsystem(); //TODO
         clawSubsystem =

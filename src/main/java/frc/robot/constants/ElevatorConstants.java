@@ -43,4 +43,14 @@ public class ElevatorConstants {
     public static double minHeight = 0;
     public static double maxVelocity = 3;
     public static double maxAcceleration = 3 ;
+
+    public static boolean elevatorConnected;
+    public static double elevatorPositionRad;
+    public static double elevatorVelocityRadPerSec;
+    public static double elevatorAppliedVoltage;
+    public static double elevatorCurrentAmps;
+
+    public static final int elevatorMotorCurrentLimit = 50;
+
+    public static int elevatorCanID = 10;
 }
