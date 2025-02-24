@@ -48,7 +48,6 @@ import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOEncoder;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOSim;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOTalonFX;
-import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSparkMax;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
@@ -121,6 +120,7 @@ public class RobotContainer {
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
         break;
 
+        
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         this.driveSimulation = new SwerveDriveSimulation(DriveConstants.mapleSimConfig, new Pose2d());
@@ -150,10 +150,12 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(new SingleJointedArmIOSim(), new SingleJointedArmIOEncoder()); //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmIOSim()); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
         break;
+
+
       default:
         // Replayed robot, disable IO implementations
         drive =
