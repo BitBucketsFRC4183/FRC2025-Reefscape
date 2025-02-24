@@ -45,7 +45,9 @@ import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
 import frc.robot.subsystems.ElevatorSubsystem.*;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
+import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOEncoder;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOSim;
+import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOTalonFX;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSparkMax;
 import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
@@ -113,7 +115,7 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(new SingleJointedArmSparkMax()) {
+                new SingleJointedArmSubsystem(new SingleJointedArmIOTalonFX()) {
                 }; //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
@@ -148,7 +150,7 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(new SingleJointedArmIOSim()); //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmIOSim(), new SingleJointedArmIOEncoder()); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
         break;
