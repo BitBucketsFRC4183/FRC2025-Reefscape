@@ -3,7 +3,7 @@ package frc.robot.subsystems.ElevatorSubsystem;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ElevatorIO {
-    ElevatorIO.ElevatorIOInputs ElevatorIOInputs = new ElevatorIOInputs(); ;
+    ElevatorIO.ElevatorIOInputs ElevatorIOInputs = new ElevatorIOInputs();
 
     @AutoLog
     class ElevatorIOInputs{

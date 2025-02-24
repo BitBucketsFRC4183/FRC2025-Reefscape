@@ -1,5 +1,13 @@
 package frc.robot.subsystems.SingleJointedArmSubsystem;
 
-public class SingleJointedArmIOEncoder implements SingleJointedArmIO {
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.SparkMax;
+import org.littletonrobotics.junction.AutoLog;
+
+public class SingleJointedArmIOEncoder {
+    SparkMax spark = new SparkMax(1,
+            SparkLowLevel.MotorType.kBrushless); //TODO!
+    @AutoLog
+    
 
 }

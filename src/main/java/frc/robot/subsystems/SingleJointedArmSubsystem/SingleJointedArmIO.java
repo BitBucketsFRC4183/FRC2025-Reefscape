@@ -1,8 +1,10 @@
 package frc.robot.subsystems.SingleJointedArmSubsystem;
 
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorIO;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface SingleJointedArmIO {
+    SingleJointedArmIO.ArmIOInputs ArmIOInputs = new SingleJointedArmIO.ArmIOInputs();
 
     @AutoLog
     class ArmIOInputs {
@@ -32,11 +34,9 @@ public interface SingleJointedArmIO {
 
         public double encoderPosition;
         public double armVelocity;
-
-
     }
+
     public default void disable(){}
     public default void updateInputs(ArmIOInputs inputs){}
-
     public default void setArmMotorVoltage(double volts) {}
 }
