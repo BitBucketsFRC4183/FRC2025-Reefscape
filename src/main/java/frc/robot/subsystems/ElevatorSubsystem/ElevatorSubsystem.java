@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
+import org.littletonrobotics.junction.Logger;
 
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -21,7 +22,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     double maxVoltage = 12.0;
     private final ElevatorEncoderIO elevatorEncoderIO;
     private final ElevatorIOInputsAutoLogged elevatorIOInputs;
-    //private final ElevatorEncoderIOInputsAutoLogged encoderIOInputs;
+    private final ElevatorEncoderIOInputsAutoLogged encoderIOInputs;
 
     private final Mechanism2d elevator2D = new Mechanism2d(2, 2);
     private final MechanismRoot2d elevator2dRoot = elevator2D.getRoot("Elevator Root", 1, 0);
@@ -41,8 +42,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.elevatorIO = elevatorIO;
         this.elevatorEncoderIO = elevatorEncoderIO;
         this.elevatorIOInputs = new ElevatorIOInputsAutoLogged();
-        //this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
-        this.elevatorMech2d = elevator2dRoot.append(new MechanismLigament2d("Elevator", elevatorIOInputs.loadHeight, 90));
+        this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
+        this.elevatorMech2d = elevator2dRoot.append(new MechanismLigament2d("Elevator", encoderIOInputs.loadHeight, 90));
         elevatorPID.setTolerance(0.001, ElevatorConstants.kShooterToleranceRPS);
         //elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
         setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
@@ -54,21 +55,22 @@ public class ElevatorSubsystem extends SubsystemBase {
     @Override
     public void periodic(){
         elevatorIO.updateInputs(elevatorIOInputs);
-        //elevatorEncoderIO.updateInputs(encoderIOInputs);
-        elevatorMech2d.setLength(elevatorIOInputs.loadHeight);
+        elevatorEncoderIO.updateInputs(encoderIOInputs);
+
+        elevatorMech2d.setLength(encoderIOInputs.loadHeight);
+        Logger.processInputs("ElevatorSubsystem", elevatorIOInputs);
+        Logger.processInputs("ElevatorSubsytem/encoder", encoderIOInputs);
 
     }
 
     public void resetLoadHeightEncoderValue() {
-        elevatorIO.setEncoderHeightValue(0);
+        elevatorEncoderIO.resetEncoderPositionWithLoadHeight();
     }
-
     public double getLoadHeight() {
-        return elevatorIOInputs.loadHeight;
+        return encoderIOInputs.loadHeight;
     }
-
     public double getElevatorSpeedRads() {
-        return elevatorIOInputs.elevatorVelocityRadPerSec;
+        return encoderIOInputs.encoderVelocityRads;
     }
     public void setElevatorVoltage(double volts) {
         elevatorIO.setElevatorMotorVoltage(volts);

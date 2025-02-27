@@ -96,11 +96,10 @@ public class ElevatorIOTalonFX implements ElevatorIO{
             var elevatorStatus =
                     BaseStatusSignal.refreshAll(elevatorPosition, elevatorVelocity, elevatorAppliedVolts, elevatorCurrent);
             inputs.elevatorConnected = elevatorConnectedDebounce.calculate(elevatorStatus.isOK());
-            inputs.elevatorPositionRad = Units.rotationsToRadians(elevatorPosition.getValueAsDouble());
-            inputs.elevatorVelocityRadPerSec = Units.rotationsToRadians(elevatorVelocity.getValueAsDouble());
+            inputs.elevatorMotorPositionRad = Units.rotationsToRadians(elevatorPosition.getValueAsDouble());
+            inputs.elevatorMotorVelocityRadPerSec = Units.rotationsToRadians(elevatorVelocity.getValueAsDouble());
             inputs.elevatorAppliedVolts = elevatorAppliedVolts.getValueAsDouble();
             inputs.elevatorCurrentAmps = elevatorCurrent.getValueAsDouble();
-            inputs.unfilteredLoadHeight = (inputs.elevatorPositionRad / ElevatorConstants.gearingRatio) * ElevatorConstants.pulleyRadius;
         }
 
         @Override

@@ -61,7 +61,6 @@ import java.util.function.DoubleSupplier;
 public class RobotContainer {
   // Subsystems
   public final DriveSubsystem drive;
-  // private final Flywheel flywheel;
   public final OperatorInput operatorInput;
   private final ElevatorSubsystem elevatorSubsystem;
   private final ClawSubsystem clawSubsystem;
@@ -100,7 +99,7 @@ public class RobotContainer {
                 new ModuleIOHybrid(3, TunerConstants.BackRight));
 
         elevatorSubsystem =
-                new ElevatorSubsystem(new ElevatorIOTalonFX(), new ElevatorEncoderIOSim()); //TODO
+                new ElevatorSubsystem(new ElevatorIOSparkMax(), new ElevatorEncoderIOThroughbore()); //TODO
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSparkMax(new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =

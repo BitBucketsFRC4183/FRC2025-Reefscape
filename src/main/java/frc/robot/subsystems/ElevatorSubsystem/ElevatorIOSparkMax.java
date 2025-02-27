@@ -19,25 +19,25 @@ import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
 import static frc.robot.constants.DriveConstants.odometryFrequency;
+import static frc.robot.constants.ElevatorConstants.kI;
 import static frc.robot.constants.ElevatorConstants.pulleyRadius;
 import static frc.robot.util.SparkUtil.*;
 public class ElevatorIOSparkMax implements ElevatorIO {
-    private SparkBase elevatorSpark1;
-    private SparkBase elevatorSpark2;
-    private final RelativeEncoder elevatorEncoder;
+    private SparkMax elevatorSpark1;
+    private SparkMax elevatorSpark2;
+    private final RelativeEncoder elevatorMotor1Encoder;
+    private final RelativeEncoder elevatorMotor2Encoder;
 
-    private final SparkClosedLoopController elevatorController;
-
-    public static Queue<Double> timestampQueue;
-    public static Queue<Double> elevatorPositionQueue;
 
     private final Debouncer elevatorConnectedDebounce = new Debouncer(0.5);
 
     public ElevatorIOSparkMax() {
-        elevatorSpark1 = new SparkMax(9, SparkLowLevel.MotorType.kBrushless);
-        elevatorSpark2 = new SparkMax(10, SparkLowLevel.MotorType.kBrushless);
-        elevatorEncoder = elevatorSpark1.getEncoder();
-        elevatorController = elevatorSpark1.getClosedLoopController();
+        elevatorSpark1 = new SparkMax(ElevatorConstants.elevatorSpark1CAN, SparkLowLevel.MotorType.kBrushless);
+        elevatorSpark2 = new SparkMax(ElevatorConstants.elevatorSpark2CAN, SparkLowLevel.MotorType.kBrushless);
+
+        elevatorMotor1Encoder = elevatorSpark1.getEncoder();
+        elevatorMotor2Encoder = elevatorSpark2.getEncoder();
+
 
         var elevatorConfig = new SparkFlexConfig();
         elevatorConfig
@@ -50,12 +50,6 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 .velocityConversionFactor(ElevatorConstants.elevatorSparkEncoderVelocityFactor)
                 .uvwMeasurementPeriod(10)
                 .uvwAverageDepth(2);
-        elevatorConfig
-                .closedLoop
-                .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
-                .pidf(
-                        ElevatorConstants.SparkP, 0.0,
-                        ElevatorConstants.SparkD, 0.0);
         elevatorConfig
                 .signals
                 .primaryEncoderPositionAlwaysOn(true)
@@ -71,18 +65,17 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 () ->
                         elevatorSpark1.configure(
                                 elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
-        tryUntilOk(elevatorSpark1, 5, () -> elevatorEncoder.setPosition(0.0));
         tryUntilOk(
-                elevatorSpark2,
+                elevatorSpark1,
                 5,
                 () ->
                         elevatorSpark2.configure(
                                 elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
-        tryUntilOk(elevatorSpark2, 5, () -> elevatorEncoder.setPosition(0.0));
-        timestampQueue = SparkOdometryThread.getInstance().
-                makeTimestampQueue();
-        elevatorPositionQueue = SparkOdometryThread.getInstance().
-                registerSignal(elevatorSpark1, elevatorEncoder::getPosition);
+
+
+        tryUntilOk(elevatorSpark1, 5, () -> elevatorMotor1Encoder.setPosition(0.0));
+        tryUntilOk(elevatorSpark1, 5, () -> elevatorMotor2Encoder.setPosition(0.0));
+
 
     }
 
@@ -94,20 +87,23 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 elevatorSpark1,
                 new DoubleSupplier[]{elevatorSpark1::getAppliedOutput, elevatorSpark1::getBusVoltage},
                 (values) -> inputs.elevatorAppliedVolts = values[0] * values[1]);
+
         ifOk(elevatorSpark1, elevatorSpark1::getOutputCurrent, (value) -> inputs.elevatorCurrentAmps = value);
+
+        inputs.elevatorMotorPositionRad = elevatorMotor1Encoder.getPosition();
+        inputs.elevatorMotorVelocityRadPerSec = elevatorMotor1Encoder.getVelocity();
         inputs.elevatorConnected = elevatorConnectedDebounce.calculate(!sparkStickyFault);
-        inputs.loadHeight = (2 * Math.PI * pulleyRadius) / ((elevatorEncoder.getPosition() - inputs.lastEncoderPosition) * ElevatorConstants.gearingRatio);
-        inputs.odometryTimestamps =
-                timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-        inputs.odometryElevatorPositionsRad =
-                elevatorPositionQueue.stream().mapToDouble((Double value) -> value).toArray();
-        timestampQueue.clear();
-        elevatorPositionQueue.clear();
-        inputs.lastEncoderPosition = elevatorEncoder.getPosition();
+
     }
     public void setElevatorMotorVoltage(double volts){
         elevatorSpark1.setVoltage(volts);
         elevatorSpark2.setVoltage(volts);
+    }
+
+    @Override
+    public void disable() {
+        elevatorSpark1.setVoltage(0);
+        elevatorSpark2.setVoltage(0);
     }
 }
 
