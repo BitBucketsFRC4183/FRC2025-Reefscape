@@ -2,6 +2,7 @@ package frc.robot.subsystems.ElevatorSubsystem;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.constants.ElevatorConstants;
 import org.littletonrobotics.junction.Logger;
@@ -22,6 +23,8 @@ public class ElevatorIOSim implements ElevatorIO {
             0,
             0.01,0);
 
+    public static final DigitalInput toplimitSwitch = new DigitalInput(0);
+    public static final DigitalInput bottomlimitSwitch = new DigitalInput(1);
 
     @Override
     public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
@@ -29,7 +32,10 @@ public class ElevatorIOSim implements ElevatorIO {
         inputs.unfilteredLoadHeight = elevatorMotor1Sim.getPositionMeters();
         inputs.loadHeight = elevatorFilter.calculate(inputs.unfilteredLoadHeight);
         inputs.elevatorCurrentAmps = new double[]{Math.abs(elevatorMotor1Sim.getCurrentDrawAmps())};
-        inputs.elevatorSpeed = elevatorMotor1Sim.getVelocityMetersPerSecond();
+
+
+        Logger.recordOutput("ElevatorSubsystem/toplimitSwitch", toplimitSwitch.get());
+        Logger.recordOutput("ElevatorSubsystem/bottomlimitSwitch", bottomlimitSwitch.get());
         Logger.recordOutput("ElevatorSubsystem/loadHeight", inputs.loadHeight);
         Logger.recordOutput("ElevatorSubsystem/unfilteredLoadHeight", inputs.unfilteredLoadHeight);
     }

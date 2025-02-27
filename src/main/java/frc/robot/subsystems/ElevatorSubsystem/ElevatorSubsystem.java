@@ -19,7 +19,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     double maxVoltage = 12.0;
     private final ElevatorEncoderIO elevatorEncoderIO;
     private final ElevatorIOInputsAutoLogged elevatorIOInputs;
-    private final ElevatorEncoderIOInputsAutoLogged encoderIOInputs;
+    //private final ElevatorEncoderIOInputsAutoLogged encoderIOInputs;
 
     private final Mechanism2d elevator2D = new Mechanism2d(2, 2);
     private final MechanismRoot2d elevator2dRoot = elevator2D.getRoot("Elevator Root", 1, 0);
@@ -30,7 +30,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.elevatorIO = elevatorIO;
         this.elevatorEncoderIO = elevatorEncoderIO;
         this.elevatorIOInputs = new ElevatorIOInputsAutoLogged();
-        this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
+        //this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
         this.elevatorMech2d = elevator2dRoot.append(new MechanismLigament2d("Elevator", elevatorIOInputs.loadHeight, 90));
         elevatorPID.setTolerance(0.001, ElevatorConstants.kShooterToleranceRPS);
         //elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
@@ -43,7 +43,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     @Override
     public void periodic(){
         elevatorIO.updateInputs(elevatorIOInputs);
-        elevatorEncoderIO.updateInputs(encoderIOInputs);
+        //elevatorEncoderIO.updateInputs(encoderIOInputs);
         elevatorMech2d.setLength(elevatorIOInputs.loadHeight);
 
     }

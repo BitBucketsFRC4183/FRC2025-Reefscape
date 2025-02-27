@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkBase;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
+import frc.robot.generated.TunerConstants;
 
 
 public class ElevatorConstants {
@@ -18,6 +19,9 @@ public class ElevatorConstants {
     public static double kEncoderDistancePerPulse;
     public static DCMotor elevator1Gearbox = DCMotor.getNEO(1);
     public static DCMotor elevator2Gearbox = DCMotor.getNEO(1);
+
+
+
     public static double SparkP = 1;
     public static double SparkD = 1 ;
     public static int elevatorSparkMotorCurrentLimit = 1 ;
@@ -25,6 +29,15 @@ public class ElevatorConstants {
     public static double elevatorSparkEncoderVelocityFactor =1;
     public static double gearingRatio = 10.0;
     public static double pulleyRadius = Units.inchesToMeters(2);
+
+
+  public static boolean elevatorConnected;
+    public static double elevatorPositionRad;
+    public static double elevatorVelocityRadPerSec;
+    public static double elevatorAppliedVoltage;
+    public static double elevatorCurrentAmps;
+
+    public static final int elevatorMotorCurrentLimit = 50;
     public static double kS = 0;
     public static double kV = 4.1;
     public static double kG = 0.92;
