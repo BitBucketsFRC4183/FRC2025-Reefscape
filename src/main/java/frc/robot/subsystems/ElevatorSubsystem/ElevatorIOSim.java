@@ -12,7 +12,7 @@ public class ElevatorIOSim implements ElevatorIO {
     private static final double LOOP_PERIOD_SECS = 0.02;
     LinearFilter elevatorFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
 
-    public static final ElevatorSim elevatorMotor1Sim = new ElevatorSim(
+    public final ElevatorSim elevatorMotor1Sim = new ElevatorSim(
             ElevatorConstants.elevator1Gearbox,
             ElevatorConstants.gearingRatio,
             ElevatorConstants.carriageMass,
@@ -29,24 +29,17 @@ public class ElevatorIOSim implements ElevatorIO {
     @Override
     public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
         elevatorMotor1Sim.update(LOOP_PERIOD_SECS);
-        inputs.unfilteredLoadHeight = elevatorMotor1Sim.getPositionMeters();
-        inputs.loadHeight = elevatorFilter.calculate(inputs.unfilteredLoadHeight);
+
+
         inputs.elevatorCurrentAmps = Math.abs(elevatorMotor1Sim.getCurrentDrawAmps());
 
 
-        Logger.recordOutput("ElevatorSubsystem/toplimitSwitch", toplimitSwitch.get());
-        Logger.recordOutput("ElevatorSubsystem/bottomlimitSwitch", bottomlimitSwitch.get());
-        Logger.recordOutput("ElevatorSubsystem/loadHeight", inputs.loadHeight);
-        Logger.recordOutput("ElevatorSubsystem/unfilteredLoadHeight", inputs.unfilteredLoadHeight);
+        // Logger.recordOutput("ElevatorSubsystem/toplimitSwitch", toplimitSwitch.get());
+        // Logger.recordOutput("ElevatorSubsystem/bottomlimitSwitch", bottomlimitSwitch.get());
     }
     @Override
     public void setElevatorMotorVoltage(double volts) {
         double appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
         elevatorMotor1Sim.setInputVoltage(appliedVolts);
-    }
-
-    @Override
-    public void setEncoderHeightValue(double height) {
-        elevatorMotor1Sim.setState(0, 0);
     }
 }

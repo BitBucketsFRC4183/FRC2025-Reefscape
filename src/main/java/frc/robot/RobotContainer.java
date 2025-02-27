@@ -123,8 +123,11 @@ public class RobotContainer {
                     new ModuleIOSim(driveSimulation.getModules()[1]),
                     new ModuleIOSim(driveSimulation.getModules()[2]),
                     new ModuleIOSim(driveSimulation.getModules()[3]));
+
+        ElevatorIOSim elevatorIOSim = new ElevatorIOSim();
         elevatorSubsystem =
-                new ElevatorSubsystem(new ElevatorIOSim(), new ElevatorEncoderIOSim()); //TODO
+                new ElevatorSubsystem(elevatorIOSim, new ElevatorEncoderIOSim(elevatorIOSim.elevatorMotor1Sim));
+
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSim());
         groundIntakeSubsystem =

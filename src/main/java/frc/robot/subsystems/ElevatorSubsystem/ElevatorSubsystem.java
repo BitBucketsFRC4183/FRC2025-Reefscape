@@ -59,7 +59,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         elevatorMech2d.setLength(encoderIOInputs.loadHeight);
         Logger.processInputs("ElevatorSubsystem", elevatorIOInputs);
-        Logger.processInputs("ElevatorSubsytem/encoder", encoderIOInputs);
+        Logger.processInputs("ElevatorSubsystem/encoder", encoderIOInputs);
 
     }
 

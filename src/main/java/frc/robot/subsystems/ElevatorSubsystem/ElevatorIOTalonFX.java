@@ -108,11 +108,8 @@ public class ElevatorIOTalonFX implements ElevatorIO{
             elevatorTalon.set(appliedVolts);
         }
 
-        @Override
-        public void setEncoderHeightValue(double position) {
-            PhoenixUtil.tryUntilOk(5, () -> elevatorTalon.setPosition(position));
-        }
-
-
-
+    @Override
+    public void disable() {
+        elevatorTalon.set(0);
+    }
 }

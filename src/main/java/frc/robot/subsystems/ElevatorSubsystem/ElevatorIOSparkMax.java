@@ -83,7 +83,6 @@ public class ElevatorIOSparkMax implements ElevatorIO {
 
     @Override
     public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
-        // Update drive inputs
         sparkStickyFault = false;
         ifOk(
                 elevatorSpark1,
@@ -91,6 +90,12 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 (values) -> inputs.elevatorAppliedVolts = values[0] * values[1]);
 
         ifOk(elevatorSpark1, elevatorSpark1::getOutputCurrent, (value) -> inputs.elevatorCurrentAmps = value);
+        ifOk(
+                elevatorSpark2,
+                new DoubleSupplier[]{elevatorSpark2::getAppliedOutput, elevatorSpark2::getBusVoltage},
+                (values) -> inputs.elevator2AppliedVolts = values[0] * values[1]);
+
+        ifOk(elevatorSpark2, elevatorSpark2::getOutputCurrent, (value) -> inputs.elevator2CurrentAmps = value);
 
         inputs.elevatorMotorPositionRad = elevatorMotor1Encoder.getPosition();
         inputs.elevatorMotorVelocityRadPerSec = elevatorMotor1Encoder.getVelocity();
