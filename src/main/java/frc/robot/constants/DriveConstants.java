@@ -112,10 +112,10 @@ public class DriveConstants {
     public static final double turnKd = 0.0;
     public static final double turnSimP = 8.0;
     public static final double turnSimD = 0.0;
-    public static final double turnPIDMinInput = 0; // Radians
-    public static final double turnPIDMaxInput = 2 * Math.PI; // Radians
+    public static final double turnPIDMinInput = - Math.PI; // Radians
+    public static final double turnPIDMaxInput = Math.PI; // Radians
 
-    public static final double robotMassKg = 74.088;
+    public static final double robotMassKg = 105.00;
     public static final double robotMOI = 6.883;
     public static final double wheelCOF = 1.2;
     public static final RobotConfig ppConfig =

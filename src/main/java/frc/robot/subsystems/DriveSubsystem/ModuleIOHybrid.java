@@ -162,8 +162,7 @@ public class ModuleIOHybrid implements ModuleIO {
 
 
 
-        turnEncoder = turnSpark.getEncoder();
-        turnController = turnSpark.getClosedLoopController();
+
         // Configure turn motor
         var turnConfig = new SparkMaxConfig();
         turnConfig
@@ -202,6 +201,9 @@ public class ModuleIOHybrid implements ModuleIO {
                         turnSpark.configure(
                                 turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
+        turnEncoder = turnSpark.getEncoder();
+        turnController = turnSpark.getClosedLoopController();
+        
         int turnAbsoluteEncoderID =
                 switch (module) {
                     case 0 -> frontLeftEncoderPort;
