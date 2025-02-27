@@ -31,7 +31,7 @@ public class ElevatorIOSim implements ElevatorIO {
         elevatorMotor1Sim.update(LOOP_PERIOD_SECS);
         inputs.unfilteredLoadHeight = elevatorMotor1Sim.getPositionMeters();
         inputs.loadHeight = elevatorFilter.calculate(inputs.unfilteredLoadHeight);
-        inputs.elevatorCurrentAmps = new double[]{Math.abs(elevatorMotor1Sim.getCurrentDrawAmps())};
+        inputs.elevatorCurrentAmps = Math.abs(elevatorMotor1Sim.getCurrentDrawAmps());
 
 
         Logger.recordOutput("ElevatorSubsystem/toplimitSwitch", toplimitSwitch.get());

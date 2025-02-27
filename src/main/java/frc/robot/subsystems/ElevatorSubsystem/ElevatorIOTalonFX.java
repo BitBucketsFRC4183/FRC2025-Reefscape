@@ -15,6 +15,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -29,6 +30,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.PhoenixOdometryThread;
+import frc.robot.util.PhoenixUtil;
 
 import java.util.Queue;
 
@@ -70,55 +72,47 @@ public class ElevatorIOTalonFX implements ElevatorIO{
         elevatorConfig.CurrentLimits.StatorCurrentLimit = ElevatorConstants.elevatorMotorCurrentLimit;
         elevatorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        elevatorTalon = new TalonFX(ElevatorConstants.elevatorTalonID);
-
-            timestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
-
-            elevatorPosition = elevatorTalon.getPosition();
-            elevatorPositionQueue =
-                    PhoenixOdometryThread.getInstance().registerSignal(elevatorTalon.getPosition());
-            elevatorVelocity = elevatorTalon.getVelocity();
-            elevatorAppliedVolts = elevatorTalon.getMotorVoltage();
-            elevatorCurrent = elevatorTalon.getStatorCurrent();
+        elevatorTalon = new TalonFX(ElevatorConstants.elevatorCanID);
 
 
-            BaseStatusSignal.setUpdateFrequencyForAll(
-                    50.0,
-                    elevatorPosition,
-                    elevatorVelocity,
-                    elevatorAppliedVolts,
-                    elevatorCurrent);
-            ParentDevice.optimizeBusUtilizationForAll(elevatorTalon);
-        }
+        elevatorPosition = elevatorTalon.getPosition();
+        elevatorVelocity = elevatorTalon.getVelocity();
+        elevatorAppliedVolts = elevatorTalon.getMotorVoltage();
+        elevatorCurrent = elevatorTalon.getStatorCurrent();
 
-        public void updateInputs(ModuleIO.ModuleIOInputs inputs) {
 
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                50.0,
+                elevatorPosition,
+                elevatorVelocity,
+                elevatorAppliedVolts,
+                elevatorCurrent);
+        ParentDevice.optimizeBusUtilizationForAll(elevatorTalon);
+        PhoenixUtil.tryUntilOk(5, () -> elevatorTalon.setPosition(0));
+
+    }
+
+        public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
             var elevatorStatus =
                     BaseStatusSignal.refreshAll(elevatorPosition, elevatorVelocity, elevatorAppliedVolts, elevatorCurrent);
-
-
-            ElevatorConstants.elevatorConnected = elevatorConnectedDebounce.calculate(elevatorStatus.isOK());
-            ElevatorConstants.elevatorPositionRad = Units.rotationsToRadians(elevatorPosition.getValueAsDouble());
-            ElevatorConstants.elevatorVelocityRadPerSec = Units.rotationsToRadians(elevatorVelocity.getValueAsDouble());
-            ElevatorConstants.elevatorAppliedVoltage = elevatorAppliedVolts.getValueAsDouble();
-            ElevatorConstants.elevatorCurrentAmps = elevatorCurrent.getValueAsDouble();
-
-            inputs.odometryTimestamps =
-                    timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-            inputs.odometryDrivePositionsRad =
-                    elevatorPositionQueue.stream()
-                            .mapToDouble((Double value) -> Units.rotationsToRadians(value))
-                            .toArray();
-            timestampQueue.clear();
-            elevatorPositionQueue.clear();
+            inputs.elevatorConnected = elevatorConnectedDebounce.calculate(elevatorStatus.isOK());
+            inputs.elevatorPositionRad = Units.rotationsToRadians(elevatorPosition.getValueAsDouble());
+            inputs.elevatorVelocityRadPerSec = Units.rotationsToRadians(elevatorVelocity.getValueAsDouble());
+            inputs.elevatorAppliedVolts = elevatorAppliedVolts.getValueAsDouble();
+            inputs.elevatorCurrentAmps = elevatorCurrent.getValueAsDouble();
+            inputs.unfilteredLoadHeight = (inputs.elevatorPositionRad / ElevatorConstants.gearingRatio) * ElevatorConstants.pulleyRadius;
         }
 
-
-        public void setElevatorVelocity(double velocityRadPerSec) {
-            double velocityRotPerSec = Units.radiansToRotations(velocityRadPerSec);
-            elevatorTalon.set(0);
+        @Override
+        public void setElevatorMotorVoltage(double volts) {
+            double appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+            elevatorTalon.set(appliedVolts);
         }
 
+        @Override
+        public void setEncoderHeightValue(double position) {
+            PhoenixUtil.tryUntilOk(5, () -> elevatorTalon.setPosition(position));
+        }
 
 
 

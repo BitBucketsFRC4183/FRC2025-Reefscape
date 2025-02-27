@@ -42,7 +42,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         var elevatorConfig = new SparkFlexConfig();
         elevatorConfig
                 .idleMode(SparkBaseConfig.IdleMode.kBrake)
-                .smartCurrentLimit(ElevatorConstants.elevatorSparkMotorCurrentLimit)
+                .smartCurrentLimit(ElevatorConstants.elevatorMotorCurrentLimit)
                 .voltageCompensation(12.0);
         elevatorConfig
                 .encoder
@@ -94,7 +94,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 elevatorSpark1,
                 new DoubleSupplier[]{elevatorSpark1::getAppliedOutput, elevatorSpark1::getBusVoltage},
                 (values) -> inputs.elevatorAppliedVolts = values[0] * values[1]);
-        ifOk(elevatorSpark1, elevatorSpark1::getOutputCurrent, (value) -> inputs.elevatorCurrentAmps = new double[]{value});
+        ifOk(elevatorSpark1, elevatorSpark1::getOutputCurrent, (value) -> inputs.elevatorCurrentAmps = value);
         inputs.elevatorConnected = elevatorConnectedDebounce.calculate(!sparkStickyFault);
         inputs.loadHeight = (2 * Math.PI * pulleyRadius) / ((elevatorEncoder.getPosition() - inputs.lastEncoderPosition) * ElevatorConstants.gearingRatio);
         inputs.odometryTimestamps =
