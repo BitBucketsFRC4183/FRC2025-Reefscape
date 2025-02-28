@@ -1,7 +1,7 @@
 package frc.robot.subsystems.ElevatorSubsystem;
 
 import org.littletonrobotics.junction.AutoLog;
-import com.revrobotics.RelativeEncoder;
+
 public interface ElevatorEncoderIO {
     @AutoLog
     class ElevatorEncoderIOInputs {

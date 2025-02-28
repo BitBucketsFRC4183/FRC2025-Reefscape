@@ -1,11 +1,8 @@
 package frc.robot.subsystems.SingleJointedArmSubsystem;
 
-import frc.robot.subsystems.ElevatorSubsystem.ElevatorIO;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface SingleJointedArmIO {
-    SingleJointedArmIO.ArmIOInputs ArmIOInputs = new SingleJointedArmIO.ArmIOInputs();
-
     @AutoLog
     class ArmIOInputs {
         public double armAngle;

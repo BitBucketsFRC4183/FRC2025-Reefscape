@@ -15,6 +15,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -25,10 +26,12 @@ import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.BaseDriveCommand;
 import frc.robot.commands.ArmCommands.BendCommand;
+import frc.robot.commands.CloseClawCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
+import frc.robot.commands.OpenClawCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.DriveConstants;
@@ -47,10 +50,7 @@ import frc.robot.subsystems.AlgaeIntakeSubsystem.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSparkMax;
 import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSim;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
-import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOEncoder;
-import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOSim;
-import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIOTalonFX;
-import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
+import frc.robot.subsystems.SingleJointedArmSubsystem.*;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
@@ -61,8 +61,6 @@ import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoral;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
-
-import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
   // Subsystems
@@ -113,8 +111,7 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(new SingleJointedArmIOTalonFX()) {
-                }; //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmIOTalonFX(), new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
         break;
@@ -143,7 +140,7 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(new SingleJointedArmIOSim()); //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmIOSim(), new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
         break;
@@ -167,7 +164,7 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(new SingleJointedArmIOSim()); //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmIO() {}, new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIO() {}); //TODO
         break;

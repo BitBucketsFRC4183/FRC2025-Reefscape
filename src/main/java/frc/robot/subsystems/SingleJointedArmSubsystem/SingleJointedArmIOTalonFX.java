@@ -123,7 +123,7 @@ public class SingleJointedArmIOTalonFX implements SingleJointedArmIO {
         ParentDevice.optimizeBusUtilizationForAll(armTalon1, armTalon2);
 
     }
-    public void updateInputs(ArmIOInputs inputs) {
+    public void updateInputs(SingleJointedArmIO.ArmIOInputs inputs) {
         // Refresh all signals
         var arm1Status =
                 BaseStatusSignal.refreshAll(arm1Position, arm1Velocity, arm1AppliedVolts, arm1Current);
@@ -131,9 +131,9 @@ public class SingleJointedArmIOTalonFX implements SingleJointedArmIO {
                 BaseStatusSignal.refreshAll(arm2Position, arm2Velocity, arm2AppliedVolts, arm2Current);
 
         // Update drive inputs
-       inputs.arm1Connected = arm1ConnectedDebounce.calculate(arm1Status.isOK());
-       inputs.arm1PositionRad = Units.rotationsToRadians(arm1Position.getValueAsDouble());
-       inputs.arm1VelocityRadPerSec = Units.rotationsToRadians(arm1Velocity.getValueAsDouble());
+        inputs.arm1Connected = arm1ConnectedDebounce.calculate(arm1Status.isOK());
+        inputs.arm1PositionRad = Units.rotationsToRadians(arm1Position.getValueAsDouble());
+        inputs.arm1VelocityRadPerSec = Units.rotationsToRadians(arm1Velocity.getValueAsDouble());
         inputs.arm1AppliedVolts = arm1AppliedVolts.getValueAsDouble();
         inputs.arm1CurrentAmps = arm1Current.getValueAsDouble();
 
