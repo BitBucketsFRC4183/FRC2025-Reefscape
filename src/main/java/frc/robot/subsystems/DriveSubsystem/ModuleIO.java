@@ -34,7 +34,8 @@ public interface ModuleIO {
     public double turnCurrentAmps = 0.0;
     public Rotation2d turnAbsolutePosition;
 
-    public double[] odometryTimestamps = new double[] {};
+    public double[] odometryPhoenixTimestamps = new double[] {};
+    public double[] odometrySparkTimestamps = new double[] {};
     public double[] odometryDrivePositionsRad = new double[] {};
     public Rotation2d[] odometryTurnPositions = new Rotation2d[] {};
 

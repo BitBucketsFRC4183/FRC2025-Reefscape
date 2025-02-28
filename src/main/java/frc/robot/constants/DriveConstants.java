@@ -47,28 +47,37 @@ public class DriveConstants {
             };
 
     // Zeroed rotation values for each module, see setup instructions
-    public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.0);
-    public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.0);
-    public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.0);
-    public static final Rotation2d backRightZeroRotation = new Rotation2d(0.0);
+    public static final Rotation2d frontLeftZeroRotation = new Rotation2d(-2.0612513383);
+    public static final Rotation2d frontRightZeroRotation = new Rotation2d(-0.7579322);
+    public static final Rotation2d backLeftZeroRotation = new Rotation2d(-0.83840501);
+    public static final Rotation2d backRightZeroRotation = new Rotation2d(1.1981722);
 
     // Device CAN IDs
-    public static final int pigeonCanId = 9;
+    public static final int pigeonCanId = 11;
 
-    public static final int frontLeftDriveCanId = 1;
-    public static final int backLeftDriveCanId = 3;
-    public static final int frontRightDriveCanId = 5;
-    public static final int backRightDriveCanId = 7;
+    public static final int frontLeftDriveCanId = 6;
+    public static final int backLeftDriveCanId = 7;
+    public static final int frontRightDriveCanId = 8;
+    public static final int backRightDriveCanId = 9;
 
     public static final int frontLeftTurnCanId = 2;
-    public static final int backLeftTurnCanId = 4;
-    public static final int frontRightTurnCanId = 6;
-    public static final int backRightTurnCanId = 8;
+    public static final int backLeftTurnCanId = 3;
+    public static final int frontRightTurnCanId = 5;
+    public static final int backRightTurnCanId = 4;
+
+    // Encoder Ports
+
+    public static final int frontLeftEncoderPort = 3;
+    public static final int frontRightEncoderPort = 2;
+    public static final int backLeftEncoderPort = 0;
+    public static final int backRightEncoderPort = 1;
+
 
     // Drive motor configuration
+    public static final boolean driveInverted = false;
     public static final int driveMotorCurrentLimit = 50;
-    public static final double wheelRadiusMeters = TunerConstants.FrontLeft.WheelRadius;
-    public static final double driveMotorReduction = TunerConstants.FrontLeft.DriveMotorGearRatio;
+    public static final double wheelRadiusMeters = 0.0508;
+    public static final double driveMotorReduction = 6.75;
     public static final DCMotor driveGearbox = DCMotor.getKrakenX60(1);
 
     // Drive encoder configuration
@@ -90,23 +99,23 @@ public class DriveConstants {
     // Turn motor configuration
     public static final boolean turnInverted = false;
     public static final int turnMotorCurrentLimit = 20;
-    public static final double turnMotorReduction = 9424.0 / 203.0;
+    public static final double turnMotorReduction = 12.8;
     public static final DCMotor turnGearbox = DCMotor.getNEO(1);
 
     // Turn encoder configuration
-    public static final boolean turnEncoderInverted = true;
-    public static final double turnEncoderPositionFactor = 2 * Math.PI; // Rotations -> Radians
-    public static final double turnEncoderVelocityFactor = (2 * Math.PI) / 60.0; // RPM -> Rad/Sec
+    public static final double turnEncoderPositionFactor = 2 * Math.PI / turnMotorReduction; // Rotations -> Radians
+    public static final double turnEncoderVelocityFactor = (2 * Math.PI) / 60.0 / turnMotorReduction; // RPM -> Rad/Sec
+    public static final boolean turnEncoderInverted = false;
 
     // Turn PID configuration
-    public static final double turnKp = 2.0;
+    public static final double turnKp = 20.0;
     public static final double turnKd = 0.0;
     public static final double turnSimP = 8.0;
     public static final double turnSimD = 0.0;
-    public static final double turnPIDMinInput = 0; // Radians
-    public static final double turnPIDMaxInput = 2 * Math.PI; // Radians
+    public static final double turnPIDMinInput = - Math.PI; // Radians
+    public static final double turnPIDMaxInput = Math.PI; // Radians
 
-    public static final double robotMassKg = 74.088;
+    public static final double robotMassKg = 105.00;
     public static final double robotMOI = 6.883;
     public static final double wheelCOF = 1.2;
     public static final RobotConfig ppConfig =

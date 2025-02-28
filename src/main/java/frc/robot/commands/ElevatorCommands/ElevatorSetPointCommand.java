@@ -43,7 +43,7 @@ public class ElevatorSetPointCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            elevator.setElevatorVoltage(ElevatorConstants.kG);
+            elevator.setElevatorVoltage(ElevatorConstants.kGSim);
 
         }
     }

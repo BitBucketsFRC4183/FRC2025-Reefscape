@@ -74,7 +74,7 @@ public class TunerConstants {
 
     // CAN bus that the devices are located on;
     // All swerve devices must share the same CAN bus
-    public static final CANBus kCANBus = new CANBus("canivore", "./logs/example.hoot");
+    // public static final CANBus kCANBus = new CANBus("c", "./logs/example.hoot");
 
     // Theoretical free speed (m/s) at 12 V applied output;
     // This needs to be tuned to your individual robot
@@ -91,7 +91,7 @@ public class TunerConstants {
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;
 
-    private static final int kPigeonId = 1;
+    private static final int kPigeonId = 11;
 
     // These are only used for simulation
     private static final MomentOfInertia kSteerInertia = KilogramSquareMeters.of(0.004);
@@ -102,7 +102,7 @@ public class TunerConstants {
 
     public static final SwerveDrivetrainConstants DrivetrainConstants =
             new SwerveDrivetrainConstants()
-                    .withCANBusName(kCANBus.getName())
+                    //.withCANBusName("canivore")
                     .withPigeon2Id(kPigeonId)
                     .withPigeon2Configs(pigeonConfigs);
 
@@ -237,77 +237,4 @@ public class TunerConstants {
     //     return new CommandSwerveDrivetrain(
     //         DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight);
     //   }
-
-    /** Swerve Drive class utilizing CTR Electronics' Phoenix 6 API with the selected device types. */
-    public static class TunerSwerveDrivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> {
-        /**
-         * Constructs a CTRE SwerveDrivetrain using the specified constants.
-         *
-         * <p>This constructs the underlying hardware devices, so users should not construct the devices
-         * themselves. If they need the devices, they can access them through getters in the classes.
-         *
-         * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
-         * @param modules Constants for each specific module
-         */
-        public TunerSwerveDrivetrain(
-                SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
-            super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, modules);
-        }
-
-        /**
-         * Constructs a CTRE SwerveDrivetrain using the specified constants.
-         *
-         * <p>This constructs the underlying hardware devices, so users should not construct the devices
-         * themselves. If they need the devices, they can access them through getters in the classes.
-         *
-         * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
-         * @param odometryUpdateFrequency The frequency to run the odometry loop. If unspecified or set
-         *     to 0 Hz, this is 250 Hz on CAN FD, and 100 Hz on CAN 2.0.
-         * @param modules Constants for each specific module
-         */
-        public TunerSwerveDrivetrain(
-                SwerveDrivetrainConstants drivetrainConstants,
-                double odometryUpdateFrequency,
-                SwerveModuleConstants<?, ?, ?>... modules) {
-            super(
-                    TalonFX::new,
-                    TalonFX::new,
-                    CANcoder::new,
-                    drivetrainConstants,
-                    odometryUpdateFrequency,
-                    modules);
-        }
-
-        /**
-         * Constructs a CTRE SwerveDrivetrain using the specified constants.
-         *
-         * <p>This constructs the underlying hardware devices, so users should not construct the devices
-         * themselves. If they need the devices, they can access them through getters in the classes.
-         *
-         * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
-         * @param odometryUpdateFrequency The frequency to run the odometry loop. If unspecified or set
-         *     to 0 Hz, this is 250 Hz on CAN FD, and 100 Hz on CAN 2.0.
-         * @param odometryStandardDeviation The standard deviation for odometry calculation in the form
-         *     [x, y, theta]ᵀ, with units in meters and radians
-         * @param visionStandardDeviation The standard deviation for vision calculation in the form [x,
-         *     y, theta]ᵀ, with units in meters and radians
-         * @param modules Constants for each specific module
-         */
-        public TunerSwerveDrivetrain(
-                SwerveDrivetrainConstants drivetrainConstants,
-                double odometryUpdateFrequency,
-                Matrix<N3, N1> odometryStandardDeviation,
-                Matrix<N3, N1> visionStandardDeviation,
-                SwerveModuleConstants<?, ?, ?>... modules) {
-            super(
-                    TalonFX::new,
-                    TalonFX::new,
-                    CANcoder::new,
-                    drivetrainConstants,
-                    odometryUpdateFrequency,
-                    odometryStandardDeviation,
-                    visionStandardDeviation,
-                    modules);
-        }
-    }
 }

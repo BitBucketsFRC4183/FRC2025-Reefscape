@@ -29,6 +29,9 @@ public class OperatorInput {
 
   final Trigger manualArmCommand = operatorControl.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
 
+  final Trigger openClaw = driver.leftStick();
+  final Trigger closeClaw = driver.rightStick();
+
   final Trigger IntakeOn = driver.a();
 
   final Trigger armbendup = operatorControl.povUp();

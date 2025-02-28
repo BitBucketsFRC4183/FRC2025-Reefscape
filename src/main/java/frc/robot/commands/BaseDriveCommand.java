@@ -50,19 +50,19 @@ public class BaseDriveCommand {
                             .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
                             .getTranslation();
 
-            // Convert to field relative speeds & send command
-            boolean isFlipped =
-                    DriverStation.getAlliance().isPresent()
-                            && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
-            drive.runVelocityPP(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                            linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                            linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
-                            omega * drive.getMaxAngularSpeedRadPerSec(),
-                            isFlipped
-                                    ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                                    : drive.getRotation()));
-        }
+        // Convert to field relative speeds & send command
+        boolean isFlipped =
+                DriverStation.getAlliance().isPresent()
+                        && DriverStation.getAlliance().get() == Alliance.Red;
+        drive.runVelocity(
+                ChassisSpeeds.fromFieldRelativeSpeeds(
+                        linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+                        linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                        omega * drive.getMaxAngularSpeedRadPerSec(),
+                        isFlipped
+                                ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                                : drive.getRotation()));
+    }
 
         @Override
         public void end(boolean interrupted) {
