@@ -38,6 +38,14 @@ public class ThriftyEncoder extends AnalogEncoder {
         return Units.rotationsToRadians(getRotations());
     }
 
+    public double getPosition() {
+        return getRadians();
+    }
+
+    public double getVelocity() {
+        return getRadiansPerSeconds();
+    }
+
     public double getRadiansPerSeconds() {
         return Units.rotationsToRadians(getRotationsPerSeconds());
     }

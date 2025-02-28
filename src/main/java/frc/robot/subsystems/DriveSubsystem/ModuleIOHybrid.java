@@ -42,6 +42,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.util.SparkUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Queue;
 import java.util.function.DoubleSupplier;
@@ -52,18 +53,19 @@ import java.util.function.DoubleSupplier;
  */
 public class ModuleIOHybrid implements ModuleIO {
     private final Rotation2d zeroRotation;
+    private final int id;
     private final SwerveModuleConstants<
             TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
             constants;
     // Hardware objects
     protected final TalonFX driveTalon;
     private final SparkBase turnSpark;
-    // private final ThriftyEncoder turnEncoder;
-    private final RelativeEncoder turnEncoder;
+    private final ThriftyEncoder turnEncoder;
+    // private final RelativeEncoder turnEncoder;
 
     // Closed loop controllers
-    private final SparkClosedLoopController turnController;
-    // private final PIDController turnController;
+    // private final SparkClosedLoopController turnController;
+    private final PIDController turnController;
 
     // Queue inputs from odometry thread
     private final Queue<Double> timestampSparkQueue;
@@ -98,6 +100,7 @@ public class ModuleIOHybrid implements ModuleIO {
 
     public ModuleIOHybrid(int module, SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants) {
         this.constants = constants;
+        id = module;
         zeroRotation =
                 switch (module) {
                     case 0 -> frontLeftZeroRotation;
@@ -166,33 +169,31 @@ public class ModuleIOHybrid implements ModuleIO {
         // Configure turn motor
         var turnConfig = new SparkMaxConfig();
         turnConfig
-                .inverted(turnInverted)
+                .inverted(true)
                 .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(turnMotorCurrentLimit)
                 .voltageCompensation(12.0);
-        turnConfig
-                .encoder
-                .positionConversionFactor(turnEncoderPositionFactor)
-                .velocityConversionFactor(turnEncoderVelocityFactor)
-                .uvwMeasurementPeriod(10)
-                .uvwAverageDepth(2);
-        turnConfig
-                .signals
-                .primaryEncoderPositionAlwaysOn(true)
-                .primaryEncoderPositionPeriodMs((int) (1000.0 / odometryFrequency))
-                .primaryEncoderVelocityAlwaysOn(true)
-                .primaryEncoderVelocityPeriodMs(20)
-                .appliedOutputPeriodMs(20)
-                .busVoltagePeriodMs(20)
-                .outputCurrentPeriodMs(20);
-        turnConfig
-                .closedLoop
-                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .positionWrappingEnabled(true)
-                .positionWrappingInputRange(turnPIDMinInput, turnPIDMaxInput)
-                // .dFilter(0.4)
-                .minOutput(0)
-                .pidf(turnKp, 0.0, turnKd, 0);
+//        turnConfig
+//                .encoder
+//                .positionConversionFactor(turnEncoderPositionFactor)
+//                .velocityConversionFactor(turnEncoderVelocityFactor)
+//                .uvwMeasurementPeriod(10)
+//                .uvwAverageDepth(2);
+//        turnConfig
+//                .signals
+//                .primaryEncoderPositionAlwaysOn(true)
+//                .primaryEncoderPositionPeriodMs((int) (1000.0 / odometryFrequency))
+//                .primaryEncoderVelocityAlwaysOn(true)
+//                .primaryEncoderVelocityPeriodMs(20)
+//                .appliedOutputPeriodMs(20)
+//                .busVoltagePeriodMs(20)
+//                .outputCurrentPeriodMs(20);
+//        turnConfig
+//                .closedLoop
+//                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+//                .positionWrappingEnabled(true)
+//                .positionWrappingInputRange(turnPIDMinInput, turnPIDMaxInput)
+//                .pidf(turnKp, 0.0, turnKd, 0);
 
         SparkUtil.tryUntilOk(
                 turnSpark,
@@ -201,8 +202,8 @@ public class ModuleIOHybrid implements ModuleIO {
                         turnSpark.configure(
                                 turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
-        turnEncoder = turnSpark.getEncoder();
-        turnController = turnSpark.getClosedLoopController();
+        // turnEncoder = turnSpark.getEncoder();
+        // turnController = turnSpark.getClosedLoopController();
         
         int turnAbsoluteEncoderID =
                 switch (module) {
@@ -213,16 +214,18 @@ public class ModuleIOHybrid implements ModuleIO {
                     default -> 0;
                 };
 
-        ThriftyEncoder thrifty = new ThriftyEncoder(new AnalogInput(turnAbsoluteEncoderID));
-        SparkUtil.tryUntilOk(turnSpark, 5, () -> turnEncoder.setPosition(thrifty.getRadians()));
 
+        turnEncoder = new ThriftyEncoder(new AnalogInput(turnAbsoluteEncoderID));
+        // SparkUtil.tryUntilOk(turnSpark, 5, () -> turnEncoder.setPosition(thrifty.getRadians() - zeroRotation.getRadians()));
+        turnController = new PIDController(turnKp, 0, turnKd);
+        turnController.enableContinuousInput(turnPIDMinInput,turnPIDMaxInput);
 
 
         // Create odometry queues
         timestampSparkQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
-        turnPositionQueue =
-                SparkOdometryThread.getInstance().registerSignal(turnSpark, turnEncoder::getPosition);
 
+        turnPositionQueue =
+                SparkOdometryThread.getInstance().registerSignal(turnEncoder::getPosition);
 
     }
 
@@ -232,7 +235,7 @@ public class ModuleIOHybrid implements ModuleIO {
         var driveStatus =
                 BaseStatusSignal.refreshAll(drivePosition, driveVelocity, driveAppliedVolts, driveCurrent);
 
-        // turnEncoder.periodic();
+        turnEncoder.periodic();
 
         // if v = 0 lol
         // inputs.turnEncoderConnected = turnEncoder.getConnected();
@@ -276,8 +279,6 @@ public class ModuleIOHybrid implements ModuleIO {
                         .map((Double value) -> new Rotation2d(value).minus(zeroRotation))
                         .toArray(Rotation2d[]::new);
 
-//        inputs.odometryTurnPositions = new Rotation2d[1];
-//        inputs.odometryTurnPositions[0] = inputs.turnPosition;
 
         timestampSparkQueue.clear();
         timestampPhoenixQueue.clear();
@@ -311,16 +312,22 @@ public class ModuleIOHybrid implements ModuleIO {
 
     @Override
     public void setTurnPosition(Rotation2d rotation) {
-//        double range = turnPIDMaxInput - turnPIDMinInput;
-//        double setpoint = rotation.getRadians() % range;
-//        double output = turnController.calculate(currentTurnPosition.getRadians(), setpoint);
-//        System.out.println(setpoint + "  " + currentTurnPosition.getRadians());
-//        setTurnOpenLoop(output);
-
-        double setpoint =
+        double setpoint = rotation.getRadians();
+        double turnPos =
                 MathUtil.inputModulus(
-                        rotation.plus(zeroRotation).getRadians(), turnPIDMinInput, turnPIDMaxInput);
-        turnController.setReference(setpoint, ControlType.kPosition);
+                        turnEncoder.getPosition() - zeroRotation.getRadians(), turnPIDMinInput, turnPIDMaxInput);
+
+        turnController.enableContinuousInput(turnPIDMinInput, turnPIDMaxInput);
+        double output = turnController.calculate(turnPos, setpoint);
+        setTurnOpenLoop(output);
+
+        Logger.recordOutput("Module" + id + "/output", output);
+        Logger.recordOutput("Module" + id + "/setpoint", setpoint);
+        Logger.recordOutput("Module" + id + "/position", turnPos);
+//
+//        turnController.setReference(setpoint, ControlType.kPosition);
+
+
     }
 
 }
