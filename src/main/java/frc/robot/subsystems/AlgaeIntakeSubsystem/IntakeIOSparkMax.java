@@ -41,6 +41,16 @@ public class IntakeIOSparkMax implements IntakeIO {
     }
 
     @Override
+    public void setPivotVoltage(double volts) {
+        pivot.setVoltage(volts);
+    }
+
+    @Override
+    public void setRollersVoltage(double volts) {
+        rollers.setVoltage(volts);
+    }
+
+    @Override
     public void updateInputs(IntakeInputsAutoLogged inputs) {
         inputs.isRunning = isRunning;
         inputs.hasCoral = hasCoral;

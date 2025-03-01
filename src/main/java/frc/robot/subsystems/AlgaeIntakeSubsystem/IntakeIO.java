@@ -16,6 +16,8 @@ public interface IntakeIO {
     public default void setRunning(boolean state) {}
     public default void pivotDown() {}
     public default void pivotUp() {}
+    public default void setPivotVoltage(double volts) {}
+    public default void setRollersVoltage(double volts) {}
     public default boolean getIsRunning() { return false; }
     public default boolean coralInside() { return false; }
     public default void updateInputs(IntakeInputsAutoLogged inputs) {}
