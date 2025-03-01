@@ -1,21 +1,22 @@
-package frc.robot.commands;
+package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 
-public class CloseClawCommand extends Command {
+public class OpenClawCommand extends Command {
     private final ClawSubsystem clawSubsystem;
 
-    public CloseClawCommand(ClawSubsystem clawSubsystem) {
+    public OpenClawCommand(ClawSubsystem clawSubsystem) {
         this.clawSubsystem = clawSubsystem;
         addRequirements(clawSubsystem);
     }
 
     public void initialize() {
-        clawSubsystem.close();
+        clawSubsystem.open();
     }
 
     public boolean isFinished() {
         return true;
     }
 }
+
