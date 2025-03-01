@@ -26,14 +26,14 @@ public class ManualElevatorCommand extends Command {
         double calculatedVolts = elevator.elevatorFF.calculate(manualVelocity);
         Logger.recordOutput("ElevatorSubsystem/target_voltage", calculatedVolts);
         this.elevator.setElevatorVoltage(calculatedVolts);
-        if (elevator.getLoadHeight() >= ElevatorConstants.maxHeight) {
-            // We are going up and top limit is tripped so stop
-            elevator.setElevatorVoltage(kG);
-        }
-        if (elevator.getLoadHeight() <= ElevatorConstants.minHeight) {
-            // We are going down and bottom limit is tripped so stop
-            elevator.setElevatorVoltage(kG);
-        }
+//        if (elevator.getLoadHeight() >= ElevatorConstants.maxHeight) {
+//            // We are going up and top limit is tripped so stop
+//            elevator.setElevatorVoltage(kG);
+//        }
+//        if (elevator.getLoadHeight() <= ElevatorConstants.minHeight) {
+//            // We are going down and bottom limit is tripped so stop
+//            elevator.setElevatorVoltage(kG);
+//        }
     }
 
     @Override

@@ -14,10 +14,10 @@ public class ElevatorConstants {
     public static DCMotor elevator2Gearbox = DCMotor.getNEO(1);
     public static final int encoderA = 0;
     public static final int encoderB = 1;
-    public static final boolean isEncoderReversed = false;
+    public static final boolean isEncoderReversed = true;
 
     public static double gearingRatio = 60.0;
-    public static final double pulleyRatio = 1.0;
+    public static final double encoderReduction = 24.8977;
 
     public static double elevatorSparkEncoderPositionFactor = 2 * Math.PI / gearingRatio;
     public static double elevatorSparkEncoderVelocityFactor = 2 * Math.PI / 60 / gearingRatio;
@@ -34,8 +34,8 @@ public class ElevatorConstants {
     public static double kISim = 0;
     public static double kDSim = 0;
 
-    public static double kS = 0;
-    public static double kV = 1;
+    public static double kS = 2;
+    public static double kV = 11;
     public static double kG = 0;
     public static double kA = 0;
     public static double kP = 0;
@@ -48,17 +48,15 @@ public class ElevatorConstants {
     public static double L3 = 1.04775;
     public static double L4 = 1.7018;
     public static double carriageMass = 20.0;
-    public static double maxHeight = Units.inchesToMeters(67);
+    public static double maxHeight = Units.inchesToMeters(50);
     public static double minHeight = 0;
     public static double maxVelocity = 1;
     public static double maxAcceleration = 1;
 
     public static final int elevatorCanID = 10;
-    public static final int elevatorSpark1CAN = 15;
-    public static final int elevatorSpark2CAN = 16;
-    public static final boolean elevatorSpark1Inverted = false;
-    public static final boolean elevatorSpark2Inverted = true;
-
-
+    public static final int elevatorSpark1CAN = 14;
+    public static final int elevatorSpark2CAN = 15;
+    public static final boolean elevatorSpark1Inverted = true;
+    public static final boolean elevatorSpark2Inverted = false;
 
 }

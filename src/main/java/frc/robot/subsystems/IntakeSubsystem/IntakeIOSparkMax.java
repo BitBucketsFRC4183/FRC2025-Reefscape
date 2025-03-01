@@ -1,11 +1,13 @@
 package frc.robot.subsystems.IntakeSubsystem;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.util.SparkUtil;
 
 import static frc.robot.constants.DriveConstants.odometryFrequency;
 
@@ -14,9 +16,9 @@ public class IntakeIOSparkMax implements IntakeIO {
     private final SparkMax rollers;
     private final RelativeEncoder pivotEncoder;
 
-    public IntakeIOSparkMax(int pivotID, int rollersID) {
-        this.pivot = new SparkMax(pivotID, SparkLowLevel.MotorType.kBrushless);
-        this.rollers = new SparkMax(rollersID, SparkLowLevel.MotorType.kBrushless);
+    public IntakeIOSparkMax() {
+        this.pivot = new SparkMax(IntakeConstants.pivotID, SparkLowLevel.MotorType.kBrushless);
+        this.rollers = new SparkMax(IntakeConstants.rollerID, SparkLowLevel.MotorType.kBrushless);
 
         this.pivotEncoder = pivot.getEncoder();
         var intakeConfig = new SparkMaxConfig();
@@ -39,6 +41,10 @@ public class IntakeIOSparkMax implements IntakeIO {
                 .appliedOutputPeriodMs(20)
                 .busVoltagePeriodMs(20)
                 .outputCurrentPeriodMs(20);
+
+        SparkUtil.tryUntilOk(pivot, 5, () -> pivot.configure(
+                intakeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
+
     }
 
     @Override
@@ -53,8 +59,8 @@ public class IntakeIOSparkMax implements IntakeIO {
 
     @Override
     public void updateInputs(IntakeIOInputs inputs) {
-        inputs.rollersVoltage = rollers.getBusVoltage();
-        inputs.pivotVoltage = pivot.getBusVoltage();
+        inputs.rollersVoltage = rollers.getAppliedOutput();
+        inputs.pivotVoltage = pivot.getAppliedOutput();
         inputs.pivotPosition = pivotEncoder.getPosition();
         inputs.pivotVelocity = pivotEncoder.getVelocity();
     }
