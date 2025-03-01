@@ -6,20 +6,20 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface IntakeIO {
     @AutoLog
-    public class IntakeInputsAutoLogged {
+    public class IntakeIOInputs{
         public boolean hasCoral = false;
         public boolean isRunning = false;
         public double rollersVoltage = 0.0;
         public double pivotVoltage = 0.0;
+        public double pivotVelocity;
+        public double pivotPosition;
     }
 
     public default void setRunning(boolean state) {}
-    public default void pivotDown() {}
-    public default void pivotUp() {}
     public default void setPivotVoltage(double volts) {}
     public default void setRollersVoltage(double volts) {}
     public default boolean getIsRunning() { return false; }
     public default boolean coralInside() { return false; }
-    public default void updateInputs(IntakeInputsAutoLogged inputs) {}
+    public default void updateInputs(IntakeIOInputs inputs) {}
 
 }

@@ -30,15 +30,12 @@ import edu.wpi.first.math.geometry.Pose3d;
 //import frc.robot.commands.ResetEncoderCommand;
 
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
-import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.BaseDriveCommand;
-import frc.robot.commands.ArmCommands.BendCommand;
-import frc.robot.commands.ClawCommands.CloseClawCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
-import frc.robot.commands.ClawCommands.OpenClawCommand;
+import frc.robot.commands.IntakeCommands.IntakeSetPivotCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.DriveConstants;
@@ -88,7 +85,7 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController driveController = new CommandXboxController(0);
-  private final CommandXboxController elevatorAndArmController = new CommandXboxController(1);
+  private final CommandXboxController operatorController = new CommandXboxController(1);
 
 
   /**
@@ -219,18 +216,18 @@ public class RobotContainer {
 
     operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
 
-    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, Math.PI/2));
-    operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, -Math.PI/2));
+    // operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, Math.PI/2));
+    // operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, -Math.PI/2));
 
-    operatorInput.manualArmCommand.whileTrue(new ManualArmCommand(singleJointedArmSubsystem, elevatorAndArmController::getRightY));
+    // operatorInput.manualArmCommand.whileTrue(new ManualArmCommand(singleJointedArmSubsystem, elevatorAndArmController::getRightY));
 
     operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
+    operatorInput.manualPivotCommand.whileTrue(new IntakeSetPivotCommand(groundIntakeSubsystem, operatorController::getRightY));
+    operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, operatorController::getLeftY));
 
-    operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, elevatorAndArmController::getLeftY));
 
-
-    operatorInput.openClaw.onTrue(new OpenClawCommand(clawSubsystem));
-    operatorInput.closeClaw.onTrue(new CloseClawCommand(clawSubsystem));
+    // operatorInput.openClaw.onTrue(new OpenClawCommand(clawSubsystem));
+    // operatorInput.closeClaw.onTrue(new CloseClawCommand(clawSubsystem));
 
     operatorInput.movementDesired.whileTrue(
             new BaseDriveCommand.basedrivecommand(
@@ -238,9 +235,7 @@ public class RobotContainer {
                 () -> -driveController.getLeftY(),
                 () -> -driveController.getLeftX(),
                 () -> -driveController.getRightX()));
-  } // TODO FIX COMMAND THIS WILL BREAK DO NOT RUN IT
-
-
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

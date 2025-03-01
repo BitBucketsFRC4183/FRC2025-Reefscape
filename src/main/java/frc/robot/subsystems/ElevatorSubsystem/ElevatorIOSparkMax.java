@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.DriveSubsystem.SparkOdometryThread;
@@ -39,7 +40,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         elevatorMotor2Encoder = elevatorSpark2.getEncoder();
 
 
-        var elevatorConfig = new SparkFlexConfig();
+        var elevatorConfig = new SparkMaxConfig();
         elevatorConfig
                 .idleMode(SparkBaseConfig.IdleMode.kBrake)
                 .smartCurrentLimit(ElevatorConstants.elevatorMotorCurrentLimit)

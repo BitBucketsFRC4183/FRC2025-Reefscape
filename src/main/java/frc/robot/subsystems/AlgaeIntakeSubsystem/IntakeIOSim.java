@@ -50,18 +50,6 @@ public class IntakeIOSim implements IntakeIO{
     }
 
     @Override
-    public void pivotDown() {
-        pivotWheel.setInputVoltage(IntakeConstants.pivotVoltsTarget);
-        setRunning(true);
-    }
-
-    @Override
-    public void pivotUp() {
-        setRunning(false);
-        pivotWheel.setInputVoltage(IntakeConstants.pivotVoltsTarget);
-    }
-
-    @Override
     public void setPivotVoltage(double volts) {
         pivotWheel.setInputVoltage(volts);
     }
@@ -82,7 +70,7 @@ public class IntakeIOSim implements IntakeIO{
     }
 
     @Override
-    public void updateInputs(IntakeInputsAutoLogged inputs) {
+    public void updateInputs(IntakeIOInputs inputs) {
         inputs.hasCoral = coralInside();
         inputs.isRunning = getIsRunning();
         inputs.rollersVoltage = rollers.getInputVoltage();

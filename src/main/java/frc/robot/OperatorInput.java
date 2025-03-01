@@ -1,41 +1,38 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class OperatorInput {
-  final CommandXboxController operatorControl = new CommandXboxController(1);
+  final CommandXboxController operator = new CommandXboxController(1);
   public final CommandXboxController driver = new CommandXboxController(0);
 
-  public boolean actuallyIsTeleop = false;
-  final Trigger isTeleop = new Trigger(() -> actuallyIsTeleop); // TODO fill this out
 
   // DRIVER'S CONTROLS
   public final Trigger slowModeHold = driver.leftTrigger();
   public final Trigger turboModeHold = driver.rightTrigger();
 
-  final Trigger elevatorGoToOrigin = operatorControl.a();
 
-  final Trigger elevatorsetpoint1 = operatorControl.x();
-  final Trigger elevatorsetpoint2 = operatorControl.y();
-  final Trigger elevatorsetpoint3 = operatorControl.b();
+  final Trigger elevatorGoToOrigin = operator.a();
 
-  final Trigger manualElevator = operatorControl.axisMagnitudeGreaterThan(XboxController.Axis.kLeftY.value, 0.1);
+  final Trigger elevatorsetpoint1 = operator.x();
+  final Trigger elevatorsetpoint2 = operator.y();
+  final Trigger elevatorsetpoint3 = operator.b();
+  final Trigger manualElevator = operator.axisMagnitudeGreaterThan(XboxController.Axis.kLeftY.value, 0.1);
+  final Trigger resetElevatorEncoder = operator.start();
 
-  final Trigger resetElevatorEncoder = operatorControl.leftBumper();
-
-  final Trigger manualArmCommand = operatorControl.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
-
+  //final Trigger manualArmCommand = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
+  final Trigger manualPivotCommand = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
   final Trigger openClaw = driver.leftStick();
   final Trigger closeClaw = driver.rightStick();
 
-  final Trigger IntakeOn = driver.a();
+  final Trigger IntakeOn = operator.a();
 
-  final Trigger armbendup = operatorControl.povUp();
-  final Trigger armbenddown = operatorControl.povDown();
+  // final Trigger armbendup = operator.povUp();
+  // final Trigger armbenddown = operator.povDown();
+
   final Trigger xNotDesired =
       driver
           .axisGreaterThan(XboxController.Axis.kLeftX.value, 0.1)
@@ -51,6 +48,7 @@ public class OperatorInput {
           .axisGreaterThan(XboxController.Axis.kRightX.value, 0.1)
           .or(driver.axisLessThan(XboxController.Axis.kRightX.value, -0.1))
           .negate();
+
   public final Trigger movementNotDesired = xNotDesired.and(yNotDesired).and(thetaNotDesired);
   public final Trigger movementDesired = movementNotDesired.negate();
 
@@ -67,25 +65,5 @@ public class OperatorInput {
     return value;
   }
 
-  public double getDriverRightComponentRaw() {
-    return -driver.getLeftX(); // reference frame stuff
-  }
 
-  public double getRobotForwardComponentRaw() {
-    return -driver.getLeftY(); // reference frame stuff
-  }
-
-  public double getRobotRotationRaw() {
-    return driver.getRightX();
-  }
-
-  public Rotation2d getDriverRightAsAngle() {
-    double rotZeroToOne = (driver.getRightX() + 1) % 1;
-
-    return Rotation2d.fromRotations(rotZeroToOne);
-  }
-
-  public double getDriverAngularComponentRaw() {
-    return deadband(-driver.getRightX());
-  }
 }
