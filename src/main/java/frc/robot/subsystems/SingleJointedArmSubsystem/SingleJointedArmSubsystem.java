@@ -1,29 +1,73 @@
 package frc.robot.subsystems.SingleJointedArmSubsystem;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.VecBuilder;
+
+
+import com.revrobotics.spark.SparkLowLevel;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkFlex;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
+import com.revrobotics.spark.SparkMax;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.ArmCommands.ArmHoverCommand;
+import frc.robot.constants.Constants;
+import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.SingleJointedArmConstants;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorEncoderIO;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorEncoderIOInputsAutoLogged;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorIO;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorIOInputsAutoLogged;
+import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmIO;
 
-public class SingleJointedArmSubsystem extends SubsystemBase{
 
+public class SingleJointedArmSubsystem extends SubsystemBase {
+    private SingleJointedArmIO singleJointedArmIO;
+    public ArmFeedforward armFeedForward;
+    public final ProfiledPIDController armFeedback;
+
+    private final ArmEncoderIO armEncoderIO;
+    private final ArmIOInputsAutoLogged armIOInputs;
+    private ArmEncoderIOInputsAutoLogged armEncoderIOInputs = new ArmEncoderIOInputsAutoLogged();
+    public double hoverAngle = 6969;
+
+    public SingleJointedArmSubsystem(SingleJointedArmIO singleJointedArmIO, ArmEncoderIO armIOEncoder) {
+        if (Constants.currentMode == Constants.Mode.SIM) {
+            this.armFeedForward = new ArmFeedforward(SingleJointedArmConstants.kSSim, SingleJointedArmConstants.kGSim, SingleJointedArmConstants.kVSim, SingleJointedArmConstants.kASim);
+            this.armFeedback = new ProfiledPIDController(SingleJointedArmConstants.kPSim, SingleJointedArmConstants.kISim, SingleJointedArmConstants.kDSim, new TrapezoidProfile.Constraints(SingleJointedArmConstants.maxVelocity, SingleJointedArmConstants.maxAcceleration));
+        } else {
+            this.armFeedForward = new ArmFeedforward(SingleJointedArmConstants.kS, SingleJointedArmConstants.kG, SingleJointedArmConstants.kV, SingleJointedArmConstants.kA);
+            this.armFeedback = new ProfiledPIDController(SingleJointedArmConstants.kP, SingleJointedArmConstants.kI, SingleJointedArmConstants.kD, new TrapezoidProfile.Constraints(SingleJointedArmConstants.maxVelocity, SingleJointedArmConstants.maxAcceleration));
+        }
+
+        this.singleJointedArmIO = singleJointedArmIO;
+        this.armEncoderIO = armIOEncoder;
+        this.armIOInputs = new ArmIOInputsAutoLogged();
+        this.armEncoderIOInputs =  new ArmEncoderIOInputsAutoLogged();
+
+//        this.encoderIOInputs = new SingleJointedArmIOEncoderInputs();
+        armFeedback.setTolerance(SingleJointedArmConstants.kArmToleranceRPS);
+        //armEncoder.setDistancePerPulse(SingleJointedArmConstants.kEncoderDistancePerPulse);
+    }
+
+
+    @Override
+    public void periodic(){
+        singleJointedArmIO.updateInputs(armIOInputs);
+        armEncoderIO.updateInputs(armEncoderIOInputs);
+    }
+
+    public void resetArmAngleEncoderValue() {
+        armEncoderIO.resetEncoderPositionWithArmAngle();
+    }
+    public double getCurrentAngle(){
+        return armEncoderIOInputs.armAngle;
+    }
+    public double getArmSpeedRads() {
+        return armEncoderIOInputs.encoderVelocityRads;
+    }
+    public void setArmVoltage(double volts){
+        singleJointedArmIO.setArmMotorVoltage(volts);
+    }
 }
 

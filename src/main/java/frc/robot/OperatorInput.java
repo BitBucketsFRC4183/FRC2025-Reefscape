@@ -23,15 +23,19 @@ public class OperatorInput {
   final Trigger elevatorsetpoint2 = operatorControl.y();
   final Trigger elevatorsetpoint3 = operatorControl.b();
 
-  final Trigger manualElevator = operatorControl.axisMagnitudeGreaterThan(1, 0.1);
+  final Trigger manualElevator = operatorControl.axisMagnitudeGreaterThan(XboxController.Axis.kLeftY.value, 0.1);
 
-  final Trigger resetEncoder = operatorControl.leftBumper();
+  final Trigger resetElevatorEncoder = operatorControl.leftBumper();
+
+  final Trigger manualArmCommand = operatorControl.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
 
   final Trigger openClaw = driver.leftStick();
   final Trigger closeClaw = driver.rightStick();
 
   final Trigger IntakeOn = driver.a();
 
+  final Trigger armbendup = operatorControl.povUp();
+  final Trigger armbenddown = operatorControl.povDown();
   final Trigger xNotDesired =
       driver
           .axisGreaterThan(XboxController.Axis.kLeftX.value, 0.1)

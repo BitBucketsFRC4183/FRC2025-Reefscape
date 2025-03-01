@@ -22,10 +22,16 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.*;
+import frc.robot.commands.ArmCommands.ArmHoverCommand;
+import frc.robot.commands.ArmCommands.ManualArmCommand;
+import frc.robot.commands.BaseDriveCommand;
+import frc.robot.commands.ArmCommands.BendCommand;
+import frc.robot.commands.CloseClawCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
+import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
+import frc.robot.commands.OpenClawCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.DriveConstants;
@@ -44,7 +50,7 @@ import frc.robot.subsystems.AlgaeIntakeSubsystem.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSparkMax;
 import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSim;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
-import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
+import frc.robot.subsystems.SingleJointedArmSubsystem.*;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
@@ -55,8 +61,6 @@ import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoral;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
-
-import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
   // Subsystems
@@ -75,7 +79,7 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController driveController = new CommandXboxController(0);
-  private final CommandXboxController elevatorController = new CommandXboxController(1);
+  private final CommandXboxController elevatorAndArmController = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -107,11 +111,12 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(); //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmIOTalonFX(), new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
         break;
 
+        
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         this.driveSimulation = new SwerveDriveSimulation(DriveConstants.mapleSimConfig, new Pose2d());
@@ -135,10 +140,12 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(); //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmIOSim(), new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
         break;
+
+
       default:
         // Replayed robot, disable IO implementations
         drive =
@@ -157,7 +164,7 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(); //TODO
+                new SingleJointedArmSubsystem(new SingleJointedArmIO() {}, new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIO() {}); //TODO
         break;
@@ -191,28 +198,29 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   void loadCommands() {
+
+    singleJointedArmSubsystem.setDefaultCommand(new ArmHoverCommand(singleJointedArmSubsystem));
     operatorInput.elevatorsetpoint1.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L1));
     operatorInput.elevatorsetpoint2.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
     operatorInput.elevatorsetpoint3.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
 
     operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
 
-    operatorInput.resetEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
+    operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, Math.PI/2));
+    operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, -Math.PI/2));
 
-    operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, new DoubleSupplier() {
-      @Override
-      public double getAsDouble() {
-        elevatorController.getLeftY();
-        return elevatorController.getLeftY();
-      }
-    }));
+    operatorInput.manualArmCommand.whileTrue(new ManualArmCommand(singleJointedArmSubsystem, elevatorAndArmController::getRightY));
+
+    operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
+
+    operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, elevatorAndArmController::getLeftY));
 
 
     operatorInput.openClaw.onTrue(new OpenClawCommand(clawSubsystem));
     operatorInput.closeClaw.onTrue(new CloseClawCommand(clawSubsystem));
 
     operatorInput.movementDesired.whileTrue(
-            new BaseDriveCommand(
+            new BaseDriveCommand.basedrivecommand(
                 drive,
                 () -> -driveController.getLeftY(),
                 () -> -driveController.getLeftX(),
