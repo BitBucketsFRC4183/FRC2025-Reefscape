@@ -45,9 +45,6 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
                 .outputCurrentPeriodMs(20);
     }
 
-    final PIDController pid = new PIDController(ClawConstants.kP, ClawConstants.kI, ClawConstants.kD);
-
-
     public boolean getHasCoral() { return this.hasCoral; }
 
     public boolean getHasAlgae() { return this.hasAlgae; }
@@ -95,6 +92,8 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
         inputs.hasCoral = getHasCoral();
         inputs.hasAlgae = getHasAlgae();
         inputs.isOpen = getIsOpen();
+        inputs.centralPosition = centralEncoder.getPosition();
+        inputs.centralVelocity = centralEncoder.getVelocity();
     }
 
 }

@@ -10,6 +10,8 @@ public interface EndEffectorIO {
     public class EndEffectorInputsAutoLogged {  //autolog volts
         public double centralVolts = 0.0;
         public double gripperVolts = 0.0;
+        public double centralPosition = 0.0;
+        public double centralVelocity = 0.0;
         public boolean hasCoral = false;
         public boolean hasAlgae = false;
         public boolean isOpen = false;
@@ -18,10 +20,6 @@ public interface EndEffectorIO {
     public default void setupPID(PIDController pid, double errorTolerance, double errorDerivativeTolerance, double minimumIntegral, double maximumIntegral) {
         pid.setTolerance(errorTolerance, errorDerivativeTolerance);
         pid.setIntegratorRange(minimumIntegral, maximumIntegral);
-    }
-
-    public default double pidCalculate(PIDController pid, EndEffectorEncoderIO encoder, double setpoint) {
-        return pid.calculate(encoder.getDistance(), setpoint);
     }
 
     public default void setHasAlgae(boolean setting) {}
@@ -43,9 +41,5 @@ public interface EndEffectorIO {
     public default void setCentralVoltage(double volts) {}
 
     public default void setGrippersVoltage(double volts) {}
-
-    public default void centralToSetpoint(double setpoint) {}
-
-    public default void grippersToSetpoint(double setpoint) {}
 
 }
