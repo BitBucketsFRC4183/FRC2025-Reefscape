@@ -13,14 +13,19 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import choreo.auto.AutoChooser;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ResetEncoderCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
@@ -36,7 +41,8 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Auto.AutoSubsystem;
+import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
+import frc.robot.subsystems.AutoSubsystem.AutoSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.ClawSubsystem.*;
 import frc.robot.subsystems.DriveSubsystem.*;
@@ -45,10 +51,9 @@ import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
-import frc.robot.subsystems.ElevatorSubsystem.*;
-import frc.robot.subsystems.AlgaeIntakeSubsystem.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
+import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
 import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSparkMax;
-import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSim;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.SingleJointedArmSubsystem.*;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
@@ -59,12 +64,12 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoral;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 public class RobotContainer {
   // Subsystems
   public final DriveSubsystem drive;
+
+  // private final Flywheel flywheel;
   public final OperatorInput operatorInput;
   private final ElevatorSubsystem elevatorSubsystem;
   private final ClawSubsystem clawSubsystem;
@@ -72,8 +77,9 @@ public class RobotContainer {
   private final LEDSubsystem ledSubsystem;
   private final SingleJointedArmSubsystem singleJointedArmSubsystem;
   private final VisionSubsystem visionSubsystem;
-  private SwerveDriveSimulation driveSimulation = null;
+  public static SwerveDriveSimulation driveSimulation = null;
   private final AutoSubsystem autoSubsystem;
+  private AutoChooser autoChooser;
 
 
 
@@ -81,26 +87,31 @@ public class RobotContainer {
   private final CommandXboxController driveController = new CommandXboxController(0);
   private final CommandXboxController elevatorAndArmController = new CommandXboxController(1);
 
-  // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
-  private final LoggedDashboardNumber flywheelSpeedInput =
-      new LoggedDashboardNumber("Flywheel Speed", 1500.0);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
 
     this.operatorInput = new OperatorInput();
+    autoChooser = new AutoChooser();
+    autoChooser.addRoutine("FourL4CoralBottom", AutoSubsystem::FourL4CoralBottomRoutine);
+    autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
+    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
+    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
+    SmartDashboard.putData("autochooser", autoChooser);
+    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         drive =
-            new DriveSubsystem(
-                new GyroIOPigeon2(),
-                new ModuleIOHybrid(0, TunerConstants.FrontLeft),
-                new ModuleIOHybrid(1,TunerConstants.FrontRight),
-                new ModuleIOHybrid(2, TunerConstants.BackLeft),
-                new ModuleIOHybrid(3, TunerConstants.BackRight));
+                new DriveSubsystem(
+                        new GyroIOPigeon2(),
+                        new ModuleIOHybrid(0, TunerConstants.FrontLeft),
+                        new ModuleIOHybrid(1, TunerConstants.FrontRight),
+                        new ModuleIOHybrid(2, TunerConstants.BackLeft),
+                        new ModuleIOHybrid(3, TunerConstants.BackRight));
 
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIOSparkMax(), new ElevatorEncoderIOThroughbore()); //TODO
@@ -114,12 +125,14 @@ public class RobotContainer {
                 new SingleJointedArmSubsystem(new SingleJointedArmIOTalonFX(), new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
+        autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
+        autoChooser = new AutoChooser();
         break;
 
         
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        this.driveSimulation = new SwerveDriveSimulation(DriveConstants.mapleSimConfig, new Pose2d());
+        driveSimulation = new SwerveDriveSimulation(DriveConstants.mapleSimConfig, new Pose2d());
         SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
         drive =
             new DriveSubsystem(
@@ -143,18 +156,25 @@ public class RobotContainer {
                 new SingleJointedArmSubsystem(new SingleJointedArmIOSim(), new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
+        autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
         break;
 
 
       default:
         // Replayed robot, disable IO implementations
         drive =
-            new DriveSubsystem(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
+                new DriveSubsystem(
+                        new GyroIO() {
+                        },
+                        new ModuleIO() {
+                        },
+                        new ModuleIO() {
+                        },
+                        new ModuleIO() {
+                        },
+                        new ModuleIO() {
+                        });
+        // flywheel = new Flywheel(new FlywheelIO() {});
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIO() {}, new ElevatorEncoderIO() {}); //TODO
         clawSubsystem =
@@ -166,36 +186,25 @@ public class RobotContainer {
         singleJointedArmSubsystem =
                 new SingleJointedArmSubsystem(new SingleJointedArmIO() {}, new ArmEncoderIO() {}); //TODO
         visionSubsystem =
-                new VisionSubsystem(new VisionIO() {}); //TODO
+                new VisionSubsystem(new VisionIO() {
+                }); //TODO
+        autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
+
+        //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
         break;
     }
 
-    // Set up auto routines
+//    // Set up auto routines
+   //TODO FIX CLAW TO END EFFECTOR
 
-    autoSubsystem = new AutoSubsystem(drive);
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-    // Set up SysId routines
-    autoChooser.addOption(
-        "DriveSubsystem SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "DriveSubsystem SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "DriveSubsystem SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "DriveSubsystem SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-    // Configure the button bindings
     loadCommands();
   }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * Joystick} or {@link XboxController}), and then passing it to a {@link
+   * JoystickButton}.
    */
   void loadCommands() {
 
@@ -227,19 +236,20 @@ public class RobotContainer {
                 () -> -driveController.getRightX()));
   } // TODO FIX COMMAND THIS WILL BREAK DO NOT RUN IT
 
+
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return autoChooser.selectedCommand();
   }
 
   public void resetSimulationField() {
     if (Constants.currentMode != Constants.Mode.SIM) return;
-
-    driveSimulation.setSimulationWorldPose(new Pose2d(3, 3, new Rotation2d()));
+    drive.setPose(new Pose2d(3, 3, new Rotation2d()));
     SimulatedArena.getInstance().resetFieldForAuto();
   }
 
