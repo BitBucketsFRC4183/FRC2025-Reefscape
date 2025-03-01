@@ -1,13 +1,10 @@
-package frc.robot.subsystems.AlgaeIntakeSubsystem;
+package frc.robot.subsystems.IntakeSubsystem;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.IntakeConstants;
 
 import static frc.robot.constants.DriveConstants.odometryFrequency;

@@ -1,13 +1,12 @@
-package frc.robot.subsystems.AlgaeIntakeSubsystem;
+package frc.robot.subsystems.IntakeSubsystem;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.IntakeConstants;
 import org.littletonrobotics.junction.Logger;
 
-public class AlgaeIntakeSubsystem extends SubsystemBase {
+public class IntakeSubsystem extends SubsystemBase {
     private final IntakeIO intake;
     private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-    public AlgaeIntakeSubsystem(IntakeIO intake){
+    public IntakeSubsystem(IntakeIO intake){
         this.intake = intake;
     }
 

@@ -3,17 +3,17 @@ package frc.robot.commands.IntakeCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.AlgaeIntakeSubsystem.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
 
 public class IntakeSetPivotCommand extends Command {
-    public AlgaeIntakeSubsystem intake;
+    public IntakeSubsystem intake;
     private final double kG;
     DoubleSupplier yStickDistanceSupplier;
 
-    public IntakeSetPivotCommand(AlgaeIntakeSubsystem intake, DoubleSupplier yDoubleSupplier) {
+    public IntakeSetPivotCommand(IntakeSubsystem intake, DoubleSupplier yDoubleSupplier) {
         this.intake = intake;
         addRequirements(intake);
         this.yStickDistanceSupplier = yDoubleSupplier;

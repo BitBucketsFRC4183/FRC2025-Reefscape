@@ -40,7 +40,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AlgaeIntakeSubsystem.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.AutoSubsystem.AutoSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.ClawSubsystem.*;
@@ -51,10 +51,10 @@ import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
 import frc.robot.subsystems.ElevatorSubsystem.*;
-import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSim;
-import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSparkMax;
+import frc.robot.subsystems.IntakeSubsystem.IntakeIOSim;
+import frc.robot.subsystems.IntakeSubsystem.IntakeIOSparkMax;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
-import frc.robot.subsystems.SingleJointedArmSubsystem.*;
+import frc.robot.subsystems.ArmSubsystem.*;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
@@ -73,9 +73,9 @@ public class RobotContainer {
   public final OperatorInput operatorInput;
   private final ElevatorSubsystem elevatorSubsystem;
   private final ClawSubsystem clawSubsystem;
-  private final AlgaeIntakeSubsystem groundIntakeSubsystem;
+  private final IntakeSubsystem groundIntakeSubsystem;
   private final LEDSubsystem ledSubsystem;
-  private final SingleJointedArmSubsystem singleJointedArmSubsystem;
+  private final ArmSubsystem armSubsystem;
   private final VisionSubsystem visionSubsystem;
   public static SwerveDriveSimulation driveSimulation = null;
   private final AutoSubsystem autoSubsystem;
@@ -119,11 +119,11 @@ public class RobotContainer {
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSparkMax(new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
-                new AlgaeIntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace placeholder
+                new IntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace placeholder
         ledSubsystem =
                 new LEDSubsystem(); //TODO
-        singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(new SingleJointedArmIOTalonFX(), new ArmEncoderIO() {}); //TODO
+        armSubsystem =
+                new ArmSubsystem(new ArmIOTalonFX(), new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
         autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
@@ -150,11 +150,11 @@ public class RobotContainer {
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSim());
         groundIntakeSubsystem =
-                new AlgaeIntakeSubsystem(new IntakeIOSim(driveSimulation)); //TODO
+                new IntakeSubsystem(new IntakeIOSim(driveSimulation)); //TODO
         ledSubsystem =
                 new LEDSubsystem(); //TODO
-        singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(new SingleJointedArmIOSim(), new ArmEncoderIO() {}); //TODO
+        armSubsystem =
+                new ArmSubsystem(new ArmIOSim(), new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
         autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
@@ -181,11 +181,11 @@ public class RobotContainer {
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIO() {});
         groundIntakeSubsystem =
-                new AlgaeIntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace with real intake
+                new IntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace with real intake
         ledSubsystem =
                 new LEDSubsystem(); //TODO
-        singleJointedArmSubsystem =
-                new SingleJointedArmSubsystem(new SingleJointedArmIO() {}, new ArmEncoderIO() {}); //TODO
+        armSubsystem =
+                new ArmSubsystem(new ArmIO() {}, new ArmEncoderIO() {}); //TODO
         visionSubsystem =
                 new VisionSubsystem(new VisionIO() {
                 }); //TODO
@@ -209,10 +209,10 @@ public class RobotContainer {
    */
   void loadCommands() {
 
-    singleJointedArmSubsystem.setDefaultCommand(new ArmHoverCommand(singleJointedArmSubsystem));
-    operatorInput.elevatorsetpoint1.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L1));
-    operatorInput.elevatorsetpoint2.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
-    operatorInput.elevatorsetpoint3.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
+    armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
+    operatorInput.elevatorSetpoint1.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L1));
+    operatorInput.elevatorSetpoint2.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
+    operatorInput.elevatorSetpoint3.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
 
     operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
 

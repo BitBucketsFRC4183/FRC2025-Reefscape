@@ -1,6 +1,5 @@
-package frc.robot.subsystems.AlgaeIntakeSubsystem;
+package frc.robot.subsystems.IntakeSubsystem;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.constants.IntakeConstants;

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.AlgaeIntakeSubsystem;
+package frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeEncoderIOSim implements IntakeEncoderIO {
     public IntakeEncoderIOSim() {

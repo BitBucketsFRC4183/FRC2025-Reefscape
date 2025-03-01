@@ -1,7 +1,5 @@
-package frc.robot.subsystems.AlgaeIntakeSubsystem;
+package frc.robot.subsystems.IntakeSubsystem;
 
-import edu.wpi.first.math.controller.PIDController;
-import frc.robot.subsystems.ClawSubsystem.EndEffectorEncoderIO;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface IntakeIO {

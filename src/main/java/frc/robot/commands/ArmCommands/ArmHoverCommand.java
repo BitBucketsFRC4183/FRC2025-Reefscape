@@ -1,34 +1,32 @@
 package frc.robot.commands.ArmCommands;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.SingleJointedArmConstants;
-import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
+import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class ArmHoverCommand extends Command {
-    public SingleJointedArmSubsystem singleJointedArmSubsystem;
+    public ArmSubsystem armSubsystem;
 
-    public ArmHoverCommand(SingleJointedArmSubsystem singleJointedArmSubsystem){
-        this.singleJointedArmSubsystem = singleJointedArmSubsystem;
-        addRequirements(singleJointedArmSubsystem);
+    public ArmHoverCommand(ArmSubsystem armSubsystem){
+        this.armSubsystem = armSubsystem;
+        addRequirements(armSubsystem);
     }
 
     @Override
     public void initialize() {
-        singleJointedArmSubsystem.armFeedback.reset(singleJointedArmSubsystem.getCurrentAngle());
-        singleJointedArmSubsystem.armFeedback.setGoal(singleJointedArmSubsystem.hoverAngle);
+        armSubsystem.armFeedback.reset(armSubsystem.getCurrentAngle());
+        armSubsystem.armFeedback.setGoal(armSubsystem.hoverAngle);
     }
     @Override
     public void execute(){
-        if (singleJointedArmSubsystem.hoverAngle != 6969) {
+        if (armSubsystem.hoverAngle != 6969) {
             double appliedVolts = (
-                    singleJointedArmSubsystem.armFeedForward.calculate(singleJointedArmSubsystem.hoverAngle, 0) +
-                            singleJointedArmSubsystem.armFeedback.calculate(singleJointedArmSubsystem.getCurrentAngle()));
-            singleJointedArmSubsystem.hoverAngle = singleJointedArmSubsystem.getCurrentAngle();
+                    armSubsystem.armFeedForward.calculate(armSubsystem.hoverAngle, 0) +
+                            armSubsystem.armFeedback.calculate(armSubsystem.getCurrentAngle()));
+            armSubsystem.hoverAngle = armSubsystem.getCurrentAngle();
             Logger.recordOutput("ArmSubsystem/appliedVolts", appliedVolts);
-            Logger.recordOutput("ArmSubsystem/target_Angle", singleJointedArmSubsystem.hoverAngle);
-            singleJointedArmSubsystem.setArmVoltage(appliedVolts);
+            Logger.recordOutput("ArmSubsystem/target_Angle", armSubsystem.hoverAngle);
+            armSubsystem.setArmVoltage(appliedVolts);
         }
 
     }

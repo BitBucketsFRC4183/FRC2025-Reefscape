@@ -1,26 +1,24 @@
 package frc.robot.commands.ArmCommands;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.SingleJointedArmConstants;
-import frc.robot.subsystems.SingleJointedArmSubsystem.SingleJointedArmSubsystem;
+import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class BendCommand extends Command {
 
-    private final SingleJointedArmSubsystem singleJointedArmSubsystem;
+    private final ArmSubsystem armSubsystem;
     public double targetAngle;
 
-    public BendCommand(SingleJointedArmSubsystem subsystem, double targetAngle) {
-        this.singleJointedArmSubsystem = subsystem;
+    public BendCommand(ArmSubsystem subsystem, double targetAngle) {
+        this.armSubsystem = subsystem;
         this.targetAngle = targetAngle;
-        addRequirements(singleJointedArmSubsystem);
+        addRequirements(armSubsystem);
     }
 
     @Override
     public void initialize() {
-        singleJointedArmSubsystem.armFeedback.reset(singleJointedArmSubsystem.getCurrentAngle());
-        singleJointedArmSubsystem.armFeedback.setGoal(targetAngle);
+        armSubsystem.armFeedback.reset(armSubsystem.getCurrentAngle());
+        armSubsystem.armFeedback.setGoal(targetAngle);
 
         Logger.recordOutput("ArmSubsystem/target_Angle", targetAngle);
 
@@ -28,13 +26,13 @@ public class BendCommand extends Command {
 
     @Override
     public void execute() {
-        double voltsPID = singleJointedArmSubsystem.armFeedback.calculate(singleJointedArmSubsystem.getCurrentAngle());
-        double calculatedVolts = singleJointedArmSubsystem.armFeedForward.calculate(singleJointedArmSubsystem.armFeedback.getSetpoint().position, singleJointedArmSubsystem.armFeedback.getSetpoint().velocity) + voltsPID;
-        singleJointedArmSubsystem.hoverAngle = singleJointedArmSubsystem.getCurrentAngle();
+        double voltsPID = armSubsystem.armFeedback.calculate(armSubsystem.getCurrentAngle());
+        double calculatedVolts = armSubsystem.armFeedForward.calculate(armSubsystem.armFeedback.getSetpoint().position, armSubsystem.armFeedback.getSetpoint().velocity) + voltsPID;
+        armSubsystem.hoverAngle = armSubsystem.getCurrentAngle();
         Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
-        Logger.recordOutput("ArmSubsystem/desired_position", singleJointedArmSubsystem.armFeedback.getSetpoint().position);
+        Logger.recordOutput("ArmSubsystem/desired_position", armSubsystem.armFeedback.getSetpoint().position);
 
-        this.singleJointedArmSubsystem.setArmVoltage(calculatedVolts);
+        this.armSubsystem.setArmVoltage(calculatedVolts);
     }
 
 }

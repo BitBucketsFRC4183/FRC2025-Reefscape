@@ -13,26 +13,6 @@ public class OperatorInput {
   // DRIVER'S CONTROLS
   public final Trigger slowModeHold = driver.leftTrigger();
   public final Trigger turboModeHold = driver.rightTrigger();
-
-
-  final Trigger elevatorGoToOrigin = operator.a();
-
-  final Trigger elevatorsetpoint1 = operator.x();
-  final Trigger elevatorsetpoint2 = operator.y();
-  final Trigger elevatorsetpoint3 = operator.b();
-  final Trigger manualElevator = operator.axisMagnitudeGreaterThan(XboxController.Axis.kLeftY.value, 0.1);
-  final Trigger resetElevatorEncoder = operator.start();
-
-  //final Trigger manualArmCommand = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
-  final Trigger manualPivotCommand = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
-  final Trigger openClaw = driver.leftStick();
-  final Trigger closeClaw = driver.rightStick();
-
-  final Trigger IntakeOn = operator.a();
-
-  // final Trigger armbendup = operator.povUp();
-  // final Trigger armbenddown = operator.povDown();
-
   final Trigger xNotDesired =
       driver
           .axisGreaterThan(XboxController.Axis.kLeftX.value, 0.1)
@@ -51,6 +31,28 @@ public class OperatorInput {
 
   public final Trigger movementNotDesired = xNotDesired.and(yNotDesired).and(thetaNotDesired);
   public final Trigger movementDesired = movementNotDesired.negate();
+
+
+  //operator controls
+  final Trigger elevatorGoToOrigin = operator.a();
+
+  final Trigger elevatorSetpoint1 = operator.x();
+  final Trigger elevatorSetpoint2 = operator.y();
+  final Trigger elevatorSetpoint3 = operator.b();
+  final Trigger manualElevator = operator.axisMagnitudeGreaterThan(XboxController.Axis.kLeftY.value, 0.1);
+  final Trigger resetElevatorEncoder = operator.start();
+
+  //final Trigger manualArmCommand = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
+  final Trigger manualPivotCommand = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
+  final Trigger openClaw = driver.leftStick();
+  final Trigger closeClaw = driver.rightStick();
+
+  final Trigger IntakeOn = operator.a();
+
+  // final Trigger armbendup = operator.povUp();
+  // final Trigger armbenddown = operator.povDown();
+
+
 
   /**
    * @param input a value

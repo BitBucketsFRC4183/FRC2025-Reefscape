@@ -1,7 +1,7 @@
 package frc.robot.constants;
 import edu.wpi.first.math.system.plant.DCMotor;
 
-public class SingleJointedArmConstants {
+public class ArmConstants {
 
     public static final int frontLeftDriveCanId = 1;
     public static final int MotorNumber = 0;

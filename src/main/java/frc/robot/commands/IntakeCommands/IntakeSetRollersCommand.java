@@ -1,17 +1,14 @@
 package frc.robot.commands.IntakeCommands;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.Constants;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.AlgaeIntakeSubsystem.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.function.DoubleSupplier;
-
 public class IntakeSetRollersCommand extends Command {
-    public AlgaeIntakeSubsystem intake;
+    public IntakeSubsystem intake;
     boolean isIntaking = false;
 
-    public IntakeSetRollersCommand(AlgaeIntakeSubsystem intake, boolean isIntaking) {
+    public IntakeSetRollersCommand(IntakeSubsystem intake, boolean isIntaking) {
         this.intake = intake;
         this.isIntaking = isIntaking;
     }

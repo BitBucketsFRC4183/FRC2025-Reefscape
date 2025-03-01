@@ -1,39 +1,23 @@
-package frc.robot.subsystems.SingleJointedArmSubsystem;
+package frc.robot.subsystems.ArmSubsystem;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.*;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import frc.robot.constants.Constants;
-import frc.robot.constants.SingleJointedArmConstants;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
-import frc.robot.subsystems.DriveSubsystem.ModuleIO;
+import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.DriveSubsystem.PhoenixOdometryThread;
 
 import java.util.Queue;
 
-import static frc.robot.util.PhoenixUtil.tryUntilOk;
-
-public class SingleJointedArmIOTalonFX implements SingleJointedArmIO {
+public class ArmIOTalonFX implements ArmIO {
     private TalonFX armTalon1;
     private TalonFX armTalon2;
 
@@ -71,26 +55,26 @@ public class SingleJointedArmIOTalonFX implements SingleJointedArmIO {
     private final Debouncer arm2ConnectedDebounce = new Debouncer(0.5);
 
 
-    public SingleJointedArmIOTalonFX() {
+    public ArmIOTalonFX() {
 
         TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
         var arm1Config = talonFXConfiguration;
         var arm2Config = talonFXConfiguration;
 
         arm1Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        arm1Config.TorqueCurrent.PeakForwardTorqueCurrent = SingleJointedArmConstants.arm1CurrentLimit;
-        arm1Config.TorqueCurrent.PeakReverseTorqueCurrent = -SingleJointedArmConstants.arm1CurrentLimit;
-        arm1Config.CurrentLimits.StatorCurrentLimit = SingleJointedArmConstants.arm1CurrentLimit;
+        arm1Config.TorqueCurrent.PeakForwardTorqueCurrent = ArmConstants.arm1CurrentLimit;
+        arm1Config.TorqueCurrent.PeakReverseTorqueCurrent = -ArmConstants.arm1CurrentLimit;
+        arm1Config.CurrentLimits.StatorCurrentLimit = ArmConstants.arm1CurrentLimit;
         arm1Config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         arm2Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        arm2Config.TorqueCurrent.PeakForwardTorqueCurrent = SingleJointedArmConstants.arm2CurrentLimit;
-        arm2Config.TorqueCurrent.PeakReverseTorqueCurrent = -SingleJointedArmConstants.arm2CurrentLimit;
-        arm2Config.CurrentLimits.StatorCurrentLimit = SingleJointedArmConstants.arm2CurrentLimit;
+        arm2Config.TorqueCurrent.PeakForwardTorqueCurrent = ArmConstants.arm2CurrentLimit;
+        arm2Config.TorqueCurrent.PeakReverseTorqueCurrent = -ArmConstants.arm2CurrentLimit;
+        arm2Config.CurrentLimits.StatorCurrentLimit = ArmConstants.arm2CurrentLimit;
         arm2Config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        armTalon1 = new TalonFX(SingleJointedArmConstants.arm1TalonID);
-        armTalon2 = new TalonFX(SingleJointedArmConstants.arm2TalonID);
+        armTalon1 = new TalonFX(ArmConstants.arm1TalonID);
+        armTalon2 = new TalonFX(ArmConstants.arm2TalonID);
 
 
         timestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
@@ -123,7 +107,7 @@ public class SingleJointedArmIOTalonFX implements SingleJointedArmIO {
         ParentDevice.optimizeBusUtilizationForAll(armTalon1, armTalon2);
 
     }
-    public void updateInputs(SingleJointedArmIO.ArmIOInputs inputs) {
+    public void updateInputs(ArmIO.ArmIOInputs inputs) {
         // Refresh all signals
         var arm1Status =
                 BaseStatusSignal.refreshAll(arm1Position, arm1Velocity, arm1AppliedVolts, arm1Current);
