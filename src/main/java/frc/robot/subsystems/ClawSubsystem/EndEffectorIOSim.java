@@ -49,20 +49,6 @@ public class EndEffectorIOSim implements EndEffectorIO {
     public void setIsOpen(boolean setting) { this.isOpen = setting; }
 
     @Override
-    public void centralToSetpoint(double setpoint) { //move wheels to setpoint
-        setCentralVelocity(pidCalculate(pid, encoder, setpoint));
-        if (setpoint == -ClawConstants.mainSetpoint) { //closing
-            setHasCoral(true);
-        } else if (setpoint == ClawConstants.mainSetpoint) { //opening
-            setHasCoral(false); //assmumes object is always coral
-        }
-
-    }
-
-    @Override
-    public void grippersToSetpoint(double setpoint) { setGrippersVelocity(pidCalculate(pid, encoder, setpoint)); }
-
-    @Override
     public void setCentralVelocity(double velocity) {
         centralWheel.setAngularVelocity(velocity); //probably change later
     }
@@ -75,6 +61,11 @@ public class EndEffectorIOSim implements EndEffectorIO {
     @Override
     public void setCentralVoltage(double volts) {
         centralWheel.setInputVoltage(volts);
+        if (volts == ClawConstants.mainVoltageTarget) {
+            setHasCoral(false);
+        } else if (volts == 0.0) {
+            setHasCoral(true);
+        }
     }
 
     @Override
