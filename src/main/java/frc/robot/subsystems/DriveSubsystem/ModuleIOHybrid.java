@@ -33,14 +33,18 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.AnalogInput;
+import frc.robot.constants.DriveConstants;
 import frc.robot.util.SparkUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -65,7 +69,8 @@ public class ModuleIOHybrid implements ModuleIO {
 
     // Closed loop controllers
     // private final SparkClosedLoopController turnController;
-    private final PIDController turnController;
+    private final ProfiledPIDController turnController;
+    private final SimpleMotorFeedforward turnFF;
 
     // Queue inputs from odometry thread
     private final Queue<Double> timestampSparkQueue;
@@ -169,7 +174,7 @@ public class ModuleIOHybrid implements ModuleIO {
         // Configure turn motor
         var turnConfig = new SparkMaxConfig();
         turnConfig
-                .inverted(true)
+                .inverted(turnInverted)
                 .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(turnMotorCurrentLimit)
                 .voltageCompensation(12.0);
@@ -216,8 +221,9 @@ public class ModuleIOHybrid implements ModuleIO {
 
 
         turnEncoder = new ThriftyEncoder(new AnalogInput(turnAbsoluteEncoderID));
+        this.turnFF = new SimpleMotorFeedforward(0, DriveConstants.turnFF, 0);
         // SparkUtil.tryUntilOk(turnSpark, 5, () -> turnEncoder.setPosition(thrifty.getRadians() - zeroRotation.getRadians()));
-        turnController = new PIDController(turnKp, 0, turnKd);
+        turnController = new ProfiledPIDController(turnKp, 0, turnKd, new TrapezoidProfile.Constraints(9999, 9999));
         turnController.enableContinuousInput(turnPIDMinInput,turnPIDMaxInput);
 
 
@@ -312,17 +318,23 @@ public class ModuleIOHybrid implements ModuleIO {
 
     @Override
     public void setTurnPosition(Rotation2d rotation) {
-        double setpoint = rotation.getRadians();
+        double goal = rotation.getRadians();
+
         double turnPos =
                 MathUtil.inputModulus(
                         turnEncoder.getPosition() - zeroRotation.getRadians(), turnPIDMinInput, turnPIDMaxInput);
 
         turnController.enableContinuousInput(turnPIDMinInput, turnPIDMaxInput);
-        double output = turnController.calculate(turnPos, setpoint);
+        turnController.setGoal(goal);
+
+        double setpointPos = turnController.getSetpoint().position;
+        double output = turnController.calculate(turnPos) + turnFF.calculate(turnController.getSetpoint().velocity);
+
         setTurnOpenLoop(output);
 
         Logger.recordOutput("Module" + id + "/output", output);
-        Logger.recordOutput("Module" + id + "/setpoint", setpoint);
+        Logger.recordOutput("Module" + id + "/setpoint", setpointPos);
+        Logger.recordOutput("Module" + id + "/goal", goal);
         Logger.recordOutput("Module" + id + "/position", turnPos);
 //
 //        turnController.setReference(setpoint, ControlType.kPosition);

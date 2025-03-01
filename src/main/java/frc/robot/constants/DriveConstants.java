@@ -97,7 +97,7 @@ public class DriveConstants {
     public static final double driveSimKv = 0.0789;
 
     // Turn motor configuration
-    public static final boolean turnInverted = false;
+    public static final boolean turnInverted = true;
     public static final int turnMotorCurrentLimit = 20;
     public static final double turnMotorReduction = 12.8;
     public static final DCMotor turnGearbox = DCMotor.getNEO(1);
@@ -109,7 +109,8 @@ public class DriveConstants {
 
     // Turn PID configuration
     public static final double turnKp = 10.0;
-    public static final double turnKd = 0.0;
+    public static final double turnFF = 1.0;
+    public static final double turnKd = 0.2;
     public static final double turnSimP = 8.0;
     public static final double turnSimD = 0.0;
     public static final double turnPIDMinInput = -Math.PI; // Radians
