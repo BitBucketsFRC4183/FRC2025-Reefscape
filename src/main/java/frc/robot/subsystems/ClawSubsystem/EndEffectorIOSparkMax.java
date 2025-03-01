@@ -1,23 +1,48 @@
 package frc.robot.subsystems.ClawSubsystem;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.PIDController;
 import frc.robot.constants.ClawConstants;
+import frc.robot.constants.IntakeConstants;
+
+import static frc.robot.constants.DriveConstants.odometryFrequency;
 
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
     private final SparkMax gripperWheels; //hold object
     private final SparkMax centralWheel; //open and close claw
-    private final EndEffectorEncoderIO encoder;
+    private final RelativeEncoder centralEncoder;
     private boolean hasAlgae = false;
     private boolean hasCoral = false;
     private boolean isOpen = false;
 //this should be fine? we'll see
-    public EndEffectorIOSparkMax(EndEffectorEncoderIO encoder) {
-        setupPID(pid, 3.0, 5.0, -0.5, 0.5); //change pid setting
+    public EndEffectorIOSparkMax() {
         centralWheel = new SparkMax(ClawConstants.centralID, SparkLowLevel.MotorType.kBrushless); //big
         gripperWheels = new SparkMax(ClawConstants.wheelID, SparkLowLevel.MotorType.kBrushless); //small
-        this.encoder = encoder;
+        this.centralEncoder = centralWheel.getEncoder();
+        SparkMaxConfig clawConfig = new SparkMaxConfig();
+        clawConfig
+                .idleMode(SparkBaseConfig.IdleMode.kBrake)
+                .smartCurrentLimit(ClawConstants.clawMotorCurrentLimit)
+                .voltageCompensation(12.0);
+        clawConfig
+                .encoder
+                .positionConversionFactor(ClawConstants.centralSparkEncoderPositionFactor)
+                .velocityConversionFactor(ClawConstants.centralSparkEncoderVelocityFactor)
+                .uvwMeasurementPeriod(10)
+                .uvwAverageDepth(2);
+        clawConfig
+                .signals
+                .primaryEncoderPositionAlwaysOn(true)
+                .primaryEncoderPositionPeriodMs((int) (1000.0 / odometryFrequency))
+                .primaryEncoderVelocityAlwaysOn(true)
+                .primaryEncoderVelocityPeriodMs(20)
+                .appliedOutputPeriodMs(20)
+                .busVoltagePeriodMs(20)
+                .outputCurrentPeriodMs(20);
     }
 
     final PIDController pid = new PIDController(ClawConstants.kP, ClawConstants.kI, ClawConstants.kD);

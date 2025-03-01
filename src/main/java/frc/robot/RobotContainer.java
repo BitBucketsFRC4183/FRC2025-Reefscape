@@ -117,7 +117,7 @@ public class RobotContainer {
                 new ElevatorSubsystem(new ElevatorIOTalonFX(),
                         new ElevatorEncoderIOThroughbore()); //TODO
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIOSparkMax(new EndEffectorEncoderIOSim()));
+                new ClawSubsystem(new EndEffectorIOSparkMax());
         groundIntakeSubsystem =
                 new IntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace placeholder
         ledSubsystem =

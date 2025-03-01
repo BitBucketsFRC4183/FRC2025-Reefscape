@@ -13,4 +13,7 @@ public class ClawConstants {
     public static double grippersVoltageTarget = 1.0;
     public static final int centralID = 29;
     public static final int wheelID = 32;
+    public static final double centralSparkEncoderPositionFactor = 1.0;
+    public static final double centralSparkEncoderVelocityFactor = 1.0;
+    public static final int clawMotorCurrentLimit = 20;
 }
