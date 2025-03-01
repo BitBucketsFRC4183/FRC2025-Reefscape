@@ -24,9 +24,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import frc.robot.commands.DriveCommands;
-import frc.robot.commands.ResetEncoderCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.math.geometry.Pose3d;
+
+//import frc.robot.commands.DriveCommands;
+//import frc.robot.commands.ResetEncoderCommand;
+
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.BaseDriveCommand;
@@ -41,7 +43,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AlgaeManagementSubsystem.AlgaeManagementSubsystem;
+import frc.robot.subsystems.AlgaeIntakeSubsystem.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.AutoSubsystem.AutoSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.ClawSubsystem.*;
@@ -51,8 +53,8 @@ import frc.robot.subsystems.DriveSubsystem.GyroIO;
 import frc.robot.subsystems.DriveSubsystem.GyroIOPigeon2;
 import frc.robot.subsystems.DriveSubsystem.ModuleIO;
 import frc.robot.subsystems.DriveSubsystem.ModuleIOSim;
-import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
-import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntakeSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem.*;
+import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSim;
 import frc.robot.subsystems.AlgaeIntakeSubsystem.IntakeIOSparkMax;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.SingleJointedArmSubsystem.*;
@@ -64,6 +66,7 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoral;
 import org.littletonrobotics.junction.Logger;
+
 
 public class RobotContainer {
   // Subsystems
@@ -114,7 +117,8 @@ public class RobotContainer {
                         new ModuleIOHybrid(3, TunerConstants.BackRight));
 
         elevatorSubsystem =
-                new ElevatorSubsystem(new ElevatorIOSparkMax(), new ElevatorEncoderIOThroughbore()); //TODO
+                new ElevatorSubsystem(new ElevatorIOTalonFX(),
+                        new ElevatorEncoderIOThroughbore()); //TODO
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSparkMax(new EndEffectorEncoderIOSim()));
         groundIntakeSubsystem =
