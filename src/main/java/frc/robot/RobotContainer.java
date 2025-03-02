@@ -229,8 +229,8 @@ public class RobotContainer {
     // manual commands
 
     // uncomment and comment which ever one is needed
-    // operatorInput.manualArmCommand.whileTrue(new ManualArmCommand(singleJointedArmSubsystem, elevatorAndArmController::getRightY));
-    operatorInput.manualPivot.whileTrue(new IntakeSetPivotCommand(intakeSubsystem, operatorController::getRightY));
+    operatorInput.manualArm.whileTrue(new ManualArmCommand(armSubsystem, operatorController::getRightY));
+    // operatorInput.manualPivot.whileTrue(new IntakeSetPivotCommand(intakeSubsystem, operatorController::getRightY));
     operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, operatorController::getLeftY));
 
     // rollers and pivot, algae intake stuff
