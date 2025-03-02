@@ -387,19 +387,14 @@ public class DriveSubsystem extends SubsystemBase {
     return maxSpeedMetersPerSec / driveBaseRadius;
   }
 
-  /** Returns an array of module translations. */
-  public static Translation2d[] getModuleTranslations() {
-    return new Translation2d[] {
-            new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
-            new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
-            new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
-            new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
-    };
-  }
-
-  public Supplier<Pose2d> getPose2dSupplier() {
-    return this::getPose;
-  }
-
-
+//  /** Returns an array of module translations. */
+//  public static Translation2d[] getModuleTranslations() {
+//    return new Translation2d[] {
+//            new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
+//            new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
+//            new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
+//            new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
+//    };
+//  }
+//  }
 }

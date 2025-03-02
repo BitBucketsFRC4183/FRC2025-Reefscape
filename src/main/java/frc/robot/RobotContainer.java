@@ -30,6 +30,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 //import frc.robot.commands.DriveCommands;
 //import frc.robot.commands.ResetEncoderCommand;
 
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.BendCommand;
 import frc.robot.commands.BaseDriveCommand;
@@ -182,7 +183,6 @@ public class RobotContainer {
                 new VisionSubsystem(new VisionIO() {
                 }); //TODO
 
-        //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
         break;
     }
 
@@ -192,6 +192,10 @@ public class RobotContainer {
     autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
     autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
     autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
+    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    autoChooser.addCmd("DriveSysIDDynamicReverse", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     SmartDashboard.putData("autochooser", autoChooser);
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
