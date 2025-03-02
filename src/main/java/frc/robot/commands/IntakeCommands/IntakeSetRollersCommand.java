@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class IntakeSetRollersCommand extends Command {
     public IntakeSubsystem intake;
-    boolean isIntaking = false;
+    boolean isIntaking;
 
     public IntakeSetRollersCommand(IntakeSubsystem intake, boolean isIntaking) {
         this.intake = intake;
@@ -15,7 +15,7 @@ public class IntakeSetRollersCommand extends Command {
 
     @Override
     public void execute() {
-        double invertedFactor = (isIntaking && IntakeConstants.rollerInverted) ? 1 : -1;
+        double invertedFactor = (isIntaking) ? 1 : -1;
         double calculatedVolts = IntakeConstants.rollerVoltsTarget * invertedFactor;
         Logger.recordOutput("IntakeSubsystem/targetVoltageRollers", calculatedVolts);
         this.intake.setRollersToVoltage(calculatedVolts);
