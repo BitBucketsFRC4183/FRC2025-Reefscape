@@ -12,14 +12,13 @@ import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 
 import java.util.function.DoubleSupplier;
 
-public class BaseDriveCommand {
-    public static class basedrivecommand extends Command {
+public class BaseDriveCommand extends Command {
         private final DriveSubsystem drive;
         private final DoubleSupplier xSupplier;
         private final DoubleSupplier ySupplier;
         private final DoubleSupplier omegaSupplier;
 
-        public basedrivecommand(DriveSubsystem drive,
+        public BaseDriveCommand(DriveSubsystem drive,
                                 DoubleSupplier xSupplier,
                                 DoubleSupplier ySupplier,
                                 DoubleSupplier omegaSupplier) {
@@ -68,5 +67,4 @@ public class BaseDriveCommand {
         public void end(boolean interrupted) {
             drive.stop();
         }
-    }
 }

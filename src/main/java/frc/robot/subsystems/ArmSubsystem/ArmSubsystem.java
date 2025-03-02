@@ -8,6 +8,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ArmConstants;
+import org.littletonrobotics.junction.Logger;
 
 
 public class ArmSubsystem extends SubsystemBase {
@@ -34,9 +35,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.armIOInputs = new ArmIOInputsAutoLogged();
         this.armEncoderIOInputs =  new ArmEncoderIOInputsAutoLogged();
 
-//        this.encoderIOInputs = new SingleJointedArmIOEncoderInputs();
         armFeedback.setTolerance(ArmConstants.kArmToleranceRPS);
-        //armEncoder.setDistancePerPulse(SingleJointedArmConstants.kEncoderDistancePerPulse);
     }
 
 
@@ -44,16 +43,13 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic(){
         armIO.updateInputs(armIOInputs);
         armEncoderIO.updateInputs(armEncoderIOInputs);
+
+        Logger.processInputs("ArmSubsystem", armIOInputs);
+        Logger.processInputs("ArmSubsystem/encoder", armEncoderIOInputs);
     }
 
-    public void resetArmAngleEncoderValue() {
-        armEncoderIO.resetEncoderPositionWithArmAngle();
-    }
     public double getCurrentAngle(){
         return armEncoderIOInputs.armAngle;
-    }
-    public double getArmSpeedRads() {
-        return armEncoderIOInputs.encoderVelocityRads;
     }
     public void setArmVoltage(double volts){
         armIO.setArmMotorVoltage(volts);

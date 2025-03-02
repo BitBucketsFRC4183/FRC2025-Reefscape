@@ -9,22 +9,19 @@ public class ArmEncoderIOThroughbore implements ArmEncoderIO{
     private final DutyCycleEncoder armDCEncoder;
     LinearFilter armFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
 
-    public ArmEncoderIOThroughbore () {
-        armDCEncoder = new DutyCycleEncoder(0, ArmConstants.fullRange, ArmConstants.expectedZero);
+    public ArmEncoderIOThroughbore() {
+        armDCEncoder = new DutyCycleEncoder(ArmConstants.encoderChannel);
+        armDCEncoder.setInverted(ArmConstants.encoderInverted);
     }
 
     @Override
     public void updateInputs(ArmEncoderIO.ArmEncoderIOInputs inputs) {
-        inputs.encoderPositionRots = armDCEncoder.get();
-        inputs.encoderPositionRads =  Units.rotationsToRadians(inputs.encoderPositionRots);
-        inputs.encoderVelocityRots = armDCEncoder.get() * armDCEncoder.getFrequency();
-        inputs.encoderVelocityRads = Units.rotationsToRadians(inputs.encoderVelocityRads);
+        inputs.encoderPositionRotsNoOffset = armDCEncoder.get();
+        inputs.encoderPositionRadsNoOffset =  Units.rotationsToRadians(inputs.encoderPositionRotsNoOffset);
+        inputs.encoderPositionRadsOffset =  Units.rotationsToRadians(inputs.encoderPositionRotsNoOffset) - ArmConstants.encoderOffset;
 
-        inputs.unfilteredArmAngle = inputs.encoderPositionRads / ArmConstants.gearingRatio;
+        inputs.unfilteredArmAngle = inputs.encoderPositionRadsOffset / ArmConstants.gearingRatio;
         inputs.armAngle = armFilter.calculate(inputs.unfilteredArmAngle);
     }
-    @Override
-    public void resetEncoderPositionWithArmAngle() {
-        armDCEncoder.close();
-    }
+
 }

@@ -7,12 +7,10 @@ public interface ArmEncoderIO {
     class ArmEncoderIOInputs {
         double unfilteredArmAngle = 0.0;
         double armAngle = 0.0;
-        double encoderPositionRads = 0;
-        double encoderPositionRots = 0;
-        double encoderVelocityRads = 0;
-        double encoderVelocityRots = 0;
+        double encoderPositionRadsOffset = 0;
+        double encoderPositionRadsNoOffset = 0;
+        double encoderPositionRotsNoOffset = 0;
     }
     public default void updateInputs(ArmEncoderIO.ArmEncoderIOInputs inputs) {}
-    public default void resetEncoderPositionWithArmAngle() {}
 
 }

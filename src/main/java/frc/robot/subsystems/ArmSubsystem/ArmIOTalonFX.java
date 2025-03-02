@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
@@ -16,6 +17,8 @@ import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.DriveSubsystem.PhoenixOdometryThread;
 
 import java.util.Queue;
+
+import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 public class ArmIOTalonFX implements ArmIO {
     private TalonFX armTalon1;
@@ -30,9 +33,7 @@ public class ArmIOTalonFX implements ArmIO {
     private final VelocityTorqueCurrentFOC velocityTorqueCurrentRequest =
             new VelocityTorqueCurrentFOC(0.0);
 
-    public Queue<Double> timestampQueue;
 
-    public static Queue<Double> arm1PositionQueue;
 
     public StatusSignal<Angle> arm1Position;
 
@@ -42,7 +43,6 @@ public class ArmIOTalonFX implements ArmIO {
     private final StatusSignal<Voltage> arm1AppliedVolts;
 
 
-    public static Queue<Double> arm2PositionQueue;
 
     public StatusSignal<Angle> arm2Position;
 
@@ -66,29 +66,27 @@ public class ArmIOTalonFX implements ArmIO {
         arm1Config.TorqueCurrent.PeakReverseTorqueCurrent = -ArmConstants.arm1CurrentLimit;
         arm1Config.CurrentLimits.StatorCurrentLimit = ArmConstants.arm1CurrentLimit;
         arm1Config.CurrentLimits.StatorCurrentLimitEnable = true;
+        arm1Config.MotorOutput.Inverted = ArmConstants.arm1Inverted;
 
         arm2Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         arm2Config.TorqueCurrent.PeakForwardTorqueCurrent = ArmConstants.arm2CurrentLimit;
         arm2Config.TorqueCurrent.PeakReverseTorqueCurrent = -ArmConstants.arm2CurrentLimit;
         arm2Config.CurrentLimits.StatorCurrentLimit = ArmConstants.arm2CurrentLimit;
         arm2Config.CurrentLimits.StatorCurrentLimitEnable = true;
+        arm2Config.MotorOutput.Inverted = ArmConstants.arm2Inverted;
+
 
         armTalon1 = new TalonFX(ArmConstants.arm1TalonID);
         armTalon2 = new TalonFX(ArmConstants.arm2TalonID);
-
-
-        timestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
+        tryUntilOk(5, () -> armTalon1.getConfigurator().apply(arm1Config, 0.25));
+        tryUntilOk(5, () -> armTalon2.getConfigurator().apply(arm2Config, 0.25));
 
         arm1Position = armTalon1.getPosition();
-        arm1PositionQueue =
-                PhoenixOdometryThread.getInstance().registerSignal(armTalon1.getPosition());
         arm1Velocity = armTalon1.getVelocity();
         arm1AppliedVolts = armTalon1.getMotorVoltage();
         arm1Current = armTalon1.getStatorCurrent();
 
         arm2Position = armTalon2.getPosition();
-        arm2PositionQueue =
-                PhoenixOdometryThread.getInstance().registerSignal(armTalon2.getPosition());
         arm2Velocity = armTalon2.getVelocity();
         arm2AppliedVolts = armTalon2.getMotorVoltage();
         arm2Current = armTalon2.getStatorCurrent();
@@ -105,8 +103,8 @@ public class ArmIOTalonFX implements ArmIO {
                 arm2AppliedVolts,
                 arm2Current);
         ParentDevice.optimizeBusUtilizationForAll(armTalon1, armTalon2);
-
     }
+
     public void updateInputs(ArmIO.ArmIOInputs inputs) {
         // Refresh all signals
         var arm1Status =
@@ -127,20 +125,11 @@ public class ArmIOTalonFX implements ArmIO {
         inputs.arm2VelocityRadPerSec = Units.rotationsToRadians(arm2Velocity.getValueAsDouble());
         inputs.arm2AppliedVolts = arm2AppliedVolts.getValueAsDouble();
         inputs.arm2CurrentAmps = arm2Current.getValueAsDouble();
+    }
 
-        // Update odometry inputs
-        inputs.odometryTimestamps =
-                timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-        inputs.odometryArm1PositionsRad =
-                arm1PositionQueue.stream()
-                        .mapToDouble((Double value) -> Units.rotationsToRadians(value))
-                        .toArray();
-        inputs.odometryArm2PositionsRad =
-                arm2PositionQueue.stream()
-                        .mapToDouble((Double value) -> Units.rotationsToRadians(value))
-                        .toArray();
-        timestampQueue.clear();
-        arm1PositionQueue.clear();
-        arm2PositionQueue.clear();
+    @Override
+    public void setArmMotorVoltage(double volts) {
+        armTalon1.setVoltage(volts);
+        armTalon2.setVoltage(volts);
     }
 }
