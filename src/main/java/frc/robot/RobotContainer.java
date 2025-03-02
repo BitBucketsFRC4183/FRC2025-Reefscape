@@ -30,6 +30,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 //import frc.robot.commands.ResetEncoderCommand;
 
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
+import frc.robot.commands.ArmCommands.BendCommand;
 import frc.robot.commands.BaseDriveCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
@@ -37,10 +38,10 @@ import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
 import frc.robot.commands.IntakeCommands.IntakeSetPivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSetRollersCommand;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.DriveConstants;
-import frc.robot.constants.IntakeConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.IntakeSubsystem.IntakeIO;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
@@ -71,12 +72,10 @@ import org.littletonrobotics.junction.Logger;
 public class RobotContainer {
   // Subsystems
   public final DriveSubsystem drive;
-
-  // private final Flywheel flywheel;
   public final OperatorInput operatorInput;
   private final ElevatorSubsystem elevatorSubsystem;
   private final ClawSubsystem clawSubsystem;
-  private final IntakeSubsystem groundIntakeSubsystem;
+  private final IntakeSubsystem intakeSubsystem;
   private final LEDSubsystem ledSubsystem;
   private final ArmSubsystem armSubsystem;
   private final VisionSubsystem visionSubsystem;
@@ -84,9 +83,7 @@ public class RobotContainer {
   private final AutoSubsystem autoSubsystem;
   private AutoChooser autoChooser;
 
-
-
-  // Controller
+  // Controllers
   private final CommandXboxController driveController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
@@ -115,18 +112,17 @@ public class RobotContainer {
                         new ModuleIOHybrid(1, TunerConstants.FrontRight),
                         new ModuleIOHybrid(2, TunerConstants.BackLeft),
                         new ModuleIOHybrid(3, TunerConstants.BackRight));
-
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIOSparkMax(),
-                        new ElevatorEncoderIOThroughbore()); //TODO
+                        new ElevatorEncoderIOThroughbore());
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSparkMax());
-        groundIntakeSubsystem =
-                new IntakeSubsystem(new IntakeIOSparkMax()); //TODO replace placeholder
+        intakeSubsystem =
+                new IntakeSubsystem(new IntakeIOSparkMax());
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         armSubsystem =
-                new ArmSubsystem(new ArmIOTalonFX(), new ArmEncoderIO() {}); //TODO
+                new ArmSubsystem(new ArmIOTalonFX(), new ArmEncoderIOThroughbore());
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVision()); //TODO
         autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
@@ -152,7 +148,7 @@ public class RobotContainer {
 
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSim());
-        groundIntakeSubsystem =
+        intakeSubsystem =
                 new IntakeSubsystem(new IntakeIOSim(driveSimulation)); //TODO
         ledSubsystem =
                 new LEDSubsystem(); //TODO
@@ -183,7 +179,7 @@ public class RobotContainer {
                 new ElevatorSubsystem(new ElevatorIO() {}, new ElevatorEncoderIO() {}); //TODO
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIO() {});
-        groundIntakeSubsystem =
+        intakeSubsystem =
                 new IntakeSubsystem(new IntakeIO() {});
         ledSubsystem =
                 new LEDSubsystem(); //TODO
@@ -198,9 +194,6 @@ public class RobotContainer {
         break;
     }
 
-//    // Set up auto routines
-   //TODO FIX CLAW TO END EFFECTOR
-
     loadCommands();
   }
 
@@ -212,33 +205,45 @@ public class RobotContainer {
    */
   void loadCommands() {
 
-    armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
+
+    // elevator stuff
     operatorInput.elevatorSetpoint1.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L1));
     operatorInput.elevatorSetpoint2.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
     operatorInput.elevatorSetpoint3.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
-
+    operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
     operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
 
-    // operatorInput.armbendup.whileTrue(new BendCommand(singleJointedArmSubsystem, Math.PI/2));
-    // operatorInput.armbenddown.whileTrue(new BendCommand(singleJointedArmSubsystem, -Math.PI/2));
+    //arm stuff
+    armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
+    operatorInput.armSetpointUp.whileTrue(new BendCommand(armSubsystem, ArmConstants.setpointUp));
+    operatorInput.armSetpointDown.whileTrue(new BendCommand(armSubsystem, ArmConstants.setpointDown));
 
+
+    // manual commands
+
+    // uncomment and comment which ever one is needed
     // operatorInput.manualArmCommand.whileTrue(new ManualArmCommand(singleJointedArmSubsystem, elevatorAndArmController::getRightY));
-
-    operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
-    operatorInput.manualPivotCommand.whileTrue(new IntakeSetPivotCommand(groundIntakeSubsystem, operatorController::getRightY));
+    operatorInput.manualPivot.whileTrue(new IntakeSetPivotCommand(intakeSubsystem, operatorController::getRightY));
     operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, operatorController::getLeftY));
-    operatorInput.rollersIn.whileTrue(new IntakeSetRollersCommand(groundIntakeSubsystem, false));
-    operatorInput.rollersOut.whileTrue(new IntakeSetRollersCommand(groundIntakeSubsystem, true));
+
+    // rollers and pivot, algae intake stuff
+    operatorInput.rollersIn.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, false));
+    operatorInput.rollersOut.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, true));
+
+    // claw stuff
     // operatorInput.openClaw.onTrue(new OpenClawCommand(clawSubsystem));
     // operatorInput.closeClaw.onTrue(new CloseClawCommand(clawSubsystem));
 
+
+    // base drive command
     operatorInput.movementDesired.whileTrue(
-            new BaseDriveCommand.basedrivecommand(
+            new BaseDriveCommand(
                 drive,
                 () -> -driveController.getLeftY() * -0.5,
                 () -> -driveController.getLeftX() * -0.5,
                 () -> -driveController.getRightX()));
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

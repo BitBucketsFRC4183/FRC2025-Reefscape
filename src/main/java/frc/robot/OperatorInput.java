@@ -42,16 +42,16 @@ public class OperatorInput {
   final Trigger manualElevator = operator.axisMagnitudeGreaterThan(XboxController.Axis.kLeftY.value, 0.1);
   final Trigger resetElevatorEncoder = operator.start();
 
-  //final Trigger manualArmCommand = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
-  final Trigger manualPivotCommand = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
-  final Trigger openClaw = driver.leftStick();
-  final Trigger closeClaw = driver.rightStick();
+  final Trigger manualArm = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
+  final Trigger manualPivot = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
+  // final Trigger openClaw = driver.leftStick();
+  // final Trigger closeClaw = driver.rightStick();
 
   final Trigger rollersIn = operator.povRight();
   final Trigger rollersOut = operator.povLeft();
 
-  // final Trigger armbendup = operator.povUp();
-  // final Trigger armbenddown = operator.povDown();
+  final Trigger armSetpointUp = operator.povUp();
+  final Trigger armSetpointDown = operator.povDown();
 
 
 

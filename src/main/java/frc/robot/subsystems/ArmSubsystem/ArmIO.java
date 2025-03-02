@@ -24,10 +24,6 @@ public interface ArmIO {
 
         public double arm1CurrentAmps;
         public double arm2CurrentAmps;
-        public double[] odometryTimestamps;
-        public double[] odometryArmPositionsRad;
-        public double[] odometryArm1PositionsRad;
-        public double[] odometryArm2PositionsRad;
 
         public double encoderPosition;
         public double armVelocity;
