@@ -73,7 +73,7 @@ public class ModuleIOHybrid implements ModuleIO {
     private final SimpleMotorFeedforward turnFF;
 
     // Queue inputs from odometry thread
-    private final Queue<Double> timestampSparkQueue;
+    // private final Queue<Double> timestampSparkQueue;
     private final Queue<Double> drivePositionQueue;
     private final Queue<Double> turnPositionQueue;
 
@@ -101,7 +101,6 @@ public class ModuleIOHybrid implements ModuleIO {
     // Connection debouncers
     private final Debouncer driveConnectedDebounce = new Debouncer(0.5);
     private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
-    // private Rotation2d currentTurnPosition = new Rotation2d();
 
     public ModuleIOHybrid(int module, SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants) {
         this.constants = constants;
@@ -137,13 +136,9 @@ public class ModuleIOHybrid implements ModuleIO {
         tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
 
 
-        // Create timestamp queue
-        timestampPhoenixQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
 
         // Create drive status signals
         drivePosition = driveTalon.getPosition();
-        drivePositionQueue =
-                PhoenixOdometryThread.getInstance().registerSignal(driveTalon.getPosition());
         driveVelocity = driveTalon.getVelocity();
         driveAppliedVolts = driveTalon.getMotorVoltage();
         driveCurrent = driveTalon.getStatorCurrent();
@@ -227,11 +222,15 @@ public class ModuleIOHybrid implements ModuleIO {
         turnController.enableContinuousInput(turnPIDMinInput,turnPIDMaxInput);
 
 
-        // Create odometry queues
-        timestampSparkQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
+        // Create timestamp queue
+        // In this hybrid implementation, turnEncoder positions are synced with drive encoder updates
+        timestampPhoenixQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
+        // timestampSparkQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
 
+        drivePositionQueue =
+                PhoenixOdometryThread.getInstance().registerSignal(driveTalon.getPosition());
         turnPositionQueue =
-                SparkOdometryThread.getInstance().registerSignal(turnEncoder::getPosition);
+                PhoenixOdometryThread.getInstance().registerSignal(turnEncoder::getPosition);
 
     }
 
@@ -265,7 +264,7 @@ public class ModuleIOHybrid implements ModuleIO {
         ifOk(turnSpark, turnEncoder::getVelocity, (value) -> inputs.turnVelocityRadPerSec = value);
         ifOk(
                 turnSpark,
-                new DoubleSupplier[] {turnSpark::getAppliedOutput, turnSpark::getBusVoltage},
+                new DoubleSupplier[] {turnSpark::getAppliedOutput, turnSpark::getAppliedOutput},
                 (values) -> inputs.turnAppliedVolts = values[0] * values[1]);
         ifOk(turnSpark, turnSpark::getOutputCurrent, (value) -> inputs.turnCurrentAmps = value);
         inputs.turnConnected = turnConnectedDebounce.calculate(!sparkStickyFault);
@@ -273,8 +272,8 @@ public class ModuleIOHybrid implements ModuleIO {
         // Update odometry inputs
         inputs.odometryPhoenixTimestamps =
                 timestampPhoenixQueue.stream().mapToDouble((Double value) -> value).toArray();
-        inputs.odometrySparkTimestamps =
-                timestampSparkQueue.stream().mapToDouble((Double value) -> value).toArray();
+//        inputs.odometrySparkTimestamps =
+//                timestampSparkQueue.stream().mapToDouble((Double value) -> value).toArray();
 
         inputs.odometryDrivePositionsRad =
                 drivePositionQueue.stream()
@@ -286,7 +285,7 @@ public class ModuleIOHybrid implements ModuleIO {
                         .toArray(Rotation2d[]::new);
 
 
-        timestampSparkQueue.clear();
+        // timestampSparkQueue.clear();
         timestampPhoenixQueue.clear();
         drivePositionQueue.clear();
         turnPositionQueue.clear();

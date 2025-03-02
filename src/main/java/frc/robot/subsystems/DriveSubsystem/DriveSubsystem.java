@@ -114,7 +114,7 @@ public class DriveSubsystem extends SubsystemBase {
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
 
     // Start odometry thread
-    SparkOdometryThread.getInstance().start();
+    // SparkOdometryThread.getInstance().start();
     PhoenixOdometryThread.getInstance().start();
 
     // Configure AutoBuilder for PathPlanner
@@ -128,7 +128,7 @@ public class DriveSubsystem extends SubsystemBase {
             ppConfig,
             () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
             this);
-    Pathfinding.setPathfinder(new LocalADStarAK());
+    // Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(
             (activePath) -> {
               Logger.recordOutput(

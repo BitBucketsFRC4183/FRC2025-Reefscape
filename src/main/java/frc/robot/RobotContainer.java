@@ -72,7 +72,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class RobotContainer {
   // Subsystems
-  public final DriveSubsystem drive;
+  public final DriveSubsystem driveSubsystem;
   public final OperatorInput operatorInput;
   private final ElevatorSubsystem elevatorSubsystem;
   private final ClawSubsystem clawSubsystem;
@@ -98,18 +98,13 @@ public class RobotContainer {
   public RobotContainer() {
 
     this.operatorInput = new OperatorInput();
-    autoChooser = new AutoChooser();
-    autoChooser.addRoutine("FourL4CoralBottom", AutoSubsystem::FourL4CoralBottomRoutine);
-    autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
-    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
-    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
-    SmartDashboard.putData("autochooser", autoChooser);
-    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+
+
 
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
-        drive =
+        driveSubsystem =
                 new DriveSubsystem(
                         new GyroIOPigeon2(),
                         new ModuleIOHybrid(0, TunerConstants.FrontLeft),
@@ -124,21 +119,18 @@ public class RobotContainer {
         intakeSubsystem =
                 new IntakeSubsystem(new IntakeIOSparkMax());
         ledSubsystem =
-                new LEDSubsystem(); //TODO
+                new LEDSubsystem();
         armSubsystem =
                 new ArmSubsystem(new ArmIOTalonFX(), new ArmEncoderIOThroughbore());
         visionSubsystem =
-                new VisionSubsystem(new VisionIOPhotonVision()); //TODO
-        autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
-        autoChooser = new AutoChooser();
+                new VisionSubsystem(new VisionIOPhotonVision());
         break;
 
-        
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         driveSimulation = new SwerveDriveSimulation(DriveConstants.mapleSimConfig, new Pose2d());
         SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
-        drive =
+        driveSubsystem =
             new DriveSubsystem(
                     new GyroIOSim(driveSimulation.getGyroSimulation()),
                     new ModuleIOSim(driveSimulation.getModules()[0]),
@@ -149,24 +141,22 @@ public class RobotContainer {
         ElevatorIOSim elevatorIOSim = new ElevatorIOSim();
         elevatorSubsystem =
                 new ElevatorSubsystem(elevatorIOSim, new ElevatorEncoderIOSim(elevatorIOSim.elevatorMotor1Sim));
-
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSim());
         intakeSubsystem =
-                new IntakeSubsystem(new IntakeIOSim(driveSimulation)); //TODO
+                new IntakeSubsystem(new IntakeIOSim(driveSimulation));
         ledSubsystem =
-                new LEDSubsystem(); //TODO
+                new LEDSubsystem();
         armSubsystem =
-                new ArmSubsystem(new ArmIOSim(), new ArmEncoderIO() {}); //TODO
+                new ArmSubsystem(new ArmIOSim(), new ArmEncoderIO() {});
         visionSubsystem =
-                new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose)); //TODO
-        autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
+                new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose));
         break;
 
 
       default:
         // Replayed robot, disable IO implementations
-        drive =
+        driveSubsystem =
                 new DriveSubsystem(
                         new GyroIO() {
                         },
@@ -178,7 +168,6 @@ public class RobotContainer {
                         },
                         new ModuleIO() {
                         });
-        // flywheel = new Flywheel(new FlywheelIO() {});
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIO() {}, new ElevatorEncoderIO() {}); //TODO
         clawSubsystem =
@@ -192,11 +181,20 @@ public class RobotContainer {
         visionSubsystem =
                 new VisionSubsystem(new VisionIO() {
                 }); //TODO
-        autoSubsystem = new AutoSubsystem(clawSubsystem, drive);
 
         //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
         break;
     }
+
+    this.autoSubsystem = new AutoSubsystem(clawSubsystem, driveSubsystem);
+    autoChooser = new AutoChooser();
+    autoChooser.addRoutine("FourL4CoralBottom", AutoSubsystem::FourL4CoralBottomRoutine);
+    autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
+    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
+    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
+
+    SmartDashboard.putData("autochooser", autoChooser);
+    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
     loadCommands();
   }
@@ -243,7 +241,7 @@ public class RobotContainer {
 
     operatorInput.movementDesired.whileTrue(
             new BaseDriveCommand(
-                drive,
+                    driveSubsystem,
                 () -> slewX.calculate(driveController.getLeftY()),
                 () -> slewY.calculate(driveController.getLeftX()),
                 () -> slewTheta.calculate(-driveController.getRightX())));
@@ -261,7 +259,7 @@ public class RobotContainer {
 
   public void resetSimulationField() {
     if (Constants.currentMode != Constants.Mode.SIM) return;
-    drive.setPose(new Pose2d(3, 3, new Rotation2d()));
+    driveSubsystem.setPose(new Pose2d(3, 3, new Rotation2d()));
     SimulatedArena.getInstance().resetFieldForAuto();
   }
 
