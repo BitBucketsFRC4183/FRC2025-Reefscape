@@ -23,12 +23,12 @@ public class ClawSubsystem extends SubsystemBase {
 
     }
 
-    public void setCentralToVoltage() {
-        endEffector.setCentralVoltage(ClawConstants.mainVoltageTarget);
+    public void setCentralToVoltage(double volts) {
+        endEffector.setCentralVoltage(volts);
     }
 
-    public void setGrippersToVoltage() {
-        endEffector.setGrippersVoltage(ClawConstants.grippersVoltageTarget);
+    public void setGrippersToVoltage(double volts) {
+        endEffector.setGrippersVoltage(volts);
     }
 
     @Override

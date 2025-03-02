@@ -16,4 +16,7 @@ public class ClawConstants {
     public static final double centralSparkEncoderPositionFactor = 1.0;
     public static final double centralSparkEncoderVelocityFactor = 1.0;
     public static final int clawMotorCurrentLimit = 20;
+    public static final boolean grippersInverted = false;
+    public static final double kGSim = 0;
+    public static final double kG = 0;
 }
