@@ -14,6 +14,7 @@
 package frc.robot;
 
 import choreo.auto.AutoChooser;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -87,6 +88,9 @@ public class RobotContainer {
   private final CommandXboxController driveController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
+  private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.slewX);
+  private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.slewY);
+  private final SlewRateLimiter slewTheta = new SlewRateLimiter(DriveConstants.slewTheta);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -236,12 +240,13 @@ public class RobotContainer {
 
 
     // base drive command
+
     operatorInput.movementDesired.whileTrue(
             new BaseDriveCommand(
                 drive,
-                () -> -driveController.getLeftY() * -0.5,
-                () -> -driveController.getLeftX() * -0.5,
-                () -> -driveController.getRightX()));
+                () -> slewX.calculate(driveController.getLeftY()),
+                () -> slewY.calculate(driveController.getLeftX()),
+                () -> slewTheta.calculate(-driveController.getRightX())));
   }
 
 
