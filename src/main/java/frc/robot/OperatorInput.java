@@ -47,8 +47,8 @@ public class OperatorInput {
   // final Trigger openClaw = driver.leftStick();
   // final Trigger closeClaw = driver.rightStick();
 
-  final Trigger rollersIn = operator.povRight();
-  final Trigger rollersOut = operator.povLeft();
+  final Trigger rollersIn = operator.rightBumper();
+  final Trigger rollersOut = operator.leftBumper();
 
   final Trigger armSetpointUp = operator.povUp();
   final Trigger armSetpointDown = operator.povDown();
