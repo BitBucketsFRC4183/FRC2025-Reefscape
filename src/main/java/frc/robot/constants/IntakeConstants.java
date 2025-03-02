@@ -12,10 +12,16 @@ public class IntakeConstants {
     public static double kP = 0.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
-    public static double rollerVoltsTarget = 1.0;
+    // magnitude of the voltage to run rollers at
+    public static double rollerVoltsTarget = 5.0;
     public static final boolean rollerInverted = false;
-    public static double intakeVoltageFactor = 1;
-    public static int intakeMotorCurrentLimit = 20;
+
+    // scaling factor for manual control of algae intake
+
+    public static double intakeVoltageFactor = 8;
+    public static int intakeMotorCurrentLimit = 40;
     public static double pivotSparkEncoderPositionFactor = 2 * Math.PI / gearing;
     public static double pivotSparkEncoderVelocityFactor= 2 * Math.PI / 60 / gearing;
+    public static int pivotID = 12;
+    public static int rollerID = 13;
 }

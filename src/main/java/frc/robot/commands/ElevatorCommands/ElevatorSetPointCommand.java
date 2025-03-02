@@ -22,6 +22,7 @@ public class ElevatorSetPointCommand extends Command {
     @Override
     public void initialize(){
         elevator.elevatorPID.setGoal(targetHeight);
+        elevator.elevatorPID.reset(elevator.getLoadHeight());
         Logger.recordOutput("ElevatorSubsystem/target_height", targetHeight);
 
     }

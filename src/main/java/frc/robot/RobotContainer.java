@@ -36,10 +36,13 @@ import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
 import frc.robot.commands.IntakeCommands.IntakeSetPivotCommand;
+import frc.robot.commands.IntakeCommands.IntakeSetRollersCommand;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.IntakeConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.IntakeSubsystem.IntakeIO;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.AutoSubsystem.AutoSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
@@ -114,12 +117,12 @@ public class RobotContainer {
                         new ModuleIOHybrid(3, TunerConstants.BackRight));
 
         elevatorSubsystem =
-                new ElevatorSubsystem(new ElevatorIOTalonFX(),
+                new ElevatorSubsystem(new ElevatorIOSparkMax(),
                         new ElevatorEncoderIOThroughbore()); //TODO
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIOSparkMax());
         groundIntakeSubsystem =
-                new IntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace placeholder
+                new IntakeSubsystem(new IntakeIOSparkMax()); //TODO replace placeholder
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         armSubsystem =
@@ -181,7 +184,7 @@ public class RobotContainer {
         clawSubsystem =
                 new ClawSubsystem(new EndEffectorIO() {});
         groundIntakeSubsystem =
-                new IntakeSubsystem(new IntakeIOSparkMax(13, 12)); //TODO replace with real intake
+                new IntakeSubsystem(new IntakeIO() {});
         ledSubsystem =
                 new LEDSubsystem(); //TODO
         armSubsystem =
@@ -224,16 +227,16 @@ public class RobotContainer {
     operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
     operatorInput.manualPivotCommand.whileTrue(new IntakeSetPivotCommand(groundIntakeSubsystem, operatorController::getRightY));
     operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, operatorController::getLeftY));
-
-
+    operatorInput.rollersIn.whileTrue(new IntakeSetRollersCommand(groundIntakeSubsystem, false));
+    operatorInput.rollersOut.whileTrue(new IntakeSetRollersCommand(groundIntakeSubsystem, true));
     // operatorInput.openClaw.onTrue(new OpenClawCommand(clawSubsystem));
     // operatorInput.closeClaw.onTrue(new CloseClawCommand(clawSubsystem));
 
     operatorInput.movementDesired.whileTrue(
             new BaseDriveCommand.basedrivecommand(
                 drive,
-                () -> -driveController.getLeftY(),
-                () -> -driveController.getLeftX(),
+                () -> -driveController.getLeftY() * -0.5,
+                () -> -driveController.getLeftX() * -0.5,
                 () -> -driveController.getRightX()));
   }
 

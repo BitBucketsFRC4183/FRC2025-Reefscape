@@ -23,11 +23,12 @@ public class ElevatorEncoderIOThroughbore implements ElevatorEncoderIO {
         inputs.encoderVelocityRots = encoder.getDistance() / (Timer.getFPGATimestamp() - lastTime);
         lastTime = Timer.getFPGATimestamp();
 
-        inputs.encoderVelocityRads = Units.rotationsToRadians(inputs.encoderVelocityRads);
-        inputs.encoderPositionRads = Units.rotationsToRadians(inputs.encoderPositionRads);
+        inputs.encoderVelocityRads = Units.rotationsToRadians(inputs.encoderVelocityRots);
+        inputs.encoderPositionRads = Units.rotationsToRadians(inputs.encoderPositionRots);
 
         // 1:1 with the shaft
-        inputs.unfilteredLoadHeight = inputs.encoderPositionRads * 2 * Math.PI / ElevatorConstants.pulleyRatio;
+        inputs.unfilteredLoadHeight = inputs.encoderPositionRads / ElevatorConstants.encoderReduction;
+
         inputs.loadHeight = elevatorFilter.calculate(inputs.unfilteredLoadHeight);
     }
 
