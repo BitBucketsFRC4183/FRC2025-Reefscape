@@ -89,6 +89,8 @@ public class DriveConstants {
     // Drive Velocity firmware PID gains
     public static final double driveKp = 0.0;
     public static final double driveKd = 0.0;
+
+    public static final double driveKa = 0;
     public static final double driveKs = 0.0;
     public static final double driveKv = 0.1;
     public static final double driveSimP = 0.05;

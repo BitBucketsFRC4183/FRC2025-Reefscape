@@ -10,6 +10,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.ParentDevice;
@@ -52,7 +53,7 @@ import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
 /**
- * Module IO implementation for Spark Flex drive motor controller, Spark Max turn motor controller,
+ * Module IO implementation for TalonFX drive motor controller, Spark Max turn motor controller,
  * and duty cycle absolute encoder.
  */
 public class ModuleIOHybrid implements ModuleIO {
@@ -125,7 +126,7 @@ public class ModuleIOHybrid implements ModuleIO {
         // Configure drive motor
         var driveConfig = new TalonFXConfiguration().withAudio(new AudioConfigs().withBeepOnBoot(true));
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        driveConfig.Slot0 = constants.DriveMotorGains;
+        driveConfig.Slot0 = new Slot0Configs().withKP(driveKp).withKD(driveKd).withKV(driveKv).withKA(driveKa).withKS(driveKs);
         driveConfig.Feedback.SensorToMechanismRatio = driveMotorReduction;
         driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = driveMotorCurrentLimit;
         driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -driveMotorCurrentLimit;
