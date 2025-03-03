@@ -21,7 +21,7 @@ public class ManualArmCommand extends Command {
     public void execute() {
         double joystickY = yStickDistanceSupplier.getAsDouble() * -1;
 
-        double calculatedVolts = ArmConstants.kV / 1.5 * joystickY + ArmConstants.kG * Math.cos(armSubsystem.getCurrentAngle());
+        double calculatedVolts = ArmConstants.kV * joystickY + ArmConstants.kG * Math.cos(armSubsystem.getCurrentAngle());
         Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
         armSubsystem.hoverAngle = armSubsystem.getCurrentAngle();
         this.armSubsystem.setArmVoltage(calculatedVolts);

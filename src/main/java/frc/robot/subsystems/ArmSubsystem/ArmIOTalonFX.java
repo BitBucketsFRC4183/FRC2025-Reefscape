@@ -57,9 +57,8 @@ public class ArmIOTalonFX implements ArmIO {
 
     public ArmIOTalonFX() {
 
-        TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
-        var arm1Config = talonFXConfiguration;
-        var arm2Config = talonFXConfiguration;
+        TalonFXConfiguration arm1Config = new TalonFXConfiguration();
+        TalonFXConfiguration arm2Config = new TalonFXConfiguration();
 
         arm1Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         arm1Config.TorqueCurrent.PeakForwardTorqueCurrent = ArmConstants.arm1CurrentLimit;

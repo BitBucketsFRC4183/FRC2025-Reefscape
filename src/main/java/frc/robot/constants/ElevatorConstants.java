@@ -17,7 +17,7 @@ public class ElevatorConstants {
     public static final boolean isEncoderReversed = true;
 
     public static double gearingRatio = 60.0;
-    public static final double encoderReduction = 24.8977;
+    public static final double encoderReduction = 20.7;
 
     public static double elevatorSparkEncoderPositionFactor = 2 * Math.PI / gearingRatio;
     public static double elevatorSparkEncoderVelocityFactor = 2 * Math.PI / 60 / gearingRatio;

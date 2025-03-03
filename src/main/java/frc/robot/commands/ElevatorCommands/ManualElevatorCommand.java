@@ -22,7 +22,7 @@ public class ManualElevatorCommand extends Command {
 
     @Override
     public void execute() {
-        double manualVelocity = yStickDistanceSupplier.getAsDouble();
+        double manualVelocity = yStickDistanceSupplier.getAsDouble() * -1;
         double calculatedVolts = elevator.elevatorFF.calculate(manualVelocity);
         Logger.recordOutput("ElevatorSubsystem/target_voltage", calculatedVolts);
         this.elevator.setElevatorVoltage(calculatedVolts);

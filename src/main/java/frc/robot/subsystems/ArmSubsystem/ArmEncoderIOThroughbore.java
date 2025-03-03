@@ -17,11 +17,13 @@ public class ArmEncoderIOThroughbore implements ArmEncoderIO{
     @Override
     public void updateInputs(ArmEncoderIO.ArmEncoderIOInputs inputs) {
         inputs.encoderPositionRotsNoOffset = armDCEncoder.get();
-        inputs.encoderPositionRadsNoOffset =  Units.rotationsToRadians(inputs.encoderPositionRotsNoOffset);
-        inputs.encoderPositionRadsOffset =  Units.rotationsToRadians(inputs.encoderPositionRotsNoOffset) - ArmConstants.encoderOffset;
+        inputs.encoderPositionRotsOffset = armDCEncoder.get() - ArmConstants.encoderOffsetRots;
+        inputs.encoderPositionRadsOffset =  Units.rotationsToRadians(inputs.encoderPositionRotsOffset);
 
-        inputs.unfilteredArmAngle = inputs.encoderPositionRadsOffset / ArmConstants.gearingRatio;
+
+        inputs.unfilteredArmAngle = inputs.encoderPositionRadsOffset;
         inputs.armAngle = armFilter.calculate(inputs.unfilteredArmAngle);
+        inputs.armAngleDegs = Units.radiansToDegrees(inputs.armAngle);
     }
 
 }

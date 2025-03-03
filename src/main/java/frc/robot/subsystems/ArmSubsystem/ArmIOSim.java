@@ -10,8 +10,8 @@ public class ArmIOSim implements ArmIO {
             ArmConstants.gearingRatio,
             SingleJointedArmSim.estimateMOI(ArmConstants.armLength, ArmConstants.mass),
             ArmConstants.armLength,
-            ArmConstants.MIN_ANGLE,
-            ArmConstants.MAX_ANGLE,
+            ArmConstants.MIN_ANGLE_RADS,
+            ArmConstants.MAX_ANGLE_RADS,
             true, -Math.PI/2, 0.01,0
             );
 

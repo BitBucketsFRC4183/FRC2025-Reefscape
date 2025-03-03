@@ -116,9 +116,9 @@ public class DriveConstants {
     public static final double turnPIDMinInput = -Math.PI; // Radians
     public static final double turnPIDMaxInput = Math.PI; // Radians
 
-    public static final double slewX = 0.8;
-    public static final double slewY = 0.8;
-    public static final double slewTheta = 0.8;
+    public static final double slewX = 99;
+    public static final double slewY = 99;
+    public static final double slewTheta = 99;
 
     public static final double robotMassKg = 105.00;
     public static final double robotMOI = 6.883;

@@ -25,7 +25,6 @@ public interface ArmIO {
         public double arm1CurrentAmps;
         public double arm2CurrentAmps;
 
-        public double encoderPosition;
         public double armVelocity;
     }
 

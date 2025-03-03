@@ -117,7 +117,7 @@ public class RobotContainer {
                 new ElevatorSubsystem(new ElevatorIOSparkMax(),
                         new ElevatorEncoderIOThroughbore());
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIOSparkMax());
+                new ClawSubsystem(new EndEffectorIO() {}); // NO HARDWARE LOL
         intakeSubsystem =
                 new IntakeSubsystem(new IntakeIOSparkMax());
         ledSubsystem =

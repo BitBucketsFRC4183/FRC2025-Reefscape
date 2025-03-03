@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class IntakeSubsystem extends SubsystemBase {
     private final IntakeIO intake;
-    private final IntakeIO.IntakeIOInputs inputs = new IntakeIO.IntakeIOInputs();
+    private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
     public IntakeSubsystem(IntakeIO intake){
         this.intake = intake;
     }
@@ -21,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void periodic() {
         intake.updateInputs(inputs);
-        Logger.processInputs("IntakeSubsystem", (LoggableInputs) inputs);
+        Logger.processInputs("IntakeSubsystem", inputs);
     }
 
 }
