@@ -39,6 +39,7 @@ import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
+import frc.robot.commands.FieldRelativeDriveCommand;
 import frc.robot.commands.IntakeCommands.IntakeSetPivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSetRollersCommand;
 import frc.robot.constants.ArmConstants;
@@ -245,11 +246,13 @@ public class RobotContainer {
     // base drive command
 
     operatorInput.movementDesired.whileTrue(
-            new BaseDriveCommand(
+            new FieldRelativeDriveCommand(
                     driveSubsystem,
                 () -> slewX.calculate(driveController.getLeftY()),
                 () -> slewY.calculate(driveController.getLeftX()),
-                () -> slewTheta.calculate(-driveController.getRightX())));
+                () -> slewTheta.calculate(-driveController.getRightX()),
+                driveSubsystem.getRotation()
+    ));
   }
 
 
