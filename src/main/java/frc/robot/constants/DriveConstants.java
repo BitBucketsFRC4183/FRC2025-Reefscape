@@ -40,6 +40,8 @@ public class DriveConstants {
     public static final double alignmentSpeed = 1;
 
     public static final double odometryFrequency = 100.0; // Hz
+
+    // update this
     public static final double trackWidth = Units.inchesToMeters(26.5);
     public static final double wheelBase = Units.inchesToMeters(26.5);
     public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);

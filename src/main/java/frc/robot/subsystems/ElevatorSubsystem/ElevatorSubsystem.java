@@ -9,12 +9,16 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.OperatorInput;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import org.littletonrobotics.junction.Logger;
+
+import static edu.wpi.first.units.Units.Volts;
 
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -30,6 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final Mechanism2d elevator2D = new Mechanism2d(2, 2);
     private final MechanismRoot2d elevator2dRoot = elevator2D.getRoot("Elevator Root", 1, 0);
     private final MechanismLigament2d elevatorMech2d;
+    private final SysIdRoutine sysId;
     // add a method to get profileGoal = new TrapezoidProfile.State(5, 0); based on where you want the robot to switch setpoints to
     //after that, add a method to setpoint = m_profile.calculate(kDt, elevator Heights (L1,L2,etc), profile);
     public ElevatorSubsystem(ElevatorIO elevatorIO, ElevatorEncoderIO elevatorEncoderIO) {
@@ -52,6 +57,16 @@ public class ElevatorSubsystem extends SubsystemBase {
         setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
         SmartDashboard.putData("ElevatorSubsystem/mechanism", elevator2D);
 
+        // Configure SysId
+        sysId =
+                new SysIdRoutine(
+                        new SysIdRoutine.Config(
+                                null,
+                                null,
+                                null,
+                                (state) -> Logger.recordOutput("ElevatorSubystem/SysIdState", state.toString())),
+                        new SysIdRoutine.Mechanism(
+                                (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
     }
 
 
@@ -86,5 +101,21 @@ public class ElevatorSubsystem extends SubsystemBase {
             outputVoltage = outputVoltage * 0.333;
         }
         elevatorIO.setElevatorMotorVoltage(outputVoltage);
+    }
+
+    public void runCharacterization(double output) {
+        // bypasses limits, be careful!!!
+        elevatorIO.setElevatorMotorVoltage(output);
+    }
+    /** Returns a command to run a quasistatic test in the specified direction. */
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return run(() -> runCharacterization(0.0))
+                .withTimeout(1.0)
+                .andThen(sysId.quasistatic(direction));
+    }
+
+    /** Returns a command to run a dynamic test in the specified direction. */
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
     }
 }

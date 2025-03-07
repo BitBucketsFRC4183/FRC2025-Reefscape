@@ -7,11 +7,15 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.OperatorInput;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ArmConstants;
 import org.littletonrobotics.junction.Logger;
+
+import static edu.wpi.first.units.Units.Volts;
 
 
 public class ArmSubsystem extends SubsystemBase {
@@ -23,6 +27,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final ArmIOInputsAutoLogged armIOInputs;
     private ArmEncoderIOInputsAutoLogged armEncoderIOInputs = new ArmEncoderIOInputsAutoLogged();
     public double hoverAngle = 6969;
+    private final SysIdRoutine sysId;
 
     public ArmSubsystem(ArmIO armIO, ArmEncoderIO armIOEncoder) {
         if (Constants.currentMode == Constants.Mode.SIM) {
@@ -39,6 +44,17 @@ public class ArmSubsystem extends SubsystemBase {
         this.armEncoderIOInputs =  new ArmEncoderIOInputsAutoLogged();
 
         armFeedback.setTolerance(ArmConstants.kArmToleranceRPS);
+
+        sysId =
+                new SysIdRoutine(
+                        new SysIdRoutine.Config(
+                                null,
+                                null,
+                                null,
+                                (state) -> Logger.recordOutput("ElevatorSubystem/SysIdState", state.toString())),
+                        new SysIdRoutine.Mechanism(
+                                (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+
     }
 
 
@@ -67,6 +83,22 @@ public class ArmSubsystem extends SubsystemBase {
 
         Logger.recordOutput("ArmSubsystem/outputVoltageAdjusted", outputVoltage);
         armIO.setArmMotorVoltage(outputVoltage);
+    }
+
+    public void runCharacterization(double output) {
+        // bypasses limits, be careful!!!
+        armIO.setArmMotorVoltage(output);
+    }
+    /** Returns a command to run a quasistatic test in the specified direction. */
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return run(() -> runCharacterization(0.0))
+                .withTimeout(1.0)
+                .andThen(sysId.quasistatic(direction));
+    }
+
+    /** Returns a command to run a dynamic test in the specified direction. */
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
     }
 }
 
