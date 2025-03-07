@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.OperatorInput;
+import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 
 import java.util.function.DoubleSupplier;
@@ -49,18 +51,22 @@ public class BaseDriveCommand extends Command {
                             .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
                             .getTranslation();
 
-        // Convert to field relative speeds & send command
-        boolean isFlipped =
-                DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+        double speedFactor;
+        if (OperatorInput.alignmentRobotRelative.getAsBoolean()) {
+            speedFactor = DriveConstants.alignmentSpeed;
+        } else if (OperatorInput.slowModeHold.getAsBoolean()) {
+            speedFactor = DriveConstants.slowSpeed;
+        } else if (OperatorInput.turboModeHold.getAsBoolean()) {
+            speedFactor = DriveConstants.turboSpeed;
+        } else {
+            speedFactor = DriveConstants.normalSpeed;
+        }
         drive.runVelocity(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                        linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                        linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                        linearVelocity.getX() * speedFactor,
+                        linearVelocity.getY() * speedFactor,
                         omega * drive.getMaxAngularSpeedRadPerSec(),
-                        isFlipped
-                                ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                                : drive.getRotation()));
+                        new Rotation2d(0)));
     }
 
         @Override
