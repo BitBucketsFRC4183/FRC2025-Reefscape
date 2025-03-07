@@ -43,10 +43,10 @@ public class ElevatorConstants {
     public static double kD = 0;
 
 
-    public static double L1 = 0.635; // THESE VALUES ARE IN Meters. FOR EVERY CALCULATION, ASSUME THESE ARE INCHES.
-    public static double L2 = 0.635;
-    public static double L3 = 1.04775;
-    public static double L4 = 1.7018;
+    public static double L1 = 0; // THESE VALUES ARE IN Meters. FOR EVERY CALCULATION, ASSUME THESE ARE INCHES.
+    public static double L2 = 0;
+    public static double L3 = 0;
+    public static double L4 = 0;
     public static double carriageMass = 20.0;
     public static double maxHeight = 0.571;
     public static double minHeight = -0.340;
