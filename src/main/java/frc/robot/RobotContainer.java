@@ -251,7 +251,7 @@ public class RobotContainer {
                 () -> slewX.calculate(driveController.getLeftY()),
                 () -> slewY.calculate(driveController.getLeftX()),
                 () -> slewTheta.calculate(-driveController.getRightX()),
-                driveSubsystem.getRotation()
+                    () -> driveSubsystem.getRotation()
     ));
   }
 

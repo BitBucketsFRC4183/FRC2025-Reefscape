@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class FieldRelativeDriveCommand extends Command {
     private final DriveSubsystem drive;
@@ -18,14 +19,14 @@ public class FieldRelativeDriveCommand extends Command {
     private final DoubleSupplier ySupplier;
     private final DoubleSupplier omegaSupplier;
 
-    private final Rotation2d heading_fieldRelative;
+    private final Supplier<Rotation2d> headingSupplier;
 
-    public FieldRelativeDriveCommand(DriveSubsystem drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, Rotation2d heading_fieldRelative) {
+    public FieldRelativeDriveCommand(DriveSubsystem drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, Supplier<Rotation2d> headingSupplier) {
         this.drive = drive;
         this.xSupplier = xSupplier;
         this.ySupplier = ySupplier;
         this.omegaSupplier = omegaSupplier;
-        this.heading_fieldRelative = heading_fieldRelative;
+        this.headingSupplier = headingSupplier;
     }
 
 
@@ -61,7 +62,7 @@ public class FieldRelativeDriveCommand extends Command {
                 omega * Math.PI * 1.5
         );
 
-        Rotation2d headingFlipped = heading_fieldRelative;
+        Rotation2d headingFlipped = headingSupplier.get();
 
         if (isFlipped) {
             headingFlipped = headingFlipped.plus(Rotation2d.fromDegrees(180));

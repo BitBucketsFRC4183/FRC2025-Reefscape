@@ -48,9 +48,9 @@ public class Module {
     Logger.processInputs("Drive/Module" + Integer.toString(index), inputs);
 
     // Calculate positions for odometry
-    // int sampleCount = inputs.odometryPhoenixTimestamps.length; // All signals are sampled together
+    int sampleCount = inputs.odometryPhoenixTimestamps.length; // All signals are sampled together
 
-    int sampleCount = Math.min(inputs.odometryPhoenixTimestamps.length, inputs.odometrySparkTimestamps.length);
+    // int sampleCount = Math.min(inputs.odometryPhoenixTimestamps.length, inputs.odometrySparkTimestamps.length);
     // System.out.println(inputs.odometrySparkTimestamps.length + "  " + inputs.odometryPhoenixTimestamps.length);
     odometryPositions = new SwerveModulePosition[sampleCount];
     for (int i = 0; i < sampleCount; i++) {
