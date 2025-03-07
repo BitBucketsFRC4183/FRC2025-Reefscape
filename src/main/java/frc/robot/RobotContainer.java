@@ -32,7 +32,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
-import frc.robot.commands.ArmCommands.BendCommand;
+import frc.robot.commands.ArmCommands.ArmBendCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
 import frc.robot.commands.DriveCommands.WheelBaseCharacterizationRoutineCommand;
@@ -43,6 +43,8 @@ import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
 import frc.robot.commands.DriveCommands.FieldRelativeDriveCommand;
 import frc.robot.commands.IntakeCommands.IntakeSetRollersCommand;
 import frc.robot.commands.DriveCommands.ResetHeadingCommand;
+import frc.robot.commands.IntakeCommands.PivotDownCommand;
+import frc.robot.commands.IntakeCommands.PivotUpCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
@@ -198,6 +200,7 @@ public class RobotContainer {
     autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
     autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
     autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
+    autoChooser.addRoutine("OneL4CoralMid", AutoSubsystem::OneL4CoralMidRoutine);
 
     autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
@@ -240,8 +243,8 @@ public class RobotContainer {
 
     //arm stuff
     armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
-    operatorInput.armSetpointUp.whileTrue(new BendCommand(armSubsystem, ArmConstants.setpointUp));
-    operatorInput.armSetpointDown.whileTrue(new BendCommand(armSubsystem, ArmConstants.setpointDown));
+    // operatorInput.armSetpointUp.whileTrue(new ArmBendCommand(armSubsystem, ArmConstants.setpointUp));
+    // operatorInput.armSetpointDown.whileTrue(new ArmBendCommand(armSubsystem, ArmConstants.setpointDown));
 
 
     // manual commands
@@ -254,6 +257,8 @@ public class RobotContainer {
     // rollers and pivot, algae intake stuff
     operatorInput.rollersIn.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, false));
     operatorInput.rollersOut.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, true));
+    operatorInput.rollerPivotDown.whileTrue(new PivotDownCommand(intakeSubsystem));
+    operatorInput.rollerPivotUp.whileTrue(new PivotUpCommand(intakeSubsystem));
 
     // claw stuff
     // operatorInput.openClaw.onTrue(new OpenClawCommand(clawSubsystem));

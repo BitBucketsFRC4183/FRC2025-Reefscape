@@ -258,7 +258,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   //no feedback yet!!!! TODO
   public void followTrajectorySample(SwerveSample sample) {
-    runVelocityPP(sample.getChassisSpeeds());
+    runVelocity(sample.getChassisSpeeds());
   }
 
   /** Runs the drive in a straight line with the specified drive output. */

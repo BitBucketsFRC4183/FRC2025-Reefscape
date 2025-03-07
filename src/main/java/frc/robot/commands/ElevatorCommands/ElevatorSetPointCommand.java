@@ -1,10 +1,14 @@
 package frc.robot.commands.ElevatorCommands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
+import frc.robot.util.TimestampAverageBuffer;
 import org.littletonrobotics.junction.Logger;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 
 
 public class ElevatorSetPointCommand extends Command {
@@ -12,6 +16,7 @@ public class ElevatorSetPointCommand extends Command {
     // The subsystem the command runs on
     public ElevatorSubsystem elevator;
     public double targetHeight;
+    private TimestampAverageBuffer timestampAverageBuffer;
 
     public ElevatorSetPointCommand(ElevatorSubsystem elevator, double targetHeight) {
         this.elevator = elevator;
@@ -23,6 +28,7 @@ public class ElevatorSetPointCommand extends Command {
     public void initialize(){
         elevator.elevatorPID.setGoal(targetHeight);
         elevator.elevatorPID.reset(elevator.getLoadHeight());
+        this.timestampAverageBuffer = new TimestampAverageBuffer(0.25);
         Logger.recordOutput("ElevatorSubsystem/target_height", targetHeight);
 
     }
@@ -31,7 +37,7 @@ public class ElevatorSetPointCommand extends Command {
 
         double voltsPID = elevator.elevatorPID.calculate(elevator.getLoadHeight());
         double calculatedVolts = elevator.elevatorFF.calculate(elevator.elevatorPID.getSetpoint().velocity) + voltsPID;
-
+        timestampAverageBuffer.addValue(elevator.getLoadHeight(), Timer.getFPGATimestamp());
 
 
         Logger.recordOutput("ElevatorSubsystem/target_voltage", calculatedVolts);
@@ -44,8 +50,16 @@ public class ElevatorSetPointCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            elevator.setElevatorVoltage(ElevatorConstants.kGSim);
+            elevator.setElevatorVoltage(ElevatorConstants.kG);
+        }
+    }
 
+    @Override
+    public boolean isFinished() {
+        if (Math.abs(timestampAverageBuffer.getAverage() - targetHeight) < 0.02) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

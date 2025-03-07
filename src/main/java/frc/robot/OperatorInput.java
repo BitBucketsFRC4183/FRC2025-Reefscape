@@ -39,7 +39,6 @@ public class OperatorInput {
   public static final Trigger alignmentRobotRelative = driver.povCenter().negate();
   //operator controls
   final Trigger elevatorGoToOrigin = operator.a();
-
   final Trigger elevatorSetpoint1 = operator.x();
   final Trigger elevatorSetpoint2 = operator.y();
   final Trigger elevatorSetpoint3 = operator.b();
@@ -55,8 +54,8 @@ public class OperatorInput {
   final Trigger rollersOut = operator.leftBumper();
 
   public static final Trigger mechanismLimitOverride = operator.back();
-  final Trigger armSetpointUp = operator.povUp();
-  final Trigger armSetpointDown = operator.povDown();
+  final Trigger rollerPivotUp = operator.povUp();
+  final Trigger rollerPivotDown = operator.povDown();
 
 
 
