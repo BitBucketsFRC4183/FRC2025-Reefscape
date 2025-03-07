@@ -131,7 +131,7 @@ public class RobotContainer {
         armSubsystem =
                 new ArmSubsystem(new ArmIOTalonFX(), new ArmEncoderIOThroughbore());
         visionSubsystem =
-                new VisionSubsystem(new VisionIOPhotonVision());
+                new VisionSubsystem(new VisionIO() {});
         break;
 
       case SIM:
