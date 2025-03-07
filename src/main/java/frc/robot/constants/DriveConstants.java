@@ -37,6 +37,8 @@ public class DriveConstants {
     public static final double turboSpeed =  maxSpeedMetersPerSec;
     public static final double normalSpeed = maxSpeedMetersPerSec - 1;
     public static final double slowSpeed = maxSpeedMetersPerSec - 2;
+    public static final double alignmentSpeed = 1;
+
     public static final double odometryFrequency = 100.0; // Hz
     public static final double trackWidth = Units.inchesToMeters(26.5);
     public static final double wheelBase = Units.inchesToMeters(26.5);

@@ -34,13 +34,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.BendCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
-import frc.robot.commands.BaseDriveCommand;
+import frc.robot.commands.RobotRelativeDriveCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
 import frc.robot.commands.FieldRelativeDriveCommand;
-import frc.robot.commands.IntakeCommands.IntakeSetPivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSetRollersCommand;
 import frc.robot.commands.ResetHeadingCommand;
 import frc.robot.constants.ArmConstants;
@@ -72,6 +71,8 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoral;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.function.DoubleSupplier;
 
 
 public class RobotContainer {
@@ -254,6 +255,28 @@ public class RobotContainer {
                 () -> slewTheta.calculate(-driveController.getRightX()),
                     driveSubsystem::getRotation
     ));
+
+    DoubleSupplier dPadX = () -> {
+      if (driveController.povLeft().getAsBoolean()) {
+        return -1.0;
+      } else if (driveController.povRight().getAsBoolean()) {
+        return 1.0;
+      } else { return 0.0;}
+    };
+
+    DoubleSupplier dPadY = () -> {
+      if (driveController.povDown().getAsBoolean()) {
+        return -1.0;
+      } else if (driveController.povUp().getAsBoolean()) {
+        return 1.0;
+      } else { return 0.0;}
+    };
+
+    OperatorInput.alignmentRobotRelative.whileTrue(
+            new RobotRelativeDriveCommand(
+                    driveSubsystem,dPadX, dPadY,() -> 0
+            )
+    );
   }
 
 

@@ -35,6 +35,8 @@ public class OperatorInput {
   public final Trigger movementDesired = movementNotDesired.negate();
   public final Trigger resetHeading = driver.start();
 
+  // dpad not pressed
+  public static final Trigger alignmentRobotRelative = driver.povCenter().negate();
   //operator controls
   final Trigger elevatorGoToOrigin = operator.a();
 

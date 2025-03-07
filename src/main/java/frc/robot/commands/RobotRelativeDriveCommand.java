@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OperatorInput;
 import frc.robot.constants.DriveConstants;
@@ -14,16 +13,16 @@ import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 
 import java.util.function.DoubleSupplier;
 
-public class BaseDriveCommand extends Command {
+public class RobotRelativeDriveCommand extends Command {
         private final DriveSubsystem drive;
         private final DoubleSupplier xSupplier;
         private final DoubleSupplier ySupplier;
         private final DoubleSupplier omegaSupplier;
 
-        public BaseDriveCommand(DriveSubsystem drive,
-                                DoubleSupplier xSupplier,
-                                DoubleSupplier ySupplier,
-                                DoubleSupplier omegaSupplier) {
+        public RobotRelativeDriveCommand(DriveSubsystem drive,
+                                         DoubleSupplier xSupplier,
+                                         DoubleSupplier ySupplier,
+                                         DoubleSupplier omegaSupplier) {
             this.drive = drive;
             this.xSupplier = xSupplier;
             this.ySupplier = ySupplier;
