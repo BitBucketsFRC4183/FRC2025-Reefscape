@@ -31,7 +31,7 @@ public class OperatorInput {
 
   public final Trigger movementNotDesired = xNotDesired.and(yNotDesired).and(thetaNotDesired);
   public final Trigger movementDesired = movementNotDesired.negate();
-
+  public final Trigger resetHeading = driver.start();
 
   //operator controls
   final Trigger elevatorGoToOrigin = operator.a();

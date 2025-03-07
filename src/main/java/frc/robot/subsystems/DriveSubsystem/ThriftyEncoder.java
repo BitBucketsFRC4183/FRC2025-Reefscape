@@ -10,7 +10,6 @@ public class ThriftyEncoder extends AnalogEncoder {
     private final AnalogInput input;
     private double lastRotation;
     private double lastTime;
-    private double dt;
 
     public ThriftyEncoder(AnalogInput input) {
         super(input);
@@ -26,8 +25,12 @@ public class ThriftyEncoder extends AnalogEncoder {
         return (input.getVoltage() != 0);
     }
     public double getRotationsPerSeconds() {
-        double deltaRotation = getRotations() - lastRotation;
-        return deltaRotation / dt;
+        double dt = Timer.getFPGATimestamp() - lastTime;
+        double dR = getRotations() - lastRotation;
+
+        lastTime = Timer.getFPGATimestamp();
+        lastRotation = getRotations();
+        return dR / dt;
     }
 
     public double getRotations() {
@@ -55,10 +58,4 @@ public class ThriftyEncoder extends AnalogEncoder {
     }
 
 
-
-    public void periodic() {
-        lastTime = Timer.getFPGATimestamp();
-        lastRotation = getRotations();
-        dt = Timer.getFPGATimestamp() - lastTime;
-    }
 }

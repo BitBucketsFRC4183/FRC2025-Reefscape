@@ -240,9 +240,6 @@ public class ModuleIOHybrid implements ModuleIO {
         // Refresh all signal
         var driveStatus =
                 BaseStatusSignal.refreshAll(drivePosition, driveVelocity, driveAppliedVolts, driveCurrent);
-
-        turnEncoder.periodic();
-
         // if v = 0 lol
         // inputs.turnEncoderConnected = turnEncoder.getConnected();
         // Update drive inputs

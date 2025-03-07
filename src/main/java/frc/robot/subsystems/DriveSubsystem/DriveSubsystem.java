@@ -359,6 +359,10 @@ public class DriveSubsystem extends SubsystemBase {
     setPose(new Pose2d());
   }
 
+  public void resetHeading() {
+    poseEstimator.resetRotation(new Rotation2d());
+  }
+
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
