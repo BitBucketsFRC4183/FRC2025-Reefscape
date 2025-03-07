@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
+import edu.wpi.first.units.VelocityUnit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -15,7 +16,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.ArmConstants;
 import org.littletonrobotics.junction.Logger;
 
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.*;
 
 
 public class ArmSubsystem extends SubsystemBase {
@@ -48,10 +49,10 @@ public class ArmSubsystem extends SubsystemBase {
         sysId =
                 new SysIdRoutine(
                         new SysIdRoutine.Config(
+                                Volts.of(0.1).per(Second),
+                                Volts.of(1.5),
                                 null,
-                                null,
-                                null,
-                                (state) -> Logger.recordOutput("ElevatorSubystem/SysIdState", state.toString())),
+                                (state) -> Logger.recordOutput("ArmSubsystem/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
                                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
 
@@ -75,10 +76,17 @@ public class ArmSubsystem extends SubsystemBase {
         double outputVoltage = volts;
         if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
             outputVoltage = volts;
-        } else if ((getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS) || (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS)) {
-            outputVoltage = outputVoltage * 0.1;
-        } else if ((getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS + Units.degreesToRadians(5)) || (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS - Units.degreesToRadians(5))) {
-            outputVoltage = outputVoltage * 0.333;
+
+
+        } else if ((getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS)) {
+            // if mechanism exceeds limit basically set it to zero
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.07;
+        } else if (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.07;
+        } else if (getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS + Units.degreesToRadians(15)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.25;
+        } else if (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS - Units.degreesToRadians(15)) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.25;
         }
 
         Logger.recordOutput("ArmSubsystem/outputVoltageAdjusted", outputVoltage);

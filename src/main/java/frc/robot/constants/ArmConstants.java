@@ -14,7 +14,7 @@ public class ArmConstants {
     public static double kASim = 0;
 
     public static double kS = 0;
-    public static double kV = 1.5;
+    public static double kV = 2;
     public static double kG = 0;
     public static double kA = 0;
     public static double kP = 0;

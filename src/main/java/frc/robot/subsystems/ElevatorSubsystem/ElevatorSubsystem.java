@@ -95,10 +95,15 @@ public class ElevatorSubsystem extends SubsystemBase {
         double outputVoltage = volts;
         if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
             outputVoltage = volts;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight) || (getLoadHeight() >= ElevatorConstants.maxHeight)) {
-            outputVoltage = outputVoltage * 0.1;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.1) || (getLoadHeight() >= ElevatorConstants.maxHeight - 0.1)) {
-            outputVoltage = outputVoltage * 0.333;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.05)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.05) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
+
         }
         elevatorIO.setElevatorMotorVoltage(outputVoltage);
     }
