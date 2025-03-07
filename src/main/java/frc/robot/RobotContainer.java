@@ -193,14 +193,15 @@ public class RobotContainer {
         break;
     }
 
-    this.autoSubsystem = new AutoSubsystem(clawSubsystem, driveSubsystem);
+    this.autoSubsystem = new AutoSubsystem(driveSubsystem, elevatorSubsystem, armSubsystem);
     autoChooser = new AutoChooser();
 
-    autoChooser.addRoutine("FourL4CoralBottom", AutoSubsystem::FourL4CoralBottomRoutine);
-    autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
-    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
-    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
-    autoChooser.addRoutine("OneL4CoralMid", AutoSubsystem::OneL4CoralMidRoutine);
+//    autoChooser.addRoutine("FourL4CoralBottom", AutoSubsystem::FourL4CoralBottomRoutine);
+//    autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
+//    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
+//    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
+//    autoChooser.addRoutine("OneL4CoralMid", AutoSubsystem::OneL4CoralMidRoutine);
+    autoChooser.addCmd("Score1L4Coral", autoSubsystem::OneL4Score);
 
     autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));

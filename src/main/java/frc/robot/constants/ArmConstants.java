@@ -46,8 +46,10 @@ public class ArmConstants {
     // so if encoder is 0.8, offset is 0.8 and not 0.8
     public static final double encoderOffsetRots = 0.630;
     public static boolean encoderInverted;
-    public static double setpointUp = Math.PI / 4;
-    public static double setpointDown =  -Math.PI / 4;
+    public final static double armL1Angle = 0;
+    public final static double armL2Angle = 0;
+    public final static double armL3Angle = 0;
+    public final static double armL4Angle = 0;
     public static InvertedValue arm1Inverted = InvertedValue.Clockwise_Positive;
     public static InvertedValue arm2Inverted = InvertedValue.CounterClockwise_Positive;
 }
