@@ -6,13 +6,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class OperatorInput {
-  final CommandXboxController operator = new CommandXboxController(1);
-  public final CommandXboxController driver = new CommandXboxController(0);
+  public static final CommandXboxController operator = new CommandXboxController(1);
+  public static final CommandXboxController driver = new CommandXboxController(0);
 
 
   // DRIVER'S CONTROLS
-  public final Trigger slowModeHold = driver.leftTrigger();
-  public final Trigger turboModeHold = driver.rightTrigger();
+
+  // static bc im lazy
+  public static final Trigger slowModeHold = driver.leftTrigger();
+  public static final Trigger turboModeHold = driver.rightTrigger();
   final Trigger xNotDesired =
       driver
           .axisGreaterThan(XboxController.Axis.kLeftX.value, 0.1)

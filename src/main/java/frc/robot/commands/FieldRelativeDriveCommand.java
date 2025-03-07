@@ -8,6 +8,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.OperatorInput;
+import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 
 import java.util.function.DoubleSupplier;
@@ -56,9 +59,18 @@ public class FieldRelativeDriveCommand extends Command {
                         && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
 
 
+        double speedFactor;
+        if (OperatorInput.slowModeHold.getAsBoolean()) {
+            speedFactor = DriveConstants.slowSpeed;
+        } else if (OperatorInput.turboModeHold.getAsBoolean()) {
+            speedFactor = DriveConstants.turboSpeed;
+        } else {
+            speedFactor = DriveConstants.normalSpeed;
+        }
+
         ChassisSpeeds speeds_robotOriented =  new ChassisSpeeds(
-                linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(), //4.5 is the experimentally determined max velocity
-                linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                linearVelocity.getX() * speedFactor, //4.5 is the experimentally determined max velocity
+                linearVelocity.getY() * speedFactor,
                 omega * Math.PI * 1.5
         );
 
