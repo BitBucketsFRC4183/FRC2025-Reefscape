@@ -3,12 +3,15 @@ package frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.OperatorInput;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import org.littletonrobotics.junction.Logger;
@@ -72,7 +75,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     public double getElevatorSpeedRads() {
         return encoderIOInputs.encoderVelocityRads;
     }
+
     public void setElevatorVoltage(double volts) {
-        elevatorIO.setElevatorMotorVoltage(volts);
+        double outputVoltage = volts;
+        if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
+            outputVoltage = volts;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight) || (getLoadHeight() >= ElevatorConstants.maxHeight)) {
+            outputVoltage = outputVoltage * 0.1;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.1) || (getLoadHeight() >= ElevatorConstants.maxHeight - 0.1)) {
+            outputVoltage = outputVoltage * 0.333;
+        }
+        elevatorIO.setElevatorMotorVoltage(outputVoltage);
     }
 }

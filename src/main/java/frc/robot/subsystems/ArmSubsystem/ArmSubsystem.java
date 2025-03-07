@@ -52,7 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getCurrentAngle(){
-        return armIOInputs.armAngle;
+        return armEncoderIOInputs.armAngle;
     }
 
     public void setArmVoltage(double volts){
