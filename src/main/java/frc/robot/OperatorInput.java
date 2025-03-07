@@ -54,6 +54,7 @@ public class OperatorInput {
   final Trigger rollersIn = operator.rightBumper();
   final Trigger rollersOut = operator.leftBumper();
 
+  public static final Trigger mechanismLimitOverride = operator.back();
   final Trigger armSetpointUp = operator.povUp();
   final Trigger armSetpointDown = operator.povDown();
 

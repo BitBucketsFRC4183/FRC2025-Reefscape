@@ -5,7 +5,10 @@ package frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.OperatorInput;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ArmConstants;
 import org.littletonrobotics.junction.Logger;
@@ -49,10 +52,21 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getCurrentAngle(){
-        return armEncoderIOInputs.armAngle;
+        return armIOInputs.armAngle;
     }
+
     public void setArmVoltage(double volts){
-        armIO.setArmMotorVoltage(volts);
+        double outputVoltage = volts;
+        if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
+            outputVoltage = volts;
+        } else if ((getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS) || (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS)) {
+            outputVoltage = outputVoltage * 0.1;
+        } else if ((getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS + Units.degreesToRadians(5)) || (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS - Units.degreesToRadians(5))) {
+            outputVoltage = outputVoltage * 0.333;
+        }
+
+        Logger.recordOutput("ArmSubsystem/outputVoltageAdjusted", outputVoltage);
+        armIO.setArmMotorVoltage(outputVoltage);
     }
 }
 
