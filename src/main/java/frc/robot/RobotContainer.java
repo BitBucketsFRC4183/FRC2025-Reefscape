@@ -33,12 +33,10 @@ import edu.wpi.first.math.geometry.Pose3d;
 
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
-import frc.robot.commands.ArmCommands.ArmBendCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
+import frc.robot.commands.ArmElevatorToOrigin;
+import frc.robot.commands.ArmElevatorToSetpoint;
 import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
-import frc.robot.commands.DriveCommands.WheelBaseCharacterizationRoutineCommand;
-import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
-import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
 import frc.robot.commands.DriveCommands.FieldRelativeDriveCommand;
@@ -68,7 +66,6 @@ import frc.robot.subsystems.IntakeSubsystem.IntakeIOSparkMax;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.ArmSubsystem.*;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
-import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.ironmaple.simulation.SimulatedArena;
@@ -238,11 +235,11 @@ public class RobotContainer {
 
 
     // elevator stuff
-    operatorInput.elevatorSetpoint1.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L1));
-    operatorInput.elevatorSetpoint2.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
-    operatorInput.elevatorSetpoint3.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
+    operatorInput.armElevatorOrigin.onTrue(new ArmElevatorToOrigin(elevatorSubsystem, armSubsystem));
+    operatorInput.armElevatorL2.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L2, ArmConstants.armL2Angle));
+    operatorInput.armElevatorL3.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L3, ArmConstants.armL3Angle));
+    operatorInput.armElevatorL4.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L4, ArmConstants.armL4Angle));
     operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
-    operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
 
     //arm stuff
     armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));

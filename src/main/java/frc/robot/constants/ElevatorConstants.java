@@ -48,10 +48,10 @@ public class ElevatorConstants {
     public static double L3 = 0;
     public static double L4 = 0;
     public static double carriageMass = 20.0;
-    public static double maxHeight = 0.571;
+    public static double maxHeight = 0.62;
     public static double minHeight = -0.240;
-    public static double maxVelocity = 1;
-    public static double maxAcceleration = 1;
+    public static double maxVelocity = 0.4;
+    public static double maxAcceleration = 0.4;
 
     public static final int elevatorCanID = 10;
     public static final int elevatorSpark1CAN = 14;

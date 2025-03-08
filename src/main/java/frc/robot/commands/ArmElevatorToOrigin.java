@@ -10,8 +10,8 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 
-public class ArmElevatorToRest extends ParallelDeadlineGroup {
-    public ArmElevatorToRest(ElevatorSubsystem elevator, ArmSubsystem arm) {
+public class ArmElevatorToOrigin extends ParallelDeadlineGroup {
+    public ArmElevatorToOrigin(ElevatorSubsystem elevator, ArmSubsystem arm) {
         super(Commands.deadline(
                 Commands.waitSeconds(Constants.commandTimeout + 1),
                 Commands.sequence(
