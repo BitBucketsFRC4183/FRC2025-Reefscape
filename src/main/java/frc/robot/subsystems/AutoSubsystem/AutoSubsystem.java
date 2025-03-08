@@ -426,8 +426,18 @@ public static AutoRoutine OneL4CoralMidRoutine() {
                     Commands.waitSeconds(1),
                     Commands.deadline(Commands.waitSeconds(0.1), new RobotRelativeDriveCommand(drive, () -> 0, () -> yValue, () -> 0))
                     );
+    }
 
-}}
+    public Command TaxiBack() {
+        return Commands.sequence(
+                Commands.waitSeconds(0),
+                Commands.deadline(
+                        Commands.waitSeconds(3),
+                        new RobotRelativeDriveCommand(drive, () -> -0.5, () -> 0, () -> 0)
+                )
+        );
+    };
+}
 
 
 

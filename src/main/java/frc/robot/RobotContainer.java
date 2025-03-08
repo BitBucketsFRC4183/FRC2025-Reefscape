@@ -204,6 +204,7 @@ public class RobotContainer {
 //    autoChooser.addRoutine("OneL4CoralMid", AutoSubsystem::OneL4CoralMidRoutine);
     autoChooser.addCmd("Score1L4Coral", autoSubsystem::OneL4Score);
     autoChooser.addCmd("nothing", Commands::none);
+    autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiBack);
 //    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 //    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 //    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
