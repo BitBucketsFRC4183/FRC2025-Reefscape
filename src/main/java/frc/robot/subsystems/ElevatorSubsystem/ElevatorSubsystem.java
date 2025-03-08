@@ -64,7 +64,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                                 null,
                                 null,
                                 null,
-                                (state) -> Logger.recordOutput("ElevatorSubystem/SysIdState", state.toString())),
+                                (state) -> Logger.recordOutput("ElevatorSubsystem/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
                                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
     }
