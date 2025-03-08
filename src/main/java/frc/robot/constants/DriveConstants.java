@@ -36,7 +36,7 @@ public class DriveConstants {
     public static final double maxSpeedMetersPerSec = 4.8;
     public static final double turboSpeed =  maxSpeedMetersPerSec;
     public static final double normalSpeed = maxSpeedMetersPerSec - 1;
-    public static final double slowSpeed = maxSpeedMetersPerSec - 2;
+    public static final double slowSpeed = maxSpeedMetersPerSec - 3;
     public static final double alignmentSpeed = 1;
 
     public static final double odometryFrequency = 100.0; // Hz

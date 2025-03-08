@@ -279,15 +279,15 @@ public class RobotContainer {
                     driveSubsystem::getRotation
     ));
 
-    DoubleSupplier dPadX = () -> {
+    DoubleSupplier dPadY = () -> {
       if (driveController.povLeft().getAsBoolean()) {
-        return -1.0;
-      } else if (driveController.povRight().getAsBoolean()) {
         return 1.0;
+      } else if (driveController.povRight().getAsBoolean()) {
+        return -1.0;
       } else { return 0.0;}
     };
 
-    DoubleSupplier dPadY = () -> {
+    DoubleSupplier dPadX = () -> {
       if (driveController.povDown().getAsBoolean()) {
         return -1.0;
       } else if (driveController.povUp().getAsBoolean()) {

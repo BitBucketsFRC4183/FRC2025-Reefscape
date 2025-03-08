@@ -49,7 +49,7 @@ public class ElevatorConstants {
     public static double L4 = 0;
     public static double carriageMass = 20.0;
     public static double maxHeight = 0.571;
-    public static double minHeight = -0.340;
+    public static double minHeight = -0.240;
     public static double maxVelocity = 1;
     public static double maxAcceleration = 1;
 
