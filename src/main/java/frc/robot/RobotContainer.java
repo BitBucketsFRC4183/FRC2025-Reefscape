@@ -235,7 +235,7 @@ public class RobotContainer {
 
 
     // elevator stuff
-    operatorInput.armElevatorOrigin.onTrue(new ArmElevatorToOrigin(elevatorSubsystem, armSubsystem));
+    operatorInput.armElevatorOrigin.whileTrue(new ArmElevatorToOrigin(elevatorSubsystem, armSubsystem));
     operatorInput.armElevatorL2.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L2, ArmConstants.armL2Angle));
     operatorInput.armElevatorL3.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L3, ArmConstants.armL3Angle));
     operatorInput.armElevatorL4.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L4, ArmConstants.armL4Angle));
