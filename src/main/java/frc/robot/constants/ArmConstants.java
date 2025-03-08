@@ -15,7 +15,7 @@ public class ArmConstants {
 
     public static double kS = 0.26427;
     public static double kV = 1.5096;
-    public static double kG = 0;
+    public static double kG = 0.18;
     public static double kA = 0.33715;
     public static double kP = 0;
     public static double kI = 0;
@@ -30,7 +30,7 @@ public class ArmConstants {
     public static double armSparkEncoderPositionFactor;
     public static double armSparkEncoderVelocityFactor;
     public static double maxVelocity = 3;
-    public static double maxAcceleration = 3;
+    public static double maxAcceleration = 2;
     public static double mass = 5;
 
     public static int arm1CurrentLimit = 50;
@@ -46,10 +46,10 @@ public class ArmConstants {
     // so if encoder is 0.8, offset is 0.8 and not 0.8
     public static final double encoderOffsetRots = 0.630;
     public static boolean encoderInverted;
-    public final static double armL1Angle = 0;
-    public final static double armL2Angle = 0;
-    public final static double armL3Angle = 0;
-    public final static double armL4Angle = 0;
+    public final static double armL1Angle = Units.degreesToRadians(25.5);
+    public final static double armL2Angle = Units.degreesToRadians(25.5);
+    public final static double armL3Angle = Units.degreesToRadians(56.4);
+    public final static double armL4Angle = Units.degreesToRadians(75);
     public static InvertedValue arm1Inverted = InvertedValue.Clockwise_Positive;
     public static InvertedValue arm2Inverted = InvertedValue.CounterClockwise_Positive;
 }

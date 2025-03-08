@@ -18,6 +18,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import org.littletonrobotics.junction.Logger;
 
+import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
 
@@ -61,8 +62,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         sysId =
                 new SysIdRoutine(
                         new SysIdRoutine.Config(
-                                null,
-                                null,
+                                Volts.of(1).per(Second),
+                                Volts.of(11),
                                 null,
                                 (state) -> Logger.recordOutput("ElevatorSubsystem/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
@@ -99,9 +100,9 @@ public class ElevatorSubsystem extends SubsystemBase {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
         } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.05)) {
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.09)) {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
-        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.05) {
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.09) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
 
         }

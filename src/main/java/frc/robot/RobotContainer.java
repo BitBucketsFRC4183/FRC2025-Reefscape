@@ -32,6 +32,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 //import frc.robot.commands.ResetEncoderCommand;
 
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.ArmCommands.ArmBendCommand;
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.ArmElevatorToOrigin;
@@ -243,7 +244,7 @@ public class RobotContainer {
 
     //arm stuff
     armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
-    // operatorInput.armSetpointUp.whileTrue(new ArmBendCommand(armSubsystem, ArmConstants.setpointUp));
+    // operatorInput.armSetpointUp.whileTrue(new ArmBendCommand(armSubsystem, 0));
     // operatorInput.armSetpointDown.whileTrue(new ArmBendCommand(armSubsystem, ArmConstants.setpointDown));
 
 
