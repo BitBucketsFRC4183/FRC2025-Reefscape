@@ -14,4 +14,9 @@ public class ResetHeadingCommand extends Command {
     public void execute() {
         driveSubsystem.resetHeading();
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }
