@@ -13,15 +13,10 @@ public class ArmElevatorToSetpoint extends ParallelDeadlineGroup {
     public ArmElevatorToSetpoint(ElevatorSubsystem elevator, ArmSubsystem arm, double elevatorSetpoint, double armSetpoint) {
         super(Commands.deadline(
                 Commands.waitSeconds(Constants.commandTimeout + 1),
-                Commands.sequence(
-                        Commands.deadline(
-                                Commands.waitSeconds(0.1),
-                        new ElevatorSetPointCommand(elevator, elevatorSetpoint)),
-                        Commands.parallel(
-                                new ArmBendCommand(arm, armSetpoint),
-                                new ElevatorSetPointCommand(elevator, elevatorSetpoint))
-                                )
-                )
-        );
+                Commands.parallel(
+                        new ArmBendCommand(arm, armSetpoint),
+                        new ElevatorSetPointCommand(elevator, elevatorSetpoint))
+                        )
+                );
     }
 }

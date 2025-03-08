@@ -85,7 +85,7 @@ public class ArmSubsystem extends SubsystemBase {
         } else if (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.07;
         } else if (getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS + Units.degreesToRadians(15)) {
-            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.25;
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.33;
         } else if (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS - Units.degreesToRadians(15)) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.25;
         }

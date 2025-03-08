@@ -71,7 +71,7 @@ public class FieldDriveElevatorLimitedCommand extends Command {
         }
 
         speedFactor *= speedRamp(elevator.getLoadHeight(),
-                ElevatorConstants.minHeight + 0.2, ElevatorConstants.maxHeight, 0, 1);
+                ElevatorConstants.minHeight + 0.2, ElevatorConstants.maxHeight, 0.5, 1, true);
 
 
         ChassisSpeeds speeds_robotOriented =  new ChassisSpeeds(
@@ -92,12 +92,15 @@ public class FieldDriveElevatorLimitedCommand extends Command {
 
     // returns a ramped speed value
     // a value between an min max, gets mapped to a different linear scale
-    private double speedRamp(double value, double inputMin, double inputMax, double outputMin, double outputMax) {
-        if (!(value <= inputMax && value >= inputMin)) {return 1;}
+    private double speedRamp(double value, double inputMin, double inputMax, double outputMin, double outputMax, boolean flipped) {
+        double frvalue = MathUtil.clamp(value, inputMin, inputMax);
         double range1 = inputMax - inputMin;
-        double diff1 = value - inputMin;
-        double firstScalar = diff1 / range1;
+        double diff1 = frvalue - inputMin;
 
+        double firstScalar = diff1 / range1;
+        if(flipped) {
+            firstScalar = 1 - firstScalar;
+        }
         double range2 = outputMax - outputMin;
         return range2 * firstScalar;
     };

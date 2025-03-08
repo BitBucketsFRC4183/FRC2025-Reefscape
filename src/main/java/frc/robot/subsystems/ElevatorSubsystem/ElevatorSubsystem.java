@@ -53,7 +53,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.elevatorIOInputs = new ElevatorIOInputsAutoLogged();
         this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
         this.elevatorMech2d = elevator2dRoot.append(new MechanismLigament2d("Elevator", encoderIOInputs.loadHeight, 90));
-        elevatorPID.setTolerance(0.001, ElevatorConstants.kShooterToleranceRPS);
+        // elevatorPID.setTolerance(0.001, ElevatorConstants.kShooterToleranceRPS);
         //elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
         setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
         SmartDashboard.putData("ElevatorSubsystem/mechanism", elevator2D);
@@ -91,6 +91,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public double getElevatorSpeedRads() {
         return encoderIOInputs.encoderVelocityRads;
     }
+    public double getElevatorHeightSpeed() { return encoderIOInputs.unfiliteredHeightVelocity;}
 
     public void setElevatorVoltage(double volts) {
         double outputVoltage = volts;
