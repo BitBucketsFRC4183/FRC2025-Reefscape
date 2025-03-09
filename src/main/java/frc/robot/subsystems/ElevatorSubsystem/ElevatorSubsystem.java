@@ -101,9 +101,26 @@ public class ElevatorSubsystem extends SubsystemBase {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
         } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.06)) {
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.05)) {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
         } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.06) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
+
+        }
+        elevatorIO.setElevatorMotorVoltage(outputVoltage);
+    }
+
+    public void setElevatorVoltageCommandBypass(double volts) {
+        double outputVoltage = volts;
+        if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
+            outputVoltage = volts;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.01)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.01) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
 
         }

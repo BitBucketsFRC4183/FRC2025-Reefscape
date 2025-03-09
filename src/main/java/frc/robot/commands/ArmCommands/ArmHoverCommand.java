@@ -26,7 +26,7 @@ public class ArmHoverCommand extends Command {
             armSubsystem.hoverAngle = armSubsystem.getCurrentAngle();
             Logger.recordOutput("ArmSubsystem/target_voltage", appliedVolts);
             Logger.recordOutput("ArmSubsystem/target_Angle", armSubsystem.hoverAngle);
-            armSubsystem.setArmVoltage(appliedVolts);
+            armSubsystem.setArmVoltageCommandBypass(appliedVolts);
         }
 
     }

@@ -3,7 +3,9 @@ package frc.robot.subsystems.AutoSubsystem;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.commands.ArmElevatorToOrigin;
 import frc.robot.commands.ArmElevatorToSetpoint;
 import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
 import frc.robot.constants.ArmConstants;
@@ -419,13 +421,20 @@ public static AutoRoutine OneL4CoralMidRoutine() {
     }
 
 
-    public Command OneL4Score() {
-            double yValue = 0.2;
-            return Commands.sequence(
-                    new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4, ArmConstants.armL4Angle),
-                    Commands.waitSeconds(1),
-                    Commands.deadline(Commands.waitSeconds(0.1), new RobotRelativeDriveCommand(drive, () -> 0, () -> yValue, () -> 0))
-                    );
+    public Command OneL3Score(ElevatorSubsystem elevator, ArmSubsystem arm) {
+        return Commands.sequence(
+                Commands.deadline(Commands.waitSeconds(4), new RobotRelativeDriveCommand(drive, () -> 0.2, () -> 0, () -> 0)),
+                Commands.waitSeconds(1),
+                Commands.deadline(Commands.waitSeconds(0.2), new RobotRelativeDriveCommand(drive, () -> -0.2, () -> 0, () -> 0)),
+                Commands.deadline(Commands.waitSeconds(3), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L3 + 0.005, ArmConstants.armL4Angle + Units.degreesToRadians(1))),
+                Commands.deadline(Commands.waitSeconds(0.05), new RobotRelativeDriveCommand(drive, () -> 0.1, () -> 0, () -> 0)),
+                Commands.parallel(
+                        new ArmElevatorToOrigin(elevator, arm),
+                        Commands.deadline(Commands.waitSeconds(0.2), new RobotRelativeDriveCommand(drive, () -> -0.1, () -> 0, () -> 0))
+                        )
+
+
+                );
     }
 
     public Command TaxiBack() {
@@ -434,6 +443,16 @@ public static AutoRoutine OneL4CoralMidRoutine() {
                 Commands.deadline(
                         Commands.waitSeconds(3),
                         new RobotRelativeDriveCommand(drive, () -> -1, () -> 0, () -> 0)
+                )
+        );
+    };
+
+    public Command TaxiForward() {
+        return Commands.sequence(
+                Commands.waitSeconds(0),
+                Commands.deadline(
+                        Commands.waitSeconds(3),
+                        new RobotRelativeDriveCommand(drive, () -> 1, () -> 0, () -> 0)
                 )
         );
     };

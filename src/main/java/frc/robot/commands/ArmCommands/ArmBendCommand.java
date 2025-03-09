@@ -37,7 +37,7 @@ public class ArmBendCommand extends Command {
         // timestampAverageBuffer.addValue(armSubsystem.getCurrentAngle(), Timer.getFPGATimestamp());
         Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
         Logger.recordOutput("ArmSubsystem/desired_position", armSubsystem.armFeedback.getSetpoint().position);
-        this.armSubsystem.setArmVoltage(calculatedVolts);
+        this.armSubsystem.setArmVoltageCommandBypass(calculatedVolts);
     }
 
     @Override

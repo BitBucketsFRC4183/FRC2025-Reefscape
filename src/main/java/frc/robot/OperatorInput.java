@@ -53,8 +53,8 @@ public class OperatorInput {
   final Trigger armElevatorL2 = operator.x();
   final Trigger armElevatorL3 = operator.y();
   final Trigger armElevatorL4 = operator.b();
-  final Trigger rollersIn = operator.rightBumper();
-  final Trigger rollersOut = operator.leftBumper();
+  final Trigger rollersIn = operator.leftBumper();
+  final Trigger rollersOut = operator.rightBumper();
 
   public static final Trigger mechanismLimitOverride = operator.back();
   final Trigger rollerPivotUp = operator.povUp();

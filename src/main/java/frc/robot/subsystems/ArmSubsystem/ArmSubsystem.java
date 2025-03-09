@@ -84,10 +84,27 @@ public class ArmSubsystem extends SubsystemBase {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.07;
         } else if (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.07;
-        } else if (getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS + Units.degreesToRadians(10)) {
+        } else if (getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS + Units.degreesToRadians(8)) {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.33;
         } else if (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS - Units.degreesToRadians(8)) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.25;
+        }
+
+        Logger.recordOutput("ArmSubsystem/outputVoltageAdjusted", outputVoltage);
+        armIO.setArmMotorVoltage(outputVoltage);
+    }
+
+    public void setArmVoltageCommandBypass(double volts){
+        double outputVoltage = volts;
+        if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
+            outputVoltage = volts;
+
+
+        } else if ((getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS)) {
+            // if mechanism exceeds limit basically set it to zero
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.07;
+        } else if (getCurrentAngle() >= ArmConstants.MAX_ANGLE_RADS) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.07;
         }
 
         Logger.recordOutput("ArmSubsystem/outputVoltageAdjusted", outputVoltage);

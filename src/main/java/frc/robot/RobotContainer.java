@@ -202,9 +202,11 @@ public class RobotContainer {
 //    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
 //    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
 //    autoChooser.addRoutine("OneL4CoralMid", AutoSubsystem::OneL4CoralMidRoutine);
-    autoChooser.addCmd("Score1L4Coral", autoSubsystem::OneL4Score);
+    autoChooser.addCmd("Score1L3Coral", () -> autoSubsystem.OneL3Score(elevatorSubsystem,armSubsystem));
     autoChooser.addCmd("nothing", Commands::none);
     autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiBack);
+    autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiForward);
+
 //    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 //    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 //    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
@@ -258,8 +260,8 @@ public class RobotContainer {
     operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, operatorController::getLeftY));
 
     // rollers and pivot, algae intake stuff
-    operatorInput.rollersIn.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, false));
-    operatorInput.rollersOut.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, true));
+    operatorInput.rollersIn.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, true));
+    operatorInput.rollersOut.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, false));
     operatorInput.rollerPivotDown.whileTrue(new PivotDownCommand(intakeSubsystem));
     operatorInput.rollerPivotUp.whileTrue(new PivotUpCommand(intakeSubsystem));
 

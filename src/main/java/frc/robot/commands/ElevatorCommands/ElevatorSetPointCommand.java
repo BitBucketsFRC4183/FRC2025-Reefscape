@@ -46,7 +46,7 @@ public class ElevatorSetPointCommand extends Command {
         Logger.recordOutput("ElevatorSubsystem/current_velocity", elevator.getElevatorHeightSpeed());
 
 
-        this.elevator.setElevatorVoltage(calculatedVolts);
+        this.elevator.setElevatorVoltageCommandBypass(calculatedVolts);
 
     }
 

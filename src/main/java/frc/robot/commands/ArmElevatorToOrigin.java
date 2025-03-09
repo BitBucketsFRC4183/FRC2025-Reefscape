@@ -18,15 +18,15 @@ public class ArmElevatorToOrigin extends ParallelDeadlineGroup {
                 Commands.waitSeconds(Constants.commandTimeout + 1),
                 Commands.sequence(
                         Commands.deadline(
-                                Commands.waitSeconds(0.2),
+                                Commands.waitSeconds(0.3),
                                 new ArmBendCommand(arm, ArmConstants.MIN_ANGLE_RADS)
+                        )
                         ,
                         Commands.parallel(
                                 new ArmBendCommand(arm, ArmConstants.MIN_ANGLE_RADS),
-                                new ElevatorSetPointCommand(elevator, -0.05))
+                                new ElevatorSetPointCommand(elevator, -0.01))
                         )
 
-                )
                 )
 
         );
