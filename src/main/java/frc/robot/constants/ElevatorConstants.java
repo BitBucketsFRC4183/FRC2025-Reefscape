@@ -38,7 +38,7 @@ public class ElevatorConstants {
     public static double kV = 10.604;
     public static double kG = 0;
     public static double kA = 2.2017;
-    public static double kP = 110;
+    public static double kP = 125;
     public static double kI = 0;
     public static double kD = 0;
 
@@ -46,7 +46,7 @@ public class ElevatorConstants {
     public static double L1 = 0;
     public static double L2 = -0.244;
     public static double L3 = 0.0885;
-    public static double L4 = 0.607;
+    public static double L4 = 0.610;
     public static double carriageMass = 20.0;
     public static double maxHeight = 0.617;
     public static double minHeight = -0.280;
