@@ -49,7 +49,7 @@ public class ArmConstants {
     public final static double armL1Angle = Units.degreesToRadians(25.5);
     public final static double armL2Angle = Units.degreesToRadians(25.5);
     public final static double armL3Angle = Units.degreesToRadians(56.4);
-    public final static double armL4Angle = Units.degreesToRadians(75);
+    public final static double armL4Angle = Units.degreesToRadians(80);
     public static InvertedValue arm1Inverted = InvertedValue.Clockwise_Positive;
     public static InvertedValue arm2Inverted = InvertedValue.CounterClockwise_Positive;
 }

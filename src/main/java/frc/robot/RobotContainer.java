@@ -37,7 +37,9 @@ import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.ArmElevatorToOrigin;
 import frc.robot.commands.ArmElevatorToSetpoint;
+import frc.robot.commands.DriveCommands.FieldDriveElevatorLimitedCommand;
 import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
+import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
 import frc.robot.commands.DriveCommands.FieldRelativeDriveCommand;
@@ -241,7 +243,7 @@ public class RobotContainer {
     operatorInput.armElevatorL3.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L3, ArmConstants.armL3Angle));
     operatorInput.armElevatorL4.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L4, ArmConstants.armL4Angle));
     operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
-
+    // operatorInput.armElevatorL4.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
     //arm stuff
     armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
     // operatorInput.armSetpointUp.whileTrue(new ArmBendCommand(armSubsystem, 0));
@@ -269,12 +271,13 @@ public class RobotContainer {
     // drive stuff
     operatorInput.resetHeading.onTrue(new ResetHeadingCommand(driveSubsystem));
     operatorInput.movementDesired.whileTrue(
-            new FieldRelativeDriveCommand(
+            new FieldDriveElevatorLimitedCommand(
                     driveSubsystem,
                 () -> slewX.calculate(driveController.getLeftY()),
                 () -> slewY.calculate(driveController.getLeftX()),
                 () -> slewTheta.calculate(-driveController.getRightX()),
-                    driveSubsystem::getRotation
+                    driveSubsystem::getRotation,
+                    elevatorSubsystem
     ));
 
     DoubleSupplier dPadY = () -> {

@@ -37,8 +37,8 @@ public class ElevatorConstants {
     public static double kS = 0.35852;
     public static double kV = 10.604;
     public static double kG = 0;
-    public static double kA = 1.2017;
-    public static double kP = 0;
+    public static double kA = 2.2017;
+    public static double kP = 75;
     public static double kI = 0;
     public static double kD = 0;
 
@@ -46,12 +46,12 @@ public class ElevatorConstants {
     public static double L1 = 0;
     public static double L2 = -0.244;
     public static double L3 = 0.0885;
-    public static double L4 = 0.50;
+    public static double L4 = 0.60;
     public static double carriageMass = 20.0;
     public static double maxHeight = 0.62;
     public static double minHeight = -0.240;
-    public static double maxVelocity = 0.25;
-    public static double maxAcceleration = 1;
+    public static double maxVelocity = 1.5;
+    public static double maxAcceleration = 1.5;
 
     public static final int elevatorCanID = 10;
     public static final int elevatorSpark1CAN = 14;

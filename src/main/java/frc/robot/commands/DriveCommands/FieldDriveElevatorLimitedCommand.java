@@ -25,7 +25,7 @@ public class FieldDriveElevatorLimitedCommand extends Command {
     private final ElevatorSubsystem elevator;
     private final Supplier<Rotation2d> headingSupplier;
 
-    public FieldDriveElevatorLimitedCommand(DriveSubsystem drive, ElevatorSubsystem elevatorSubsystem, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, Supplier<Rotation2d> headingSupplier) {
+    public FieldDriveElevatorLimitedCommand(DriveSubsystem drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, Supplier<Rotation2d> headingSupplier, ElevatorSubsystem elevatorSubsystem) {
         this.drive = drive;
         this.xSupplier = xSupplier;
         this.ySupplier = ySupplier;
@@ -70,9 +70,10 @@ public class FieldDriveElevatorLimitedCommand extends Command {
             speedFactor = DriveConstants.normalSpeed;
         }
 
-        speedFactor *= speedRamp(elevator.getLoadHeight(),
-                ElevatorConstants.minHeight + 0.2, ElevatorConstants.maxHeight, 0.5, 1, true);
+        double rampFactor = speedRamp(elevator.getLoadHeight(),
+                ElevatorConstants.minHeight + 0.25, ElevatorConstants.maxHeight, 0.5, 1, true);
 
+        speedFactor = speedFactor * rampFactor;
 
         ChassisSpeeds speeds_robotOriented =  new ChassisSpeeds(
                 linearVelocity.getX() * speedFactor, //4.5 is the experimentally determined max velocity
@@ -93,7 +94,7 @@ public class FieldDriveElevatorLimitedCommand extends Command {
     // returns a ramped speed value
     // a value between an min max, gets mapped to a different linear scale
     private double speedRamp(double value, double inputMin, double inputMax, double outputMin, double outputMax, boolean flipped) {
-        double frvalue = MathUtil.clamp(value, inputMin, inputMax);
+        double frvalue = MathUtil.clamp( value, inputMin, inputMax);
         double range1 = inputMax - inputMin;
         double diff1 = frvalue - inputMin;
 
@@ -102,7 +103,7 @@ public class FieldDriveElevatorLimitedCommand extends Command {
             firstScalar = 1 - firstScalar;
         }
         double range2 = outputMax - outputMin;
-        return range2 * firstScalar;
+        return range2 * firstScalar + outputMin;
     };
 
     public void end(boolean interrupted) {

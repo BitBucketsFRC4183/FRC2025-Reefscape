@@ -433,7 +433,7 @@ public static AutoRoutine OneL4CoralMidRoutine() {
                 Commands.waitSeconds(0),
                 Commands.deadline(
                         Commands.waitSeconds(3),
-                        new RobotRelativeDriveCommand(drive, () -> -0.5, () -> 0, () -> 0)
+                        new RobotRelativeDriveCommand(drive, () -> -1, () -> 0, () -> 0)
                 )
         );
     };
