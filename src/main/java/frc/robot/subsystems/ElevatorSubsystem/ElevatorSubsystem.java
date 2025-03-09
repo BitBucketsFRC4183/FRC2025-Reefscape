@@ -101,9 +101,9 @@ public class ElevatorSubsystem extends SubsystemBase {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
         } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.09)) {
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.06)) {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
-        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.09) {
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.06) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
 
         }
