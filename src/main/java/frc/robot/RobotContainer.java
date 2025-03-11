@@ -113,10 +113,10 @@ public class RobotContainer {
         driveSubsystem =
                 new DriveSubsystem(
                         new GyroIOPigeon2(),
-                        new ModuleIOHybrid(0, TunerConstants.FrontLeft),
-                        new ModuleIOHybrid(1, TunerConstants.FrontRight),
-                        new ModuleIOHybrid(2, TunerConstants.BackLeft),
-                        new ModuleIOHybrid(3, TunerConstants.BackRight));
+                        new ModuleIOHybrid(0),
+                        new ModuleIOHybrid(1),
+                        new ModuleIOHybrid(2),
+                        new ModuleIOHybrid(3));
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIOSparkMax(),
                         new ElevatorEncoderIOThroughbore());
@@ -139,10 +139,10 @@ public class RobotContainer {
         driveSubsystem =
             new DriveSubsystem(
                     new GyroIOSim(driveSimulation.getGyroSimulation()),
-                    new ModuleIOSim(driveSimulation.getModules()[0]),
-                    new ModuleIOSim(driveSimulation.getModules()[1]),
-                    new ModuleIOSim(driveSimulation.getModules()[2]),
-                    new ModuleIOSim(driveSimulation.getModules()[3]));
+                    new ModuleIOHybridSim(0, driveSimulation.getModules()[0]),
+                    new ModuleIOHybridSim(1, driveSimulation.getModules()[1]),
+                    new ModuleIOHybridSim(2, driveSimulation.getModules()[2]),
+                    new ModuleIOHybridSim(3, driveSimulation.getModules()[3]));
 
         ElevatorIOSim elevatorIOSim = new ElevatorIOSim();
         elevatorSubsystem =

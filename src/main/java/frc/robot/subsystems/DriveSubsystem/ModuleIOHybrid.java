@@ -59,9 +59,6 @@ import java.util.function.DoubleSupplier;
 public class ModuleIOHybrid implements ModuleIO {
     private final Rotation2d zeroRotation;
     private final int id;
-    private final SwerveModuleConstants<
-            TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
-            constants;
     // Hardware objects
     protected final TalonFX driveTalon;
     private final SparkBase turnSpark;
@@ -103,8 +100,7 @@ public class ModuleIOHybrid implements ModuleIO {
     private final Debouncer driveConnectedDebounce = new Debouncer(0.5);
     private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
 
-    public ModuleIOHybrid(int module, SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants) {
-        this.constants = constants;
+    public ModuleIOHybrid(int module) {
         id = module;
         zeroRotation =
                 switch (module) {
@@ -292,7 +288,7 @@ public class ModuleIOHybrid implements ModuleIO {
     @Override
     public void setDriveOpenLoop(double output) {
         driveTalon.setControl(
-                switch (constants.DriveMotorClosedLoopOutput) {
+                switch (DriveConstants.DriveMotorClosedLoopOutput) {
                     case Voltage -> voltageRequest.withOutput(output);
                     case TorqueCurrentFOC -> torqueCurrentRequest.withOutput(output);
                 });
@@ -307,7 +303,7 @@ public class ModuleIOHybrid implements ModuleIO {
     public void setDriveVelocity(double velocityRadPerSec) {
         double velocityRotPerSec = Units.radiansToRotations(velocityRadPerSec);
         driveTalon.setControl(
-                switch (constants.DriveMotorClosedLoopOutput) {
+                switch (DriveConstants.DriveMotorClosedLoopOutput) {
                     case Voltage -> velocityVoltageRequest.withVelocity(velocityRotPerSec);
                     case TorqueCurrentFOC -> velocityTorqueCurrentRequest.withVelocity(velocityRotPerSec);
                 });

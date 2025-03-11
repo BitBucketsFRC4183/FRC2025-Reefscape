@@ -13,6 +13,7 @@
 
 package frc.robot.constants;
 
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -154,4 +155,5 @@ public class DriveConstants {
                     Meters.of(wheelRadiusMeters),
                     KilogramSquareMeters.of(0.02),
                     wheelCOF));
+    public static SwerveModuleConstants.ClosedLoopOutputType DriveMotorClosedLoopOutput = SwerveModuleConstants.ClosedLoopOutputType.Voltage;
 }

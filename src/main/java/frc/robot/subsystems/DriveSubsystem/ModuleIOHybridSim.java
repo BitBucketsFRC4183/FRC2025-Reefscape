@@ -18,19 +18,6 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
-import edu.wpi.first.math.system.plant.DCMotor;
-import frc.robot.subsystems.DriveSubsystem.ModuleIOHybrid;
-import frc.robot.subsystems.DriveSubsystem.ModuleIOTalonFX;
-import frc.robot.util.PhoenixUtil;
-import java.util.Arrays;
-import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
-import org.ironmaple.simulation.motorsims.SimulatedMotorController;
-
-/**
- * Physics sim implementation of module IO. The sim models are configured using a set of module constants from Phoenix.
- * Simulation is always based on voltage control.
- */
-package frc.robot.subsystems.DriveSubsystem;
 
 
 
@@ -70,6 +57,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -78,9 +66,13 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.constants.DriveConstants;
+import frc.robot.util.PhoenixUtil;
 import frc.robot.util.SparkUtil;
+import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
+import org.ironmaple.simulation.motorsims.SimulatedMotorController;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Arrays;
 import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
@@ -88,25 +80,14 @@ import java.util.function.DoubleSupplier;
  * Module IO implementation for TalonFX drive motor controller, Spark Max turn motor controller,
  * and duty cycle absolute encoder.
  */
-public class ModuleIOHybrid implements ModuleIO {
-    private final Rotation2d zeroRotation;
+public class ModuleIOHybridSim implements ModuleIO {
     private final int id;
-    private final SwerveModuleConstants<
-            TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
-            constants;
     // Hardware objects
     protected final TalonFX driveTalon;
     private final SimulatedMotorController.GenericMotorController turnSpark;
     private final ProfiledPIDController turnController;
     private final SimpleMotorFeedforward turnFF;
 
-    // Queue inputs from odometry thread
-    // private final Queue<Double> timestampSparkQueue;
-    private final Queue<Double> drivePositionQueue;
-    private final Queue<Double> turnPositionQueue;
-
-    // Timestamp inputs from Phoenix thread
-    private final Queue<Double> timestampPhoenixQueue;
 
     // Inputs from drive motor
     private final StatusSignal<Angle> drivePosition;
@@ -129,18 +110,10 @@ public class ModuleIOHybrid implements ModuleIO {
             new VelocityTorqueCurrentFOC(0.0);
 
 
-    public ModuleIOHybrid(int module, SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants, SwerveModuleSimulation simulation) {
-        this.constants = constants;
+    public ModuleIOHybridSim(int module, SwerveModuleSimulation simulation) {
+
         this.simulation = simulation;
         id = module;
-        zeroRotation =
-                switch (module) {
-                    case 0 -> frontLeftZeroRotation;
-                    case 1 -> frontRightZeroRotation;
-                    case 2 -> backLeftZeroRotation;
-                    case 3 -> backRightZeroRotation;
-                    default -> new Rotation2d();
-                };
         driveTalon =
                 switch (module) {
                     case 0 -> new TalonFX(frontLeftDriveCanId);
@@ -151,7 +124,7 @@ public class ModuleIOHybrid implements ModuleIO {
                 };
 
         // Configure drive motor
-        var driveConfig = new TalonFXConfiguration().withAudio(new AudioConfigs().withBeepOnBoot(true));
+        var driveConfig = new TalonFXConfiguration();
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         driveConfig.Slot0 = new Slot0Configs().withKP(driveSimP).withKD(driveSimD).withKV(driveSimKv).withKA(driveSimKa).withKS(driveSimKs);
         driveConfig.Feedback.SensorToMechanismRatio = driveMotorReduction;
@@ -185,7 +158,7 @@ public class ModuleIOHybrid implements ModuleIO {
         turnController = new ProfiledPIDController(turnKp, 0, turnKd, new TrapezoidProfile.Constraints(9999, 9999));
         turnController.enableContinuousInput(turnPIDMinInput, turnPIDMaxInput);
 
-        simulation.useSteerMotorController(new SimulatedMotorController.GenericMotorController(DCMotor.getNEO(1)));
+        this.turnSpark = simulation.useSteerMotorController(new SimulatedMotorController.GenericMotorController(DCMotor.getNEO(1)));
         simulation.useDriveMotorController(new PhoenixUtil.TalonFXMotorControllerSim(driveTalon));
 
 
@@ -228,7 +201,7 @@ public class ModuleIOHybrid implements ModuleIO {
     @Override
     public void setDriveOpenLoop(double output) {
         driveTalon.setControl(
-                switch (constants.DriveMotorClosedLoopOutput) {
+                switch (DriveConstants.DriveMotorClosedLoopOutput) {
                     case Voltage -> voltageRequest.withOutput(output);
                     case TorqueCurrentFOC -> torqueCurrentRequest.withOutput(output);
                 });
@@ -243,7 +216,7 @@ public class ModuleIOHybrid implements ModuleIO {
     public void setDriveVelocity(double velocityRadPerSec) {
         double velocityRotPerSec = Units.radiansToRotations(velocityRadPerSec);
         driveTalon.setControl(
-                switch (constants.DriveMotorClosedLoopOutput) {
+                switch (DriveConstants.DriveMotorClosedLoopOutput) {
                     case Voltage -> velocityVoltageRequest.withVelocity(velocityRotPerSec);
                     case TorqueCurrentFOC -> velocityTorqueCurrentRequest.withVelocity(velocityRotPerSec);
                 });
