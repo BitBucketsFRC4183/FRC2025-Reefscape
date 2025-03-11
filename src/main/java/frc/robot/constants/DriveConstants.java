@@ -13,27 +13,21 @@
 
 package frc.robot.constants;
 
-import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveDrivetrain;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import frc.robot.generated.TunerConstants;
 import org.ironmaple.simulation.drivesims.COTS;
-import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 
-import static edu.wpi.first.units.Units.Kilogram;
-import static edu.wpi.first.units.Units.Volts;
-import static edu.wpi.first.units.Units.KilogramSquareMeters;
-import static edu.wpi.first.units.Units.Meters;
-import org.ironmaple.simulation.drivesims.GyroSimulation;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
+import static edu.wpi.first.units.Units.*;
+
 public class DriveConstants {
-    public static final double maxSpeedMetersPerSec = 4;
+    public static final double maxSpeedMetersPerSec = 4.7;
     public static final double turboSpeed =  2.5;
     public static final double normalSpeed = 1.5;
     public static final double slowSpeed = 0.5;
@@ -100,10 +94,11 @@ public class DriveConstants {
     public static final double driveKa = 0.0038184;
     public static final double driveKs = 0.1884;
     public static final double driveKv = 0.77595;
-    public static final double driveSimP = 0.05;
+    public static final double driveSimP = 0.17423;
     public static final double driveSimD = 0.0;
-    public static final double driveSimKs = 0.0;
-    public static final double driveSimKv = 0.0789;
+    public static final double driveSimKs = 0.1884;
+    public static final double driveSimKv = 1.77595;
+    public static final double driveSimKa = 0.0038184;
 
     // Turn motor configuration
     public static final boolean turnInverted = true;
@@ -120,7 +115,7 @@ public class DriveConstants {
     public static final double turnKp = 11.0;
     public static final double turnFF = 1.3;
     public static final double turnKd = 0.2;
-    public static final double turnSimP = 8.0;
+    public static final double turnSimP = 11.0;
     public static final double turnSimD = 0.0;
     public static final double turnPIDMinInput = -Math.PI; // Radians
     public static final double turnPIDMaxInput = Math.PI; // Radians
@@ -129,12 +124,12 @@ public class DriveConstants {
     public static final double slewY = 99;
     public static final double slewTheta = 99;
 
-    public static final double robotMassKg = 105.00;
+    public static final double robotMassLb = 125.00;
     public static final double robotMOI = 6.883;
     public static final double wheelCOF = 1.2;
     public static final RobotConfig ppConfig =
             new RobotConfig(
-                    robotMassKg,
+                    Units.lbsToKilograms(robotMassLb),
                     robotMOI,
                     new ModuleConfig(
                             wheelRadiusMeters,
@@ -147,7 +142,7 @@ public class DriveConstants {
 
     public static final DriveTrainSimulationConfig mapleSimConfig = DriveTrainSimulationConfig.Default()
             .withCustomModuleTranslations(moduleTranslations)
-            .withRobotMass(Kilogram.of(robotMassKg))
+            .withRobotMass(Pounds.of(robotMassLb))
             .withGyro(COTS.ofPigeon2())
             .withSwerveModule(new SwerveModuleSimulationConfig(
                     driveGearbox,

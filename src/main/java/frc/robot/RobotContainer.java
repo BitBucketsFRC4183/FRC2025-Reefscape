@@ -31,18 +31,15 @@ import edu.wpi.first.math.geometry.Pose3d;
 //import frc.robot.commands.DriveCommands;
 //import frc.robot.commands.ResetEncoderCommand;
 
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.ArmCommands.ArmBendCommand;
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.ArmElevatorToOrigin;
 import frc.robot.commands.ArmElevatorToSetpoint;
 import frc.robot.commands.DriveCommands.FieldDriveElevatorLimitedCommand;
 import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
-import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
+import frc.robot.commands.DriveCommands.WheelBaseCharacterizationRoutineCommand;
 import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
-import frc.robot.commands.DriveCommands.FieldRelativeDriveCommand;
 import frc.robot.commands.IntakeCommands.IntakeSetRollersCommand;
 import frc.robot.commands.DriveCommands.ResetHeadingCommand;
 import frc.robot.commands.IntakeCommands.PivotDownCommand;
@@ -202,16 +199,17 @@ public class RobotContainer {
 //    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
 //    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
 //    autoChooser.addRoutine("OneL4CoralMid", AutoSubsystem::OneL4CoralMidRoutine);
-    autoChooser.addCmd("Score1L3Coral", () -> autoSubsystem.OneL3Score(elevatorSubsystem,armSubsystem));
+    autoChooser.addCmd("Score1L3Coral", autoSubsystem::OneL3Score);
     autoChooser.addCmd("nothing", Commands::none);
     autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiBack);
     autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiForward);
+    autoChooser.addRoutine("CircleTest", autoSubsystem::TestingFR);
 
 //    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 //    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 //    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
 //    autoChooser.addCmd("DriveSysIDDynamicReverse", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-//    autoChooser.addCmd("WheelBaseCharacterization", () -> new WheelBaseCharacterizationRoutineCommand(driveSubsystem));
+     autoChooser.addCmd("WheelBaseCharacterization", () -> new WheelBaseCharacterizationRoutineCommand(driveSubsystem));
 
 //    autoChooser.addCmd("ElevatorSysIDQuasistaticForward", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 //    autoChooser.addCmd("ElevatorSysIDQuasistaticReverse", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
@@ -222,7 +220,7 @@ public class RobotContainer {
 //    autoChooser.addCmd("ArmSysIDQuasistaticReverse", () -> armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 //    autoChooser.addCmd("ArmSysIDDynamicForward", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
 //    autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
+    autoChooser.select("CircleTest");
     SmartDashboard.putData("autochooser", autoChooser);
 
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
@@ -248,8 +246,8 @@ public class RobotContainer {
     // operatorInput.armElevatorL4.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
     //arm stuff
     armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
-    // operatorInput.armSetpointUp.whileTrue(new ArmBendCommand(armSubsystem, 0));
-    // operatorInput.armSetpointDown.whileTrue(new ArmBendCommand(armSubsystem, ArmConstants.setpointDown));
+    // operatorInput.armSetpointUp.whileTrue(new ArmToSetpoint(armSubsystem, 0));
+    // operatorInput.armSetpointDown.whileTrue(new ArmToSetpoint(armSubsystem, ArmConstants.setpointDown));
 
 
     // manual commands
