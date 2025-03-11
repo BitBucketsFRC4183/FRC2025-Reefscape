@@ -131,8 +131,9 @@ public class ModuleIOHybridSim implements ModuleIO {
         driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = driveMotorCurrentLimit;
         driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -driveMotorCurrentLimit;
         driveConfig.CurrentLimits.StatorCurrentLimit = driveMotorCurrentLimit;
-        driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+        driveConfig.CurrentLimits.StatorCurrentLimitEnable = false;
         driveConfig.Feedback.FeedbackRotorOffset = 0;
+
 
         tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
         tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
