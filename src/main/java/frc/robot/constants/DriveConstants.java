@@ -167,4 +167,22 @@ public class DriveConstants {
                     KilogramSquareMeters.of(0.02),
                     wheelCOF));
     public static SwerveModuleConstants.ClosedLoopOutputType DriveMotorClosedLoopOutput = SwerveModuleConstants.ClosedLoopOutputType.Voltage;
+
+    // HolonomicDrivePID
+    public static final double kXHoloP = 0;
+    public static final double kXHoloI = 0;
+    public static final double kXHoloD = 0;
+
+    public static final double kYHoloP = 0;
+    public static final double kYHoloI = 0;
+    public static final double kYHoloD = 0;
+
+    public static final double kTHoloP = 0;
+    public static final double kTHoloI = 0;
+    public static final double kTHoloD = 0;
+    public static final double maxAngularSpeedRadPerSecAuto = 6.826;
+    public static final double maxAngularAccelRadPerSecSquare = 38.523;
+
+
+
 }

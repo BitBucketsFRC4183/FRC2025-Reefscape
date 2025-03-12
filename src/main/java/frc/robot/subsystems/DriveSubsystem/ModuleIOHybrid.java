@@ -123,9 +123,10 @@ public class ModuleIOHybrid implements ModuleIO {
         var driveConfig = new TalonFXConfiguration().withAudio(new AudioConfigs().withBeepOnBoot(true));
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         driveConfig.Slot0 = new Slot0Configs().withKP(driveKp).withKD(driveKd).withKV(driveKv).withKA(driveKa).withKS(driveKs);
-        driveConfig.Feedback.SensorToMechanismRatio = driveMotorReduction;
         driveConfig.CurrentLimits.StatorCurrentLimit = driveMotorStatorCurrentLimit;
+        driveConfig.CurrentLimits.SupplyCurrentLimit = driveMotorSupplyCurrentLimit;
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+        driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveConfig.MotorOutput.Inverted = driveInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
         tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));

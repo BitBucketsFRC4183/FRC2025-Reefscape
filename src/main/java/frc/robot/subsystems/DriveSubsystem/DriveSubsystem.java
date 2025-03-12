@@ -30,6 +30,8 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -97,6 +99,7 @@ public class DriveSubsystem extends SubsystemBase {
           new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   private SwerveSetpoint previousSetpoint;
   private final SwerveSetpointGenerator setpointGenerator;
+  private final HolonomicDriveController holonomicDriveController;
 
   public DriveSubsystem(
           GyroIO gyroIO,
@@ -118,16 +121,16 @@ public class DriveSubsystem extends SubsystemBase {
     PhoenixOdometryThread.getInstance().start();
 
     // Configure AutoBuilder for PathPlanner
-    AutoBuilder.configure(
-            this::getPose,
-            this::setPose,
-            this::getChassisSpeeds,
-            this::runVelocity,
-            new PPHolonomicDriveController(
-                    new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
-            ppConfig,
-            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
-            this);
+//    AutoBuilder.configure(
+//            this::getPose,
+//            this::setPose,
+//            this::getChassisSpeeds,
+//            this::runVelocity,
+//            new PPHolonomicDriveController(
+//                    new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+//            ppConfig,
+//            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+//            this);
     // Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(
             (activePath) -> {
@@ -146,19 +149,23 @@ public class DriveSubsystem extends SubsystemBase {
                             null,
                             null,
                             null,
-                            (state) -> Logger.recordOutput("DriveSubsystem/SysIdState", state.toString())),
+                            (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
                     new SysIdRoutine.Mechanism(
                             (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
 
     setpointGenerator = new SwerveSetpointGenerator(ppConfig, getMaxAngularSpeedRadPerSec());
     previousSetpoint = new SwerveSetpoint(getChassisSpeeds(), getModuleStates(), DriveFeedforwards.zeros(4));
+
+    this.holonomicDriveController = new HolonomicDriveController(
+            new PIDController()
+    )
   }
 
   @Override
   public void periodic() {
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
-    Logger.processInputs("DriveSubsystem/Gyro", gyroInputs);
+    Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {
       module.periodic();
     }
@@ -210,6 +217,9 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
+
+
+
   }
 
   /**
@@ -258,7 +268,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   //no feedback yet!!!! TODO
   public void followTrajectorySample(SwerveSample sample) {
-    runVelocity(sample.getChassisSpeeds());
+    Logger.recordOutput("Odometry/TrajectorySetpoint", sample.getPose());
+    runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(sample.getChassisSpeeds(), getRotation()));
   }
 
   /** Runs the drive in a straight line with the specified drive output. */

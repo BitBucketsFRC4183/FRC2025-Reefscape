@@ -1,8 +1,12 @@
 package frc.robot.subsystems.AutoSubsystem;
 
+import choreo.Choreo;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import choreo.trajectory.SwerveSample;
+import choreo.trajectory.Trajectory;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.ArmCommands.ArmToSetpoint;
@@ -15,6 +19,7 @@ import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 
 public class AutoSubsystem extends SubsystemBase {
@@ -23,12 +28,19 @@ public class AutoSubsystem extends SubsystemBase {
     private final ArmSubsystem arm;
     private final AutoFactory autoFactory;
 
-
+    private static Choreo.TrajectoryLogger<SwerveSample> trajectoryLogger() {
+        return (swerveSampleTrajectory, aBoolean) -> {
+            Logger.recordOutput(
+                      "Odometry/Trajectory", swerveSampleTrajectory.getPoses()
+            );
+            Logger.recordOutput("Odometry/TrajectoryGoal", swerveSampleTrajectory.getFinalPose(false).get());
+        };
+    }
     public AutoSubsystem(DriveSubsystem drive, ElevatorSubsystem elevator, ArmSubsystem arm) {
         this.drive = drive;
         this.elevator = elevator;
         this.arm = arm;
-        this.autoFactory = new AutoFactory(drive::getPose, drive::setPose, drive::followTrajectorySample, false, drive);
+        this.autoFactory = new AutoFactory(drive::getPose, drive::setPose, drive::followTrajectorySample, false, drive, trajectoryLogger());
 
     }
 
