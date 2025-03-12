@@ -294,20 +294,22 @@ public class DriveSubsystem extends SubsystemBase {
     holoYController.setSetpoint(samplePose.getY());
     holoTController.setGoal(samplePose.getRotation().getRadians());
 
-    if (holoXController.atSetpoint() && holoYController.atSetpoint() && holoTController.atSetpoint()) {
-        newSpeeds = unalteredSpeeds;
-        Logger.recordOutput("Odometry/isAtTrajectorySetpoint", true);
+    double addedX = holoXController.calculate(pose.getX());
+    double addedY = holoYController.calculate(pose.getY());
+    double addedT = holoTController.calculate(pose.getRotation().getRadians());
+    Logger.recordOutput("Odometry/isAtXSetpoint", holoXController.atSetpoint());
+    Logger.recordOutput("Odometry/isAtYSetpoint", holoYController.atSetpoint());
+    Logger.recordOutput("Odometry/isAtTSetpoint", holoTController.atSetpoint());
 
-    } else {
-        Logger.recordOutput("Odometry/isAtTrajectorySetpoint", false);
-
-        newSpeeds = new ChassisSpeeds(
-          unalteredSpeeds.vxMetersPerSecond + holoXController.calculate(pose.getX()),
-          unalteredSpeeds.vyMetersPerSecond + holoYController.calculate(pose.getY()),
-          unalteredSpeeds.omegaRadiansPerSecond + holoTController.calculate(pose.getRotation().getRadians()));
-    }
+    if (holoXController.atSetpoint()) { addedX = 0;}
+    if (holoYController.atSetpoint()) { addedY = 0;}
+    if (holoTController.atSetpoint()) { addedT = 0;}
 
 
+    newSpeeds = new ChassisSpeeds(
+      unalteredSpeeds.vxMetersPerSecond + addedX,
+      unalteredSpeeds.vyMetersPerSecond + addedY,
+      unalteredSpeeds.omegaRadiansPerSecond + addedT);
 
     runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(newSpeeds, getRotation()));
   }
