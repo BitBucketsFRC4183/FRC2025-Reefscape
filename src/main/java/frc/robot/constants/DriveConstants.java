@@ -180,9 +180,23 @@ public class DriveConstants {
     public static final double kTHoloP = 0;
     public static final double kTHoloI = 0;
     public static final double kTHoloD = 0;
+
+
+    public static final double kXHoloPSim = 8;
+    public static final double kXHoloISim = 0;
+    public static final double kXHoloDSim = 0;
+
+    public static final double kYHoloPSim = 8;
+    public static final double kYHoloISim = 0;
+    public static final double kYHoloDSim = 0;
+
+    public static final double kTHoloPSim = 8;
+    public static final double kTHoloISim = 0;
+    public static final double kTHoloDSim = 0;
+
+    public static final double kHoloXTolerance = 0.01;
+    public static final double kHoloYTolerance = 0.01;
+    public static final double kHoloTTolerance = 0.01;
     public static final double maxAngularSpeedRadPerSecAuto = 6.826;
-    public static final double maxAngularAccelRadPerSecSquare = 38.523;
-
-
-
+    public static final double maxAngularAccelRadPerSecSquareAuto = 38.523;
 }

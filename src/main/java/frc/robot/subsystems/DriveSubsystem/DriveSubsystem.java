@@ -32,6 +32,7 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -43,6 +44,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -99,7 +101,10 @@ public class DriveSubsystem extends SubsystemBase {
           new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   private SwerveSetpoint previousSetpoint;
   private final SwerveSetpointGenerator setpointGenerator;
-  private final HolonomicDriveController holonomicDriveController;
+  private final PIDController holoXController;
+  private final PIDController holoYController;
+  private final ProfiledPIDController holoTController;
+
 
   public DriveSubsystem(
           GyroIO gyroIO,
@@ -156,9 +161,20 @@ public class DriveSubsystem extends SubsystemBase {
     setpointGenerator = new SwerveSetpointGenerator(ppConfig, getMaxAngularSpeedRadPerSec());
     previousSetpoint = new SwerveSetpoint(getChassisSpeeds(), getModuleStates(), DriveFeedforwards.zeros(4));
 
-    this.holonomicDriveController = new HolonomicDriveController(
-            new PIDController()
-    )
+    // holo drive is just a container for all three lol
+    if (Constants.currentMode == Mode.SIM) {
+            this.holoXController = new PIDController(kXHoloPSim, kXHoloISim, kXHoloDSim);
+            this.holoYController = new PIDController(kYHoloPSim,kYHoloISim,kYHoloDSim);
+            this.holoTController =  new ProfiledPIDController(kTHoloPSim, kTHoloISim, kTHoloDSim, new TrapezoidProfile.Constraints(maxAngularSpeedRadPerSecAuto, maxAngularAccelRadPerSecSquareAuto));
+    } else {
+            this.holoXController = new PIDController(kXHoloP, kXHoloI, kXHoloD);
+            this.holoYController = new PIDController(kYHoloP,kYHoloI,kYHoloD);
+            this.holoTController = new ProfiledPIDController(kTHoloP, kTHoloI, kTHoloD, new TrapezoidProfile.Constraints(maxAngularSpeedRadPerSecAuto, maxAngularAccelRadPerSecSquareAuto));
+      }
+
+    this.holoXController.setTolerance(kHoloXTolerance);
+    this.holoYController.setTolerance(kHoloYTolerance);
+    this.holoTController.setTolerance(kHoloTTolerance);
   }
 
   @Override
@@ -268,8 +284,32 @@ public class DriveSubsystem extends SubsystemBase {
 
   //no feedback yet!!!! TODO
   public void followTrajectorySample(SwerveSample sample) {
+    Pose2d samplePose = sample.getPose();
+    Pose2d pose = getPose();
     Logger.recordOutput("Odometry/TrajectorySetpoint", sample.getPose());
-    runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(sample.getChassisSpeeds(), getRotation()));
+    ChassisSpeeds unalteredSpeeds = sample.getChassisSpeeds();
+
+    ChassisSpeeds newSpeeds;
+    holoXController.setSetpoint(samplePose.getX());
+    holoYController.setSetpoint(samplePose.getY());
+    holoTController.setGoal(samplePose.getRotation().getRadians());
+
+    if (holoXController.atSetpoint() && holoYController.atSetpoint() && holoTController.atSetpoint()) {
+        newSpeeds = unalteredSpeeds;
+        Logger.recordOutput("Odometry/isAtTrajectorySetpoint", true);
+
+    } else {
+        Logger.recordOutput("Odometry/isAtTrajectorySetpoint", false);
+
+        newSpeeds = new ChassisSpeeds(
+          unalteredSpeeds.vxMetersPerSecond + holoXController.calculate(pose.getX()),
+          unalteredSpeeds.vyMetersPerSecond + holoYController.calculate(pose.getY()),
+          unalteredSpeeds.omegaRadiansPerSecond + holoTController.calculate(pose.getRotation().getRadians()));
+    }
+
+
+
+    runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(newSpeeds, getRotation()));
   }
 
   /** Runs the drive in a straight line with the specified drive output. */
