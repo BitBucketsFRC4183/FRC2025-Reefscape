@@ -28,7 +28,7 @@ import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import static edu.wpi.first.units.Units.*;
 
 public class DriveConstants {
-    public static final double maxSpeedMetersPerSec = 4.7;
+    public static final double maxSpeedMetersPerSec = 4.8;
     public static final double turboSpeed =  2.5;
     public static final double normalSpeed = 1.5;
     public static final double slowSpeed = 0.5;
@@ -91,15 +91,15 @@ public class DriveConstants {
     // Drive Velocity firmware PID gains
     public static final double driveKp = 0.17423;
     public static final double driveKd = 0.0;
-
     public static final double driveKa = 0.0038184;
     public static final double driveKs = 0.1884;
     public static final double driveKv = 0.77595;
-    public static final double driveSimP = 0.17423;
+
+    public static final double driveSimP = 0.10345;
     public static final double driveSimD = 0.0;
-    public static final double driveSimKs = 0.1984;
-    public static final double driveSimKv = 0.90595;
-    public static final double driveSimKa = 0.0038184;
+    public static final double driveSimKs = 0.025022;
+    public static final double driveSimKv = 10.94146;
+    public static final double driveSimKa = 0.0098804;
 
     // Turn motor configuration
     public static final boolean turnInverted = true;
