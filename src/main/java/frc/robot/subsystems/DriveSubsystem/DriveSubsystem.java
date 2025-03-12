@@ -243,7 +243,7 @@ public class DriveSubsystem extends SubsystemBase {
     previousSetpoint = setpointGenerator.generateSetpoint(
             previousSetpoint, // The previous setpoint
             speeds, // The desired target speeds
-            0.02 // The loop time of the robot code, in seconds
+            0.02
     );
 
     Logger.recordOutput("SwerveChassisSpeeds/Setpoints", previousSetpoint.moduleStates());

@@ -65,6 +65,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.DriveConstants;
 import frc.robot.util.PhoenixUtil;
 import frc.robot.util.SparkUtil;
@@ -128,10 +129,10 @@ public class ModuleIOHybridSim implements ModuleIO {
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         driveConfig.Slot0 = new Slot0Configs().withKP(driveSimP).withKD(driveSimD).withKV(driveSimKv).withKA(driveSimKa).withKS(driveSimKs);
         driveConfig.Feedback.SensorToMechanismRatio = driveMotorReduction;
-        driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = driveMotorCurrentLimit;
-        driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -driveMotorCurrentLimit;
-        driveConfig.CurrentLimits.StatorCurrentLimit = driveMotorCurrentLimit;
-        driveConfig.CurrentLimits.StatorCurrentLimitEnable = false;
+        driveConfig.CurrentLimits.StatorCurrentLimit = driveMotorStatorCurrentLimit;
+        driveConfig.CurrentLimits.SupplyCurrentLimit = driveMotorSupplyCurrentLimit;
+        driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+        driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveConfig.Feedback.FeedbackRotorOffset = 0;
 
 
@@ -221,6 +222,8 @@ public class ModuleIOHybridSim implements ModuleIO {
                     case Voltage -> velocityVoltageRequest.withVelocity(velocityRotPerSec);
                     case TorqueCurrentFOC -> velocityTorqueCurrentRequest.withVelocity(velocityRotPerSec);
                 });
+
+//        driveTalon.setControl(voltageRequest.withOutput(Voltage.ofBaseUnits(12, Volts)));
     }
 
     @Override

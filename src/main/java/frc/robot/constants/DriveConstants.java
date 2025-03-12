@@ -28,7 +28,7 @@ import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import static edu.wpi.first.units.Units.*;
 
 public class DriveConstants {
-    public static final double maxSpeedMetersPerSec = 4.8;
+    public static final double maxSpeedMetersPerSec = 4.2;
     public static final double turboSpeed =  2.5;
     public static final double normalSpeed = 1.5;
     public static final double slowSpeed = 0.5;
@@ -77,7 +77,10 @@ public class DriveConstants {
 
     // Drive motor configuration
     public static final boolean driveInverted = false;
-    public static final int driveMotorCurrentLimit = 50;
+
+    // stator is for peaks, neo 40A breakers can sustain 120 easily, and 70 for more than like 20seconds
+    public static final int driveMotorStatorCurrentLimit = 120;
+    public static final int driveMotorSupplyCurrentLimit = 70;
     public static final double wheelRadiusMeters = 0.0508;
     public static final double driveMotorReduction = 6.75;
     public static final DCMotor driveGearbox = DCMotor.getKrakenX60(1);
@@ -95,11 +98,19 @@ public class DriveConstants {
     public static final double driveKs = 0.1884;
     public static final double driveKv = 0.77595;
 
-    public static final double driveSimP = 0.10345;
-    public static final double driveSimD = 0.0;
-    public static final double driveSimKs = 0.025022;
-    public static final double driveSimKv = 10.94146;
-    public static final double driveSimKa = 0.0098804;
+    // tune kV till perfect
+    // kS measured through sysid, + a lil extra
+    // kA and KP jack it up until oscillation
+    // https://www.reca.lc/motors
+    // for krakens: 4200 rpm, 0.94 torque, at 50A, this is to make sure acceleration and over current stuff does not occur
+    // better to be conservative
+    // essentially to tune run motor at 12V or as close as possible, then find a good enough traj that matches max accel
+    // adjust max speed . motor max speed to whatever value that the cutoff curve does not fit
+    public static final double driveSimP = 3.75;
+    public static final double driveSimD = 0.00;
+    public static final double driveSimKs = 0.029022;
+    public static final double driveSimKv = 0.88;
+    public static final double driveSimKa = 0.00998804;
 
     // Turn motor configuration
     public static final boolean turnInverted = true;
@@ -125,7 +136,7 @@ public class DriveConstants {
     public static final double slewY = 99;
     public static final double slewTheta = 99;
 
-    public static final double robotMassLb = 125.00;
+    public static final double robotMassLb = 120.00;
     public static final double robotMOI = 6.883;
     public static final double wheelCOF = 1.2;
     public static final RobotConfig ppConfig =
@@ -137,7 +148,7 @@ public class DriveConstants {
                             maxSpeedMetersPerSec,
                             wheelCOF,
                             driveGearbox.withReduction(driveMotorReduction),
-                            driveMotorCurrentLimit,
+                            driveMotorStatorCurrentLimit,
                             1),
                     moduleTranslations);
 
