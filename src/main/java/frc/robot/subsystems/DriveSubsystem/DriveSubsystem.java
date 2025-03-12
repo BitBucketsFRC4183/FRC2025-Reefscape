@@ -103,7 +103,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final SwerveSetpointGenerator setpointGenerator;
   private final PIDController holoXController;
   private final PIDController holoYController;
-  private final ProfiledPIDController holoTController;
+  // private final ProfiledPIDController holoTController;
+  private final PIDController holoTController;
 
 
   public DriveSubsystem(
@@ -165,11 +166,15 @@ public class DriveSubsystem extends SubsystemBase {
     if (Constants.currentMode == Mode.SIM) {
             this.holoXController = new PIDController(kXHoloPSim, kXHoloISim, kXHoloDSim);
             this.holoYController = new PIDController(kYHoloPSim,kYHoloISim,kYHoloDSim);
-            this.holoTController =  new ProfiledPIDController(kTHoloPSim, kTHoloISim, kTHoloDSim, new TrapezoidProfile.Constraints(maxAngularSpeedRadPerSecAuto, maxAngularAccelRadPerSecSquareAuto));
+            // this.holoTController =  new ProfiledPIDController(kTHoloPSim, kTHoloISim, kTHoloDSim, new TrapezoidProfile.Constraints(maxAngularSpeedRadPerSecAuto, maxAngularAccelRadPerSecSquareAuto));
+            this.holoTController =  new PIDController(kTHoloPSim, kTHoloISim, kTHoloDSim);
+
     } else {
             this.holoXController = new PIDController(kXHoloP, kXHoloI, kXHoloD);
             this.holoYController = new PIDController(kYHoloP,kYHoloI,kYHoloD);
-            this.holoTController = new ProfiledPIDController(kTHoloP, kTHoloI, kTHoloD, new TrapezoidProfile.Constraints(maxAngularSpeedRadPerSecAuto, maxAngularAccelRadPerSecSquareAuto));
+            // this.holoTController = new ProfiledPIDController(kTHoloP, kTHoloI, kTHoloD, new TrapezoidProfile.Constraints(Math.PI, Math.PI/2));
+            this.holoTController =  new PIDController(kTHoloPSim, kTHoloISim, kTHoloDSim);
+
       }
 
     this.holoXController.setTolerance(kHoloXTolerance);
@@ -292,7 +297,9 @@ public class DriveSubsystem extends SubsystemBase {
     ChassisSpeeds newSpeeds;
     holoXController.setSetpoint(samplePose.getX());
     holoYController.setSetpoint(samplePose.getY());
-    holoTController.setGoal(samplePose.getRotation().getRadians());
+    //holoTController.setGoal(samplePose.getRotation().getRadians());
+    holoTController.setSetpoint(samplePose.getRotation().getRadians());
+
 
     double addedX = holoXController.calculate(pose.getX());
     double addedY = holoYController.calculate(pose.getY());

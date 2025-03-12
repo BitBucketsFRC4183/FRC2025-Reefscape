@@ -109,7 +109,7 @@ public class DriveConstants {
     public static final double driveSimP = 3.75;
     public static final double driveSimD = 0.00;
     public static final double driveSimKs = 0.029022;
-    public static final double driveSimKv = 0.88;
+    public static final double driveSimKv = 0.5;
     public static final double driveSimKa = 0.00998804;
 
     // Turn motor configuration
@@ -127,7 +127,7 @@ public class DriveConstants {
     public static final double turnKp = 11.0;
     public static final double turnFF = 1.3;
     public static final double turnKd = 0.2;
-    public static final double turnSimP = 11.0;
+    public static final double turnSimP = 8.0;
     public static final double turnSimD = 0.0;
     public static final double turnPIDMinInput = -Math.PI; // Radians
     public static final double turnPIDMaxInput = Math.PI; // Radians
@@ -184,19 +184,19 @@ public class DriveConstants {
 
     public static final double kXHoloPSim = 8;
     public static final double kXHoloISim = 0;
-    public static final double kXHoloDSim = 0;
+    public static final double kXHoloDSim = 0.1;
 
     public static final double kYHoloPSim = 8;
     public static final double kYHoloISim = 0;
-    public static final double kYHoloDSim = 0;
+    public static final double kYHoloDSim = 0.1;
 
-    public static final double kTHoloPSim = 4;
+    public static final double kTHoloPSim = 3;
     public static final double kTHoloISim = 0;
-    public static final double kTHoloDSim = 0;
+    public static final double kTHoloDSim = 0.0;
 
     public static final double kHoloXTolerance = 0.01;
     public static final double kHoloYTolerance = 0.02;
-    public static final double kHoloTTolerance = Units.degreesToRadians(4);
+    public static final double kHoloTTolerance = Units.degreesToRadians(5);
     public static final double maxAngularSpeedRadPerSecAuto = 6.826;
     public static final double maxAngularAccelRadPerSecSquareAuto = 38.523;
 }
