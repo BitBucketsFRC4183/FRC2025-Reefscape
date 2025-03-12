@@ -109,7 +109,7 @@ public class DriveConstants {
     public static final double driveSimP = 3.75;
     public static final double driveSimD = 0.00;
     public static final double driveSimKs = 0.029022;
-    public static final double driveSimKv = 0.5;
+    public static final double driveSimKv = 0.88;
     public static final double driveSimKa = 0.00998804;
 
     // Turn motor configuration

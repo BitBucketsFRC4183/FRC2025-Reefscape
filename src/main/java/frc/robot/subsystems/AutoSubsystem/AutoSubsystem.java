@@ -40,7 +40,7 @@ public class AutoSubsystem extends SubsystemBase {
         this.drive = drive;
         this.elevator = elevator;
         this.arm = arm;
-        this.autoFactory = new AutoFactory(drive::getPose, drive::setPose, drive::followTrajectorySample, false, drive, trajectoryLogger());
+        this.autoFactory = new AutoFactory(drive::getPose, drive::setPose, drive::followTrajectorySample, true, drive, trajectoryLogger());
 
     }
 
