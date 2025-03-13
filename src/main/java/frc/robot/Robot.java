@@ -15,6 +15,7 @@ package frc.robot;
 
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
@@ -49,6 +50,9 @@ public class Robot extends LoggedRobot {
     //SmartDashboard.putData(autoChooser);
     //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
     // Record metadata
+
+    CameraServer.startAutomaticCapture();
+
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
