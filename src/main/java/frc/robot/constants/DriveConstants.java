@@ -156,6 +156,7 @@ public class DriveConstants {
             .withCustomModuleTranslations(moduleTranslations)
             .withRobotMass(Pounds.of(robotMassLb))
             .withGyro(COTS.ofPigeon2())
+            .withBumperSize(Inches.of(15), Inches.of(15))
             .withSwerveModule(new SwerveModuleSimulationConfig(
                     driveGearbox,
                     turnGearbox,
