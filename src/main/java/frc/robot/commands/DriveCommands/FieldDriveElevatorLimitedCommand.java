@@ -91,10 +91,10 @@ public class FieldDriveElevatorLimitedCommand extends Command {
         );
 
         Rotation2d headingFlipped = headingSupplier.get();
-
         if (isFlipped) {
             headingFlipped = headingFlipped.plus(Rotation2d.fromDegrees(180));
         }
+
 
         drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds_robotOriented, headingFlipped));
     }

@@ -13,6 +13,7 @@
 
 package frc.robot.constants;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
