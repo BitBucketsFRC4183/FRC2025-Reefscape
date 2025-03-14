@@ -8,8 +8,10 @@ import frc.robot.subsystems.VisionSubsystem.VisionUtil;
 public class VisionConstants {
     public static AprilTagFieldLayout aprilTagFieldLayout = VisionUtil.getAprilTagFieldLayoutSafe();
 
-    public static String cameraName =
-            "BitbucketCamera";
+    public static String camera0Name =
+            "BitbucketDriver'sCamera";
+    public static String camera1Name =
+            "BitbucketPhotonVision'sCamera";
     public static Transform3d cameraToRobot =
             new Transform3d();
 

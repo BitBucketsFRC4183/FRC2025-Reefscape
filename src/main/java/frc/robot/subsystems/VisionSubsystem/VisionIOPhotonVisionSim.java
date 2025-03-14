@@ -100,9 +100,9 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
         inputs.hasEstimate =
                 optionalPose.isPresent();
 
-
+//        visionSim.simulationPeriodic(DriveSubsystem.getPose());
         var debugField = visionSim.getDebugField();
-        debugField.getObject("EstimatedRobot").setPose(DriveSubsystem.getPose());
+//        debugField.getObject("EstimatedRobot").setPose(DriveSubsystem.getPose());
 
         visionSim.getDebugField();
         cameraSim.enableRawStream(true);
