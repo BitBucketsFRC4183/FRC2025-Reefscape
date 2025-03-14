@@ -33,11 +33,11 @@ import org.ironmaple.simulation.drivesims.GyroSimulation;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
 public class DriveConstants {
-    public static final double maxSpeedMetersPerSec = 4.8;
-    public static final double turboSpeed =  maxSpeedMetersPerSec;
-    public static final double normalSpeed = maxSpeedMetersPerSec - 1;
-    public static final double slowSpeed = maxSpeedMetersPerSec - 2;
-    public static final double alignmentSpeed = 1;
+    public static final double maxSpeedMetersPerSec = 4;
+    public static final double turboSpeed =  2.5;
+    public static final double normalSpeed = 1.5;
+    public static final double slowSpeed = 0.5;
+    public static final double alignmentSpeed = 0.2;
 
     public static final double odometryFrequency = 100.0; // Hz
 
@@ -94,12 +94,12 @@ public class DriveConstants {
             (2 * Math.PI) / 60.0 / driveMotorReduction; // Rotor RPM -> Wheel Rad/Sec
 
     // Drive Velocity firmware PID gains
-    public static final double driveKp = 0.0;
+    public static final double driveKp = 0.17423;
     public static final double driveKd = 0.0;
 
-    public static final double driveKa = 0;
-    public static final double driveKs = 0.0;
-    public static final double driveKv = 0.1;
+    public static final double driveKa = 0.0038184;
+    public static final double driveKs = 0.1884;
+    public static final double driveKv = 0.77595;
     public static final double driveSimP = 0.05;
     public static final double driveSimD = 0.0;
     public static final double driveSimKs = 0.0;
@@ -117,8 +117,8 @@ public class DriveConstants {
     public static final boolean turnEncoderInverted = true;
 
     // Turn PID configuration
-    public static final double turnKp = 10.0;
-    public static final double turnFF = 1.0;
+    public static final double turnKp = 11.0;
+    public static final double turnFF = 1.3;
     public static final double turnKd = 0.2;
     public static final double turnSimP = 8.0;
     public static final double turnSimD = 0.0;

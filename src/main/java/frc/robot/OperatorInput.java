@@ -38,20 +38,23 @@ public class OperatorInput {
   // dpad not pressed
   public static final Trigger alignmentRobotRelative = driver.povCenter().negate();
   //operator controls
-  final Trigger elevatorGoToOrigin = operator.a();
-  final Trigger elevatorSetpoint1 = operator.x();
-  final Trigger elevatorSetpoint2 = operator.y();
-  final Trigger elevatorSetpoint3 = operator.b();
+//  final Trigger elevatorGoToOrigin = operator.a();
+//  final Trigger elevatorSetpoint1 = operator.x();
+//  final Trigger elevatorSetpoint2 = operator.y();
+//  final Trigger elevatorSetpoint3 = operator.b();
   final Trigger manualElevator = operator.axisMagnitudeGreaterThan(XboxController.Axis.kLeftY.value, 0.1);
   final Trigger resetElevatorEncoder = operator.start();
 
   final Trigger manualArm = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
   final Trigger manualPivot = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
   // final Trigger openClaw = driver.leftStick();
-  // final Trigger closeClaw = driver.rightStick();
-
-  final Trigger rollersIn = operator.rightBumper();
-  final Trigger rollersOut = operator.leftBumper();
+  final Trigger closeClaw = driver.rightStick();
+  final Trigger armElevatorOrigin = operator.a();
+  final Trigger armElevatorL2 = operator.x();
+  final Trigger armElevatorL3 = operator.y();
+  final Trigger armElevatorL4 = operator.b();
+  final Trigger rollersIn = operator.leftBumper();
+  final Trigger rollersOut = operator.rightBumper();
 
   public static final Trigger mechanismLimitOverride = operator.back();
   final Trigger rollerPivotUp = operator.povUp();

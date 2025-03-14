@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ElevatorEncoderIO {
     @AutoLog
     class ElevatorEncoderIOInputs {
+        public double unfiliteredHeightVelocity = 0.0;
         double unfilteredLoadHeight = 0.0;
         double loadHeight = 0.0;
         double encoderPositionRads = 0;

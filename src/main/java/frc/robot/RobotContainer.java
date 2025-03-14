@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -31,12 +32,13 @@ import edu.wpi.first.math.geometry.Pose3d;
 //import frc.robot.commands.ResetEncoderCommand;
 
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ArmBendCommand;
+import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
+import frc.robot.commands.ArmElevatorToOrigin;
+import frc.robot.commands.ArmElevatorToSetpoint;
+import frc.robot.commands.DriveCommands.FieldDriveElevatorLimitedCommand;
 import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
-import frc.robot.commands.DriveCommands.WheelBaseCharacterizationRoutineCommand;
-import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
@@ -67,7 +69,6 @@ import frc.robot.subsystems.IntakeSubsystem.IntakeIOSparkMax;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.ArmSubsystem.*;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
-import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.ironmaple.simulation.SimulatedArena;
@@ -193,20 +194,24 @@ public class RobotContainer {
         break;
     }
 
-    this.autoSubsystem = new AutoSubsystem(clawSubsystem, driveSubsystem);
+    this.autoSubsystem = new AutoSubsystem(driveSubsystem, elevatorSubsystem, armSubsystem);
     autoChooser = new AutoChooser();
 
-    autoChooser.addRoutine("FourL4CoralBottom", AutoSubsystem::FourL4CoralBottomRoutine);
-    autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
-    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
-    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
-    autoChooser.addRoutine("OneL4CoralMid", AutoSubsystem::OneL4CoralMidRoutine);
+//    autoChooser.addRoutine("FourL4CoralBottom", AutoSubsystem::FourL4CoralBottomRoutine);
+//    autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
+//    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
+//    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
+//    autoChooser.addRoutine("OneL4CoralMid", AutoSubsystem::OneL4CoralMidRoutine);
+    autoChooser.addCmd("Score1L3Coral", () -> autoSubsystem.OneL3Score(elevatorSubsystem,armSubsystem));
+    autoChooser.addCmd("nothing", Commands::none);
+    autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiBack);
+    autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiForward);
 
-    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addCmd("DriveSysIDDynamicReverse", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addCmd("WheelBaseCharacterization", () -> new WheelBaseCharacterizationRoutineCommand(driveSubsystem));
+//    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+//    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+//    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+//    autoChooser.addCmd("DriveSysIDDynamicReverse", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+//    autoChooser.addCmd("WheelBaseCharacterization", () -> new WheelBaseCharacterizationRoutineCommand(driveSubsystem));
 
 //    autoChooser.addCmd("ElevatorSysIDQuasistaticForward", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 //    autoChooser.addCmd("ElevatorSysIDQuasistaticReverse", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
@@ -235,15 +240,15 @@ public class RobotContainer {
 
 
     // elevator stuff
-    operatorInput.elevatorSetpoint1.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L1));
-    operatorInput.elevatorSetpoint2.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
-    operatorInput.elevatorSetpoint3.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L4));
+    operatorInput.armElevatorOrigin.whileTrue(new ArmElevatorToOrigin(elevatorSubsystem, armSubsystem));
+    operatorInput.armElevatorL2.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L2, ArmConstants.armL2Angle));
+    operatorInput.armElevatorL3.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L3, ArmConstants.armL3Angle));
+    operatorInput.armElevatorL4.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L4, ArmConstants.armL4Angle));
     operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
-    operatorInput.elevatorGoToOrigin.onTrue(new ElevatorGoToOriginCommand(elevatorSubsystem));
-
+    // operatorInput.armElevatorL4.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
     //arm stuff
     armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
-    // operatorInput.armSetpointUp.whileTrue(new ArmBendCommand(armSubsystem, ArmConstants.setpointUp));
+    // operatorInput.armSetpointUp.whileTrue(new ArmBendCommand(armSubsystem, 0));
     // operatorInput.armSetpointDown.whileTrue(new ArmBendCommand(armSubsystem, ArmConstants.setpointDown));
 
 
@@ -255,8 +260,8 @@ public class RobotContainer {
     operatorInput.manualElevator.whileTrue(new ManualElevatorCommand(elevatorSubsystem, operatorController::getLeftY));
 
     // rollers and pivot, algae intake stuff
-    operatorInput.rollersIn.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, false));
-    operatorInput.rollersOut.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, true));
+    operatorInput.rollersIn.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, true));
+    operatorInput.rollersOut.whileTrue(new IntakeSetRollersCommand(intakeSubsystem, false));
     operatorInput.rollerPivotDown.whileTrue(new PivotDownCommand(intakeSubsystem));
     operatorInput.rollerPivotUp.whileTrue(new PivotUpCommand(intakeSubsystem));
 
@@ -268,23 +273,24 @@ public class RobotContainer {
     // drive stuff
     operatorInput.resetHeading.onTrue(new ResetHeadingCommand(driveSubsystem));
     operatorInput.movementDesired.whileTrue(
-            new FieldRelativeDriveCommand(
+            new FieldDriveElevatorLimitedCommand(
                     driveSubsystem,
                 () -> slewX.calculate(driveController.getLeftY()),
                 () -> slewY.calculate(driveController.getLeftX()),
                 () -> slewTheta.calculate(-driveController.getRightX()),
-                    driveSubsystem::getRotation
+                    driveSubsystem::getRotation,
+                    elevatorSubsystem
     ));
 
-    DoubleSupplier dPadX = () -> {
+    DoubleSupplier dPadY = () -> {
       if (driveController.povLeft().getAsBoolean()) {
-        return -1.0;
-      } else if (driveController.povRight().getAsBoolean()) {
         return 1.0;
+      } else if (driveController.povRight().getAsBoolean()) {
+        return -1.0;
       } else { return 0.0;}
     };
 
-    DoubleSupplier dPadY = () -> {
+    DoubleSupplier dPadX = () -> {
       if (driveController.povDown().getAsBoolean()) {
         return -1.0;
       } else if (driveController.povUp().getAsBoolean()) {

@@ -18,6 +18,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import org.littletonrobotics.junction.Logger;
 
+import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
 
@@ -52,7 +53,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.elevatorIOInputs = new ElevatorIOInputsAutoLogged();
         this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
         this.elevatorMech2d = elevator2dRoot.append(new MechanismLigament2d("Elevator", encoderIOInputs.loadHeight, 90));
-        elevatorPID.setTolerance(0.001, ElevatorConstants.kShooterToleranceRPS);
+        elevatorPID.setTolerance(0);
         //elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
         setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
         SmartDashboard.putData("ElevatorSubsystem/mechanism", elevator2D);
@@ -61,10 +62,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         sysId =
                 new SysIdRoutine(
                         new SysIdRoutine.Config(
+                                Volts.of(1).per(Second),
+                                Volts.of(11),
                                 null,
-                                null,
-                                null,
-                                (state) -> Logger.recordOutput("ElevatorSubystem/SysIdState", state.toString())),
+                                (state) -> Logger.recordOutput("ElevatorSubsystem/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
                                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
     }
@@ -90,15 +91,38 @@ public class ElevatorSubsystem extends SubsystemBase {
     public double getElevatorSpeedRads() {
         return encoderIOInputs.encoderVelocityRads;
     }
+    public double getElevatorHeightSpeed() { return encoderIOInputs.unfiliteredHeightVelocity;}
 
     public void setElevatorVoltage(double volts) {
         double outputVoltage = volts;
         if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
             outputVoltage = volts;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight) || (getLoadHeight() >= ElevatorConstants.maxHeight)) {
-            outputVoltage = outputVoltage * 0.1;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.1) || (getLoadHeight() >= ElevatorConstants.maxHeight - 0.1)) {
-            outputVoltage = outputVoltage * 0.333;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.05)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.06) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
+
+        }
+        elevatorIO.setElevatorMotorVoltage(outputVoltage);
+    }
+
+    public void setElevatorVoltageCommandBypass(double volts) {
+        double outputVoltage = volts;
+        if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
+            outputVoltage = volts;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.01)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.005) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
+
         }
         elevatorIO.setElevatorMotorVoltage(outputVoltage);
     }

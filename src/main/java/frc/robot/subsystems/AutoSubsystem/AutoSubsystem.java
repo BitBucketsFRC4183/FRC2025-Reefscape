@@ -3,22 +3,31 @@ package frc.robot.subsystems.AutoSubsystem;
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArmElevatorToOrigin;
+import frc.robot.commands.ArmElevatorToSetpoint;
+import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.ElevatorConstants;
+import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
+
 
 public class AutoSubsystem extends SubsystemBase {
     private final DriveSubsystem drive;
-    private final ClawSubsystem claw;
+    private final ElevatorSubsystem elevator;
+    private final ArmSubsystem arm;
     private static AutoFactory autoFactory;
 
 
-    public AutoSubsystem(ClawSubsystem claw,
-                         DriveSubsystem drive) {
+    public AutoSubsystem(DriveSubsystem drive, ElevatorSubsystem elevator, ArmSubsystem arm) {
         this.drive = drive;
-        this.claw = claw; //TODO!!!!!! (fix to end effector)
+        this.elevator = elevator;
+        this.arm = arm;
         this.autoFactory = new AutoFactory(drive::getPose, drive::setPose, drive::followTrajectorySample, true, drive);
 
     }
@@ -408,7 +417,46 @@ public static AutoRoutine OneL4CoralMidRoutine() {
 
     return OneL4CoralMidRoutine;
 
-}}
+
+    }
+
+
+    public Command OneL3Score(ElevatorSubsystem elevator, ArmSubsystem arm) {
+        return Commands.sequence(
+                Commands.deadline(Commands.waitSeconds(4), new RobotRelativeDriveCommand(drive, () -> 0.2, () -> 0, () -> 0)),
+                Commands.waitSeconds(1),
+                Commands.deadline(Commands.waitSeconds(0.2), new RobotRelativeDriveCommand(drive, () -> -0.2, () -> 0, () -> 0)),
+                Commands.deadline(Commands.waitSeconds(3), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L3 + 0.005, ArmConstants.armL4Angle + Units.degreesToRadians(1))),
+                Commands.deadline(Commands.waitSeconds(0.05), new RobotRelativeDriveCommand(drive, () -> 0.1, () -> 0, () -> 0)),
+                Commands.parallel(
+                        new ArmElevatorToOrigin(elevator, arm),
+                        Commands.deadline(Commands.waitSeconds(0.2), new RobotRelativeDriveCommand(drive, () -> -0.1, () -> 0, () -> 0))
+                        )
+
+
+                );
+    }
+
+    public Command TaxiBack() {
+        return Commands.sequence(
+                Commands.waitSeconds(0),
+                Commands.deadline(
+                        Commands.waitSeconds(3),
+                        new RobotRelativeDriveCommand(drive, () -> -1, () -> 0, () -> 0)
+                )
+        );
+    };
+
+    public Command TaxiForward() {
+        return Commands.sequence(
+                Commands.waitSeconds(0),
+                Commands.deadline(
+                        Commands.waitSeconds(3),
+                        new RobotRelativeDriveCommand(drive, () -> 1, () -> 0, () -> 0)
+                )
+        );
+    };
+}
 
 
 

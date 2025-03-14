@@ -16,7 +16,7 @@ public class ElevatorSetPointCommand extends Command {
     // The subsystem the command runs on
     public ElevatorSubsystem elevator;
     public double targetHeight;
-    private TimestampAverageBuffer timestampAverageBuffer;
+    // private TimestampAverageBuffer timestampAverageBuffer;
 
     public ElevatorSetPointCommand(ElevatorSubsystem elevator, double targetHeight) {
         this.elevator = elevator;
@@ -28,7 +28,7 @@ public class ElevatorSetPointCommand extends Command {
     public void initialize(){
         elevator.elevatorPID.setGoal(targetHeight);
         elevator.elevatorPID.reset(elevator.getLoadHeight());
-        this.timestampAverageBuffer = new TimestampAverageBuffer(0.25);
+        // this.timestampAverageBuffer = new TimestampAverageBuffer(0.25);
         Logger.recordOutput("ElevatorSubsystem/target_height", targetHeight);
 
     }
@@ -37,13 +37,16 @@ public class ElevatorSetPointCommand extends Command {
 
         double voltsPID = elevator.elevatorPID.calculate(elevator.getLoadHeight());
         double calculatedVolts = elevator.elevatorFF.calculate(elevator.elevatorPID.getSetpoint().velocity) + voltsPID;
-        timestampAverageBuffer.addValue(elevator.getLoadHeight(), Timer.getFPGATimestamp());
+        // timestampAverageBuffer.addValue(elevator.getLoadHeight(), Timer.getFPGATimestamp());
 
 
         Logger.recordOutput("ElevatorSubsystem/target_voltage", calculatedVolts);
         Logger.recordOutput("ElevatorSubsystem/desired_position", elevator.elevatorPID.getSetpoint().position);
+        Logger.recordOutput("ElevatorSubsystem/desired_velocity", elevator.elevatorPID.getSetpoint().velocity);
+        Logger.recordOutput("ElevatorSubsystem/current_velocity", elevator.getElevatorHeightSpeed());
 
-        this.elevator.setElevatorVoltage(calculatedVolts);
+
+        this.elevator.setElevatorVoltageCommandBypass(calculatedVolts);
 
     }
 
@@ -56,11 +59,12 @@ public class ElevatorSetPointCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        if (Math.abs(timestampAverageBuffer.getAverage() - targetHeight) < 0.02) {
-            return true;
-        } else {
-            return false;
-        }
+//        if (Math.abs(timestampAverageBuffer.getAverage() - targetHeight) < 0.02) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+        return elevator.elevatorPID.atGoal();
     }
 }
 
