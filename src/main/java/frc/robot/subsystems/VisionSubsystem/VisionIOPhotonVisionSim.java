@@ -1,10 +1,14 @@
 package frc.robot.subsystems.VisionSubsystem;
 
 
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.robot.constants.VisionConstants;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.simulation.PhotonCameraSim;
@@ -32,13 +36,13 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
 
         // Add sim camera
         var cameraProp = new SimCameraProperties();
-        // A 640 x 480 camera with a 100 degree diagonal FOV.
+
         cameraProp.setCalibration(640, 480, Rotation2d.fromDegrees(100));
-// Approximate detection noise with average and standard deviation error in pixels.
+
         cameraProp.setCalibError(0.25, 0.08);
-// Set the camera image capture framerate (Note: this is limited by robot loop rate).
+
         cameraProp.setFPS(20);
-// The average and standard deviation in milliseconds of image data latency.
+
         cameraProp.setAvgLatencyMs(35);
         cameraProp.setLatencyStdDevMs(5);
 
@@ -51,6 +55,7 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
         photonPoseEstimator =
                 new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraToRobot);
     }
+
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
@@ -88,7 +93,10 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
         inputs.hasEstimate =
                 optionalPose.isPresent();
 
-        //sim field construct
+
+        var debugField = visionSim.getDebugField();
+        debugField.getObject("EstimatedRobot").setPose(DriveSubsystem.getPose());
+
         visionSim.getDebugField();
         cameraSim.enableRawStream(true);
         cameraSim.enableProcessedStream(true);

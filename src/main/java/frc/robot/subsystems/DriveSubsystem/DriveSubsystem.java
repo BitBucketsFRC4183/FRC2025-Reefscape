@@ -345,7 +345,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Returns the current odometry pose. */
   @AutoLogOutput(key = "Odometry/Robot")
-  public Pose2d getPose() {
+  public static Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
   }
 
