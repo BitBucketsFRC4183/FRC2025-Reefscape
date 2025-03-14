@@ -18,7 +18,7 @@ public class IntakeConstants {
 
     // scaling factor for manual control of algae intake
 
-    public static double intakeVoltageFactor = 8;
+    public static double intakeVoltageFactor = 4;
     public static int intakeMotorCurrentLimit = 40;
     public static double pivotSparkEncoderPositionFactor = 2 * Math.PI / gearing;
     public static double pivotSparkEncoderVelocityFactor= 2 * Math.PI / 60 / gearing;
