@@ -1,5 +1,6 @@
 package frc.robot.subsystems.VisionSubsystem;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.VisionConstants;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -31,7 +32,7 @@ public class VisionIOPhotonVision implements VisionIO {
 
     public VisionIOPhotonVision() {
         this.camera =
-                new PhotonCamera(VisionConstants.cameraName);
+                new PhotonCamera(VisionConstants.camera1Name);
         photonPoseEstimator =
                 new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraToRobot);
 
@@ -42,6 +43,9 @@ public class VisionIOPhotonVision implements VisionIO {
         var visionResult = camera.getLatestResult();
         boolean hasTargets =
                 visionResult.hasTargets();
+        boolean targetVisible = false;
+        if (!hasTargets){
+            targetVisible = true;}
 
         List<PhotonTrackedTarget> targets =
                 visionResult.getTargets();
@@ -69,6 +73,7 @@ public class VisionIOPhotonVision implements VisionIO {
         inputs.hasEstimate =
                 optionalPose.isPresent();
 
+        SmartDashboard.putBoolean("Vision Target Visible", targetVisible);
 
     }
 }

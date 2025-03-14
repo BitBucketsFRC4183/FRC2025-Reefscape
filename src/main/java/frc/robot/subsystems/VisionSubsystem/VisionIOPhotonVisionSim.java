@@ -5,6 +5,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.robot.constants.VisionConstants;
@@ -61,11 +62,17 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
     public void updateInputs(VisionIOInputs inputs) {
         visionSim.update(poseSupplier.get());
         super.updateInputs(inputs);
+        
+        boolean targetVisible = false;
 
         var visionResult =
                 camera.getLatestResult();
         boolean hasTargets =
                 visionResult.hasTargets();
+
+        if (!hasTargets){
+        targetVisible = true;}
+
 
         List<PhotonTrackedTarget> targets =
                 visionResult.getTargets();
@@ -102,6 +109,7 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
         cameraSim.enableProcessedStream(true);
         cameraSim.enableDrawWireframe(true);
 
+        SmartDashboard.putBoolean("Vision Target Visible", targetVisible);
 
     }
 
