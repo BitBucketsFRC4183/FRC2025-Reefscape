@@ -24,7 +24,7 @@ public class ElevatorSetpointTimedCommand extends Command {
 
     @Override
     public void initialize(){
-        double velocity = targetHeight / timeToCompleteSeconds;
+        double velocity = targetHeight - elevator.getLoadHeight() / timeToCompleteSeconds;
         elevator.elevatorPID.setGoal(new TrapezoidProfile.State(targetHeight, velocity));
         Logger.recordOutput("ElevatorSubsystem/target_height", targetHeight);
         Logger.recordOutput("ElevatorSubsystem/target_velocity", velocity);
@@ -35,7 +35,6 @@ public class ElevatorSetpointTimedCommand extends Command {
 
         double voltsPID = elevator.elevatorPID.calculate(elevator.getLoadHeight());
         double calculatedVolts = elevator.elevatorFF.calculate(elevator.elevatorPID.getSetpoint().velocity) + voltsPID;
-
 
         Logger.recordOutput("ElevatorSubsystem/target_voltage", calculatedVolts);
         Logger.recordOutput("ElevatorSubsystem/desired_position", elevator.elevatorPID.getSetpoint().position);
