@@ -104,7 +104,12 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
+    LaserCan lasercan = new LaserCan(0);
+    LaserCan.Measurement measurement = lasercan.getMeasurement();
 
+    if (measurement != null) {
+      System.out.println("The target is " + measurement.distance_mm + "mm away!");
+    }
 
   }
 
