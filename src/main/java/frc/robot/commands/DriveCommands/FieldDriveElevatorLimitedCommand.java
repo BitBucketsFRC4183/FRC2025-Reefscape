@@ -70,6 +70,15 @@ public class FieldDriveElevatorLimitedCommand extends Command {
             speedFactor = DriveConstants.normalSpeed;
         }
 
+        double radFactor;
+        if (OperatorInput.slowModeHold.getAsBoolean()) {
+            radFactor = 0.75;
+        } else if (OperatorInput.turboModeHold.getAsBoolean()) {
+            radFactor = 1;
+        } else {
+            radFactor = 1.25;
+        }
+
         double rampFactor = speedRamp(elevator.getLoadHeight(),
                 ElevatorConstants.minHeight + 0.25, ElevatorConstants.maxHeight, 0.5, 1, true);
 
@@ -78,14 +87,14 @@ public class FieldDriveElevatorLimitedCommand extends Command {
         ChassisSpeeds speeds_robotOriented =  new ChassisSpeeds(
                 linearVelocity.getX() * speedFactor, //4.5 is the experimentally determined max velocity
                 linearVelocity.getY() * speedFactor,
-                omega * Math.PI * 1.5
+                omega * drive.getMaxAngularSpeedRadPerSec() * rampFactor * radFactor
         );
 
         Rotation2d headingFlipped = headingSupplier.get();
-
         if (isFlipped) {
             headingFlipped = headingFlipped.plus(Rotation2d.fromDegrees(180));
         }
+
 
         drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds_robotOriented, headingFlipped));
     }
