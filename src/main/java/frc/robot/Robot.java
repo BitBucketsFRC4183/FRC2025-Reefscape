@@ -15,6 +15,7 @@ package frc.robot;
 
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -117,6 +118,8 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
+    CameraServer.startAutomaticCapture();
+    
     // Create the trajectory to follow in autonomous. It is best to initialize
     // trajectories here to avoid wasting time in autonomous.
     m_trajectory =
