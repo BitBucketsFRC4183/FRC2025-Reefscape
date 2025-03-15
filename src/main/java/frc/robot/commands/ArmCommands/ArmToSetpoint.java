@@ -1,20 +1,17 @@
 package frc.robot.commands.ArmCommands;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
 import frc.robot.util.TimestampAverageBuffer;
-import org.dyn4j.collision.narrowphase.FallbackCondition;
 import org.littletonrobotics.junction.Logger;
 
-public class ArmBendCommand extends Command {
+public class ArmToSetpoint extends Command {
 
     private final ArmSubsystem armSubsystem;
     public double targetAngle;
     private TimestampAverageBuffer timestampAverageBuffer;
 
-    public ArmBendCommand(ArmSubsystem subsystem, double targetAngle) {
+    public ArmToSetpoint(ArmSubsystem subsystem, double targetAngle) {
         this.armSubsystem = subsystem;
         this.targetAngle = targetAngle;
         addRequirements(armSubsystem);

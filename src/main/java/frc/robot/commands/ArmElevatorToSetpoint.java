@@ -1,9 +1,8 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import frc.robot.commands.ArmCommands.ArmBendCommand;
+import frc.robot.commands.ArmCommands.ArmToSetpoint;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
@@ -14,7 +13,7 @@ public class ArmElevatorToSetpoint extends ParallelDeadlineGroup {
         super(Commands.deadline(
                 Commands.waitSeconds(Constants.commandTimeout + 1),
                 Commands.parallel(
-                        new ArmBendCommand(arm, armSetpoint),
+                        new ArmToSetpoint(arm, armSetpoint),
                         new ElevatorSetPointCommand(elevator, elevatorSetpoint))
                         )
                 );

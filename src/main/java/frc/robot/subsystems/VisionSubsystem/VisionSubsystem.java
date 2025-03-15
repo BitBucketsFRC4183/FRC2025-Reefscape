@@ -27,6 +27,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.GyroIO;
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.*;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -55,6 +56,7 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         visionIO.updateInputs(visionInputs);
+        Logger.processInputs("VisionSubsystem", visionInputs);
         if (!visionInputs.connected) {
             new Alert("Vision camera " + VisionConstants.cameraName +
                     "is disconnected.", Alert.AlertType.kWarning);
