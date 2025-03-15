@@ -15,9 +15,18 @@ package frc.robot;
 
 import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.BuildConstants;
@@ -32,6 +41,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
 import org.photonvision.PhotonVersion;
 
+import java.util.List;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -43,6 +54,8 @@ public class Robot extends LoggedRobot {
   private RobotContainer robotContainer;
 
   private AutoChooser autoChooser;
+  private Trajectory m_trajectory;
+  private Field2d m_field;
 
   public Robot() {
 
@@ -104,8 +117,21 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
+    // Create the trajectory to follow in autonomous. It is best to initialize
+    // trajectories here to avoid wasting time in autonomous.
+    m_trajectory =
+            TrajectoryGenerator.generateTrajectory(
+                    new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                    List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+                    new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
+                    new TrajectoryConfig(Units.feetToMeters(3.0), Units.feetToMeters(3.0)));
 
+    // Create and push Field2d to SmartDashboard.
+    m_field = new Field2d();
+    SmartDashboard.putData(m_field);
 
+    // Push the trajectory to Field2d.
+    m_field.getObject("traj").setTrajectory(m_trajectory);
   }
 
   /**
