@@ -28,96 +28,47 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
 
     public VisionIOPhotonVisionSim(Supplier<Pose2d> poseSupplier) {
         super();
-        // Initialize vision sim
+
+        // initial
         this.poseSupplier = poseSupplier;
         if (visionSim == null) {
-            visionSim = new VisionSystemSim("main");
+            visionSim = new VisionSystemSim(
+                    "VisionSubsystem");
             visionSim.addAprilTags(VisionConstants.aprilTagFieldLayout);
         }
 
+
         // Add sim camera
+        //properties
+
         var cameraProp = new SimCameraProperties();
-
         cameraProp.setCalibration(640, 480, Rotation2d.fromDegrees(100));
-
         cameraProp.setCalibError(0.25, 0.08);
-
         cameraProp.setFPS(20);
-
         cameraProp.setAvgLatencyMs(35);
         cameraProp.setLatencyStdDevMs(5);
 
-        cameraSim =
-                new PhotonCameraSim(new PhotonCamera("simCamera")
-                        , cameraProp);
-        camera = cameraSim.getCamera();
 
-        visionSim.addCamera(cameraSim,
-                VisionConstants.robotToCamera1);
-        photonPoseEstimator =
-                new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.robotToCamera1);
+        cameraSim = new PhotonCameraSim(new PhotonCamera("simCamera")
+                        , cameraProp);
+        cameraSim.enableRawStream(true);
+        cameraSim.enableProcessedStream(true);
+        cameraSim.enableDrawWireframe(true);
+
+        camera = cameraSim.getCamera();
+        
+        visionSim.addCamera(cameraSim, VisionConstants.robotToCamera1);
+        photonPoseEstimator = new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.robotToCamera1);
+
+        var debugField = visionSim.getDebugField();
+        visionSim.getDebugField();
+
     }
 
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
         visionSim.update(poseSupplier.get());
-
         super.updateInputs(inputs);
-
-        var visionResult = camera.getLatestResult();
-
-        List<PhotonTrackedTarget> targets =
-                visionResult.getTargets();
-
-        boolean hasTargets =
-                visionResult.hasTargets();
-        boolean targetVisible = false;
-
-        if (visionResult.multitagResult.isPresent()) { //
-            var multitagResult =
-                    visionResult.multitagResult.get();
-
-            if (!hasTargets) {
-                targetVisible = true;
-            }
-
-
-            if (!targets.isEmpty()) {
-                PhotonTrackedTarget target =
-                        visionResult.getBestTarget();
-
-                //apriltag
-                int targetID = target.getFiducialId();
-                Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-                Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
-
-                inputs.latestTargetObservation = new TargetObservation(Rotation2d.fromDegrees(target.getYaw()), Rotation2d.fromDegrees(target.getPitch()));
-                inputs.tagPose =
-                        VisionConstants.aprilTagFieldLayout.getTagPose(targetID).get();
-            }
-
-            var optionalPose = photonPoseEstimator.update(visionResult);
-            optionalPose.ifPresent(estimatedRobotPose -> inputs.estimatedRobotPose = estimatedRobotPose.estimatedPose);
-            optionalPose.ifPresent(estimatedRobotPose -> inputs.timestampSeconds = estimatedRobotPose.timestampSeconds);
-
-            inputs.connected =
-                    camera.isConnected();
-            inputs.hasEstimate =
-                    optionalPose.isPresent();
-
-//        visionSim.simulationPeriodic(DriveSubsystem.getPose());
-            var debugField = visionSim.getDebugField();
-//        debugField.getObject("EstimatedRobot").setPose(DriveSubsystem.getPose());
-
-            visionSim.getDebugField();
-            cameraSim.enableRawStream(true);
-            cameraSim.enableProcessedStream(true);
-            cameraSim.enableDrawWireframe(true);
-
-            SmartDashboard.putBoolean("Vision Target Visible", targetVisible);
-
         }
-
     }
-}
