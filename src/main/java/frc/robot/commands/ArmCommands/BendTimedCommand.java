@@ -1,31 +1,31 @@
 package frc.robot.commands.ArmCommands;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
-import frc.robot.util.TimestampAverageBuffer;
-import org.dyn4j.collision.narrowphase.FallbackCondition;
 import org.littletonrobotics.junction.Logger;
 
-public class ArmBendCommand extends Command {
+public class BendTimedCommand extends Command {
 
     private final ArmSubsystem armSubsystem;
     public double targetAngle;
-    private TimestampAverageBuffer timestampAverageBuffer;
+    public double timeToCompleteSeconds;
 
-    public ArmBendCommand(ArmSubsystem subsystem, double targetAngle) {
+    public BendTimedCommand(ArmSubsystem subsystem, double targetAngle, double timeToCompleteSeconds) {
         this.armSubsystem = subsystem;
         this.targetAngle = targetAngle;
+        this.timeToCompleteSeconds = timeToCompleteSeconds;
         addRequirements(armSubsystem);
     }
 
     @Override
     public void initialize() {
+        double velocity = targetAngle / timeToCompleteSeconds;
         armSubsystem.armFeedback.reset(armSubsystem.getCurrentAngle());
-        armSubsystem.armFeedback.setGoal(targetAngle);
-        // this.timestampAverageBuffer = new TimestampAverageBuffer(0.25);
+        armSubsystem.armFeedback.setGoal(new TrapezoidProfile.State(targetAngle, velocity));
+
         Logger.recordOutput("ArmSubsystem/target_Angle", targetAngle);
+        Logger.recordOutput("ArmSubsystem/target_velocity", velocity);
 
     }
 
@@ -34,19 +34,10 @@ public class ArmBendCommand extends Command {
         double voltsPID = armSubsystem.armFeedback.calculate(armSubsystem.getCurrentAngle());
         double calculatedVolts = armSubsystem.armFeedForward.calculate(armSubsystem.armFeedback.getSetpoint().position, armSubsystem.armFeedback.getSetpoint().velocity) + voltsPID;
         armSubsystem.hoverAngle = armSubsystem.getCurrentAngle();
-        // timestampAverageBuffer.addValue(armSubsystem.getCurrentAngle(), Timer.getFPGATimestamp());
         Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
         Logger.recordOutput("ArmSubsystem/desired_position", armSubsystem.armFeedback.getSetpoint().position);
-        this.armSubsystem.setArmVoltageCommandBypass(calculatedVolts);
+
+        this.armSubsystem.setArmVoltage(calculatedVolts);
     }
 
-    @Override
-    public boolean isFinished() {
-//        if (Math.abs(timestampAverageBuffer.getAverage() - targetAngle) < Units.degreesToRadians(2)) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-        return armSubsystem.armFeedback.atGoal();
-    };
 }

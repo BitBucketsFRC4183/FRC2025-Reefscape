@@ -35,17 +35,15 @@ import edu.wpi.first.math.geometry.Pose3d;
 //import frc.robot.commands.ResetEncoderCommand;
 
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.ArmCommands.ArmBendCommand;
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.ArmElevatorToOrigin;
 import frc.robot.commands.ArmElevatorToSetpoint;
 import frc.robot.commands.DriveCommands.FieldDriveElevatorLimitedCommand;
 import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
-import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
+import frc.robot.commands.DriveCommands.WheelBaseCharacterizationRoutineCommand;
 import frc.robot.commands.ElevatorCommands.ManualElevatorCommand;
 import frc.robot.commands.ElevatorCommands.ResetElevatorEncoderCommand;
-import frc.robot.commands.DriveCommands.FieldRelativeDriveCommand;
 import frc.robot.commands.IntakeCommands.IntakeSetRollersCommand;
 import frc.robot.commands.DriveCommands.ResetHeadingCommand;
 import frc.robot.commands.IntakeCommands.PivotDownCommand;
@@ -76,7 +74,7 @@ import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoral;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
@@ -121,10 +119,10 @@ public class RobotContainer {
         driveSubsystem =
                 new DriveSubsystem(
                         new GyroIOPigeon2(),
-                        new ModuleIOHybrid(0, TunerConstants.FrontLeft),
-                        new ModuleIOHybrid(1, TunerConstants.FrontRight),
-                        new ModuleIOHybrid(2, TunerConstants.BackLeft),
-                        new ModuleIOHybrid(3, TunerConstants.BackRight));
+                        new ModuleIOHybrid(0),
+                        new ModuleIOHybrid(1),
+                        new ModuleIOHybrid(2),
+                        new ModuleIOHybrid(3));
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIOSparkMax(),
                         new ElevatorEncoderIOThroughbore());
@@ -147,12 +145,13 @@ public class RobotContainer {
         driveSubsystem =
             new DriveSubsystem(
                     new GyroIOSim(driveSimulation.getGyroSimulation()),
-                    new ModuleIOSim(driveSimulation.getModules()[0]),
-                    new ModuleIOSim(driveSimulation.getModules()[1]),
-                    new ModuleIOSim(driveSimulation.getModules()[2]),
-                    new ModuleIOSim(driveSimulation.getModules()[3]));
+                    new ModuleIOHybridSim(0, driveSimulation.getModules()[0]),
+                    new ModuleIOHybridSim(1, driveSimulation.getModules()[1]),
+                    new ModuleIOHybridSim(2, driveSimulation.getModules()[2]),
+                    new ModuleIOHybridSim(3, driveSimulation.getModules()[3]));
 
         ElevatorIOSim elevatorIOSim = new ElevatorIOSim();
+        ArmIOSim armIOSim = new ArmIOSim();
         elevatorSubsystem =
                 new ElevatorSubsystem(elevatorIOSim, new ElevatorEncoderIOSim(elevatorIOSim.elevatorMotor1Sim));
         clawSubsystem =
@@ -162,7 +161,7 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem();
         armSubsystem =
-                new ArmSubsystem(new ArmIOSim(), new ArmEncoderIO() {});
+                new ArmSubsystem(armIOSim, new ArmEncoderIOSim(armIOSim.armMotorSim));
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose));
         break;
@@ -210,17 +209,18 @@ public class RobotContainer {
 //    autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
 //    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
 //    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
-//    autoChooser.addRoutine("OneL4CoralMid", AutoSubsystem::OneL4CoralMidRoutine);
-    autoChooser.addCmd("Score1L3Coral", () -> autoSubsystem.OneL3Score(elevatorSubsystem,armSubsystem));
+    autoChooser.addRoutine("OneL4CoralMid", autoSubsystem::OneL4CoralMidRoutine);
+    autoChooser.addCmd("Score1L3Coral", autoSubsystem::OneL3Score);
     autoChooser.addCmd("nothing", Commands::none);
     autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiBack);
     autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiForward);
+    autoChooser.addRoutine("CircleTest", autoSubsystem::TestingFR);
 
-//    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-//    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-//    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-//    autoChooser.addCmd("DriveSysIDDynamicReverse", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-//    autoChooser.addCmd("WheelBaseCharacterization", () -> new WheelBaseCharacterizationRoutineCommand(driveSubsystem));
+    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    autoChooser.addCmd("DriveSysIDDynamicReverse", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+     autoChooser.addCmd("WheelBaseCharacterization", () -> new WheelBaseCharacterizationRoutineCommand(driveSubsystem));
 
 //    autoChooser.addCmd("ElevatorSysIDQuasistaticForward", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 //    autoChooser.addCmd("ElevatorSysIDQuasistaticReverse", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
@@ -231,7 +231,7 @@ public class RobotContainer {
 //    autoChooser.addCmd("ArmSysIDQuasistaticReverse", () -> armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 //    autoChooser.addCmd("ArmSysIDDynamicForward", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
 //    autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
+    autoChooser.select("CircleTest");
     SmartDashboard.putData("autochooser", autoChooser);
 
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
@@ -257,8 +257,8 @@ public class RobotContainer {
     // operatorInput.armElevatorL4.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
     //arm stuff
     armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
-    // operatorInput.armSetpointUp.whileTrue(new ArmBendCommand(armSubsystem, 0));
-    // operatorInput.armSetpointDown.whileTrue(new ArmBendCommand(armSubsystem, ArmConstants.setpointDown));
+    // operatorInput.armSetpointUp.whileTrue(new ArmToSetpoint(armSubsystem, 0));
+    // operatorInput.armSetpointDown.whileTrue(new ArmToSetpoint(armSubsystem, ArmConstants.setpointDown));
 
 
     // manual commands
@@ -333,7 +333,7 @@ public class RobotContainer {
   public void addCoral() {
     if (Constants.currentMode != Constants.Mode.SIM) return;
 
-    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoral(new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
     Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
   }
 
