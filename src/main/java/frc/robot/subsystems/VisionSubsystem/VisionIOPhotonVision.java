@@ -1,5 +1,6 @@
 package frc.robot.subsystems.VisionSubsystem;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.VisionConstants;
 import org.photonvision.PhotonCamera;
@@ -20,6 +21,9 @@ import edu.wpi.first.math.geometry.*;
 //aprilTag
 
 import org.photonvision.*;
+
+import static frc.robot.constants.VisionConstants.aprilTagFieldLayout;
+import static frc.robot.constants.VisionConstants.robotToCamera1;
 // getting into photon and position
 
 
@@ -52,9 +56,20 @@ public class VisionIOPhotonVision implements VisionIO {
         if (visionResult.multitagResult.isPresent()) { //
             var multitagResult =
                     visionResult.multitagResult.get();
+            Transform3d fieldToCamera = multitagResult.estimatedPose.best;
+            Transform3d fieldToRobot =
+                    fieldToCamera.plus(robotToCamera1.inverse());
+            Pose3d robotPose =
+                    new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());}
+
 
         if (!hasTargets) {
             targetVisible = true;
+            inputs.latestTargetObservation =
+                    new TargetObservation(
+                            Rotation2d.fromDegrees(visionResult.getBestTarget().getYaw()),
+                            Rotation2d.fromDegrees(visionResult.getBestTarget().getPitch()));
+
         }
 
 
@@ -62,28 +77,40 @@ public class VisionIOPhotonVision implements VisionIO {
             PhotonTrackedTarget target =
                     visionResult.getBestTarget();
 
-            //apriltag
+            //tagID
             int targetID = target.getFiducialId();
-            Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-            Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
 
-            inputs.latestTargetObservation = new TargetObservation(Rotation2d.fromDegrees(target.getYaw()), Rotation2d.fromDegrees(target.getPitch()));
-            inputs.tagPose =
-                    VisionConstants.aprilTagFieldLayout.getTagPose(targetID).get();
-        }
 
-        Transform3d fieldToCamera = multitagResult.estimatedPose.best;
+            //tagPose
+            var tagPose = aprilTagFieldLayout.getTagPose(target.fiducialId);
+            if (tagPose.isPresent()) {
+                Transform3d fieldToTarget =
+                        new Transform3d(tagPose.get().getTranslation(), tagPose.get().getRotation());
 
-        var optionalPose = photonPoseEstimator.update(visionResult);
-        optionalPose.ifPresent(estimatedRobotPose -> inputs.estimatedRobotPose = estimatedRobotPose.estimatedPose);
-        optionalPose.ifPresent(estimatedRobotPose -> inputs.timestampSeconds = estimatedRobotPose.timestampSeconds);
+                Transform3d cameraToTarget = target.bestCameraToTarget;
 
-        inputs.connected =
-                camera.isConnected();
-        inputs.hasEstimate =
-                optionalPose.isPresent();
+                Transform3d fieldToCamera = fieldToTarget.plus(cameraToTarget.inverse());
+                Transform3d fieldToRobot = fieldToCamera.plus(robotToCamera1.inverse());
 
-        SmartDashboard.putBoolean("Vision Target Visible", targetVisible);
+                Pose3d robotPose = new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());
+
+                inputs.latestTargetObservation = new TargetObservation(Rotation2d.fromDegrees(target.getYaw()),
+                        Rotation2d.fromDegrees(target.getPitch()));
+
+                inputs.tagPose =
+                        aprilTagFieldLayout.getTagPose(targetID).get();
+            }
+
+            var optionalPose = photonPoseEstimator.update(visionResult);
+            optionalPose.ifPresent(estimatedRobotPose -> inputs.estimatedRobotPose = estimatedRobotPose.estimatedPose);
+            optionalPose.ifPresent(estimatedRobotPose -> inputs.timestampSeconds = estimatedRobotPose.timestampSeconds);
+
+            inputs.connected =
+                    camera.isConnected();
+            inputs.hasEstimate =
+                    optionalPose.isPresent();
+
+            SmartDashboard.putBoolean("Vision Target Visible", targetVisible);
 
         }
     }
