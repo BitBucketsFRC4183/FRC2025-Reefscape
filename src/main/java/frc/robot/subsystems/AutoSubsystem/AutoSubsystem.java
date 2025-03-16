@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import org.littletonrobotics.junction.Logger;
 
+import static frc.robot.constants.ArmConstants.MIN_ANGLE_RADS;
+
 
 public class AutoSubsystem extends SubsystemBase {
     private final DriveSubsystem drive;
@@ -53,6 +55,10 @@ public class AutoSubsystem extends SubsystemBase {
 
     public Command score() {
         return new ArmToSetpoint(arm, Units.degreesToRadians(50));
+    }
+
+    public Command intakecoral() {
+        return new ArmToSetpoint(arm, Units.degreesToRadians(MIN_ANGLE_RADS));
     }
 
 
@@ -97,23 +103,23 @@ public class AutoSubsystem extends SubsystemBase {
         );
 
 
-//        StarttoR11.atTime("StarttoR11").onTrue(drive());
-//        StarttoR11.done().onTrue(drive().andThen(R11toSource.cmd(), LowerElevator()));
-//
-//        R11toSource.atTime("R11toSource").onTrue(deposit());
-//        R11toSource.done().onTrue(drive().andThen(SourcetoR12.cmd(), raiseElevator()));
-//
-//
-//        SourcetoR12.atTime("SourcetoR12").onTrue(claw());
-//        SourcetoR12.done().onTrue(drive().andThen(R12toSource.cmd(), LowerElevator()));
-//
-//        R12toSource.atTime("R12toSource").onTrue(deposit());
-//        R12toSource.done().onTrue(drive().andThen(SourcetoR1.cmd(), raiseElevator()));
-//
-//        SourcetoR1.atTime("SourcetoR1").onTrue(claw());
-//        SourcetoR1.done();
-//
-//        System.out.println(StarttoR11.getInitialPose().get());
+        StarttoR11.atTime("StarttoR11").onTrue(raiseArmElevatorToL4());
+        StarttoR11.done().onTrue(score().andThen(R11toSource.cmd()));
+
+        R11toSource.atTime("R11toSource").onTrue(lowerArmElevatorToOrigin());
+        R11toSource.done().onTrue(intakecoral().andThen(SourcetoR12.cmd()));
+
+
+        SourcetoR12.atTime("SourcetoR12").onTrue(raiseArmElevatorToL4());
+        SourcetoR12.done().onTrue(score().andThen(R12toSource.cmd()));
+
+        R12toSource.atTime("R12toSource").onTrue(lowerArmElevatorToOrigin());
+        R12toSource.done().onTrue(intakecoral().andThen(SourcetoR1.cmd()));
+
+        SourcetoR1.atTime("SourcetoR1").onTrue(raiseArmElevatorToL4());
+        SourcetoR1.done().onTrue(score());
+
+       System.out.println(StarttoR11.getInitialPose().get());
 
 
         return ThreeL4CoralTopRoutine;
