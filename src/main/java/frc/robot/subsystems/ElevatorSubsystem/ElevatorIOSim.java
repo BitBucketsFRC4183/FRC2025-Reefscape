@@ -19,18 +19,17 @@ public class ElevatorIOSim implements ElevatorIO {
             ElevatorConstants.pulleyRadius,
             ElevatorConstants.minHeight,
             ElevatorConstants.maxHeight,
-            true,
+            false,
             0,
             0.01,0);
 
-    public static final DigitalInput toplimitSwitch = new DigitalInput(0);
-    public static final DigitalInput bottomlimitSwitch = new DigitalInput(1);
 
     @Override
     public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
         elevatorMotor1Sim.update(LOOP_PERIOD_SECS);
 
-
+        inputs.elevatorConnected = true;
+        inputs.elevatorAppliedVolts = elevatorMotor1Sim.getInput(0);
         inputs.elevatorCurrentAmps = Math.abs(elevatorMotor1Sim.getCurrentDrawAmps());
 
 

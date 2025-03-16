@@ -17,10 +17,13 @@ import choreo.auto.AutoChooser;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
@@ -102,7 +105,11 @@ public class RobotContainer {
   private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.slewY);
   private final SlewRateLimiter slewTheta = new SlewRateLimiter(DriveConstants.slewTheta);
 
-  private final MechanismLigament2d elevatorArm2D;
+
+  public final Mechanism2d mechanism2D;
+  public final MechanismRoot2d mechanismRoot2D;
+  private final MechanismLigament2d armMech2D;
+  private final MechanismLigament2d elevatorMech2D;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -197,9 +204,14 @@ public class RobotContainer {
 
         break;
     }
+    this.mechanism2D = new Mechanism2d(3, 3);
+    this.mechanismRoot2D = mechanism2D.getRoot("Elevator Root", 1.5, 0);
+    this.elevatorMech2D =
+            mechanismRoot2D.append(new MechanismLigament2d("Elevator", ElevatorConstants.minHeight , 90));
+    this.armMech2D =
+            elevatorMech2D.append(new MechanismLigament2d("Arm", ArmConstants.armLength, Units.radiansToDegrees(armSubsystem.getCurrentAngle()) ,6, new Color8Bit(Color.kPurple)));
 
-    this.elevatorArm2D = elevatorSubsystem.elevatorMech2d.append(new MechanismLigament2d("wrist", 0.5, 90 ,6, new Color8Bit(Color.kPurple)));
-    SmartDashboard.putData("ElevatorAndArm2d", elevatorSubsystem.elevator2D);
+    SmartDashboard.putData("ElevatorAndArm2d", this.mechanism2D);
 
 
     this.autoSubsystem = new AutoSubsystem(driveSubsystem, elevatorSubsystem, armSubsystem);
@@ -352,8 +364,8 @@ public class RobotContainer {
       Logger.recordOutput("FieldSimulation/CoralPositions", coralPoses);
     };
 
-    elevatorSubsystem.elevatorMech2d.setLength(ElevatorConstants.minHeight + elevatorSubsystem.getLoadHeight());
-    elevatorArm2D.setLength(armSubsystem.getCurrentAngle());
+    elevatorMech2D.setLength(elevatorSubsystem.getLoadHeight());
+    armMech2D.setAngle(Units.radiansToDegrees(armSubsystem.getCurrentAngle()) - 90);
   }
 
 }

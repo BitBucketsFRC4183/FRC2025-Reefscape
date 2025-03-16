@@ -32,9 +32,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final ElevatorIOInputsAutoLogged elevatorIOInputs;
     private final ElevatorEncoderIOInputsAutoLogged encoderIOInputs;
 
-    public final Mechanism2d elevator2D = new Mechanism2d(3, 3);
-    private final MechanismRoot2d elevator2dRoot = elevator2D.getRoot("Elevator Root", 2, 0);
-    public final MechanismLigament2d elevatorMech2d;
+
     private final SysIdRoutine sysId;
     // add a method to get profileGoal = new TrapezoidProfile.State(5, 0); based on where you want the robot to switch setpoints to
     //after that, add a method to setpoint = m_profile.calculate(kDt, elevator Heights (L1,L2,etc), profile);
@@ -52,11 +50,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.elevatorEncoderIO = elevatorEncoderIO;
         this.elevatorIOInputs = new ElevatorIOInputsAutoLogged();
         this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
-        this.elevatorMech2d = elevator2dRoot.append(new MechanismLigament2d("Elevator", ElevatorConstants.minHeight , 90));
+
         elevatorPID.setTolerance(0);
         //elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
         setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
-        SmartDashboard.putData("ElevatorSubsystem/mechanism", elevator2D);
 
         // Configure SysId
         sysId =
@@ -75,8 +72,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic(){
         elevatorIO.updateInputs(elevatorIOInputs);
         elevatorEncoderIO.updateInputs(encoderIOInputs);
-
-        elevatorMech2d.setLength(encoderIOInputs.loadHeight);
         Logger.processInputs("ElevatorSubsystem", elevatorIOInputs);
         Logger.processInputs("ElevatorSubsystem/encoder", encoderIOInputs);
 

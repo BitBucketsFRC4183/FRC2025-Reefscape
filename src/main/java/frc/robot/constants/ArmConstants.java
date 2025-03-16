@@ -9,7 +9,7 @@ public class ArmConstants {
     public static final double kDSim = 2;
     public static final double kISim = 0;
     public static final double kVSim= 0.39;
-    public static final double kGSim = 1.696;
+    public static final double kGSim = 0;
     public static final double kSSim = 0;
     public static double kASim = 0;
 
@@ -39,11 +39,10 @@ public class ArmConstants {
     public static int arm1TalonID = 16;
     public static int arm2TalonID = 17;
 
-    // 0 as a value should be parallel to the floor, think unit circle
     public static final int encoderChannel = 2;
-
+    // 0 as a value should be parallel to the floor, think unit circle
     // offset in rads, this will be subtracted from the offset reading
-    // so if encoder is 0.8, offset is 0.8 and not 0.8
+    // so if encoder is 0.8, offset is 0.8 and not -0.8
     public static final double encoderOffsetRots = 0.630;
     public static boolean encoderInverted;
     public final static double armL1Angle = Units.degreesToRadians(25.5);
