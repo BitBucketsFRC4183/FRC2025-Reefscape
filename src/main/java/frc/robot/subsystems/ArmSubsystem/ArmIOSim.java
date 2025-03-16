@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSim implements ArmIO {
     private static final double LOOP_PERIOD_SECS = 0.02;
-    public static final SingleJointedArmSim armMotorSim = new SingleJointedArmSim(
+    public final SingleJointedArmSim armMotorSim = new SingleJointedArmSim(
             ArmConstants.armGearbox,
             ArmConstants.gearingRatio,
             SingleJointedArmSim.estimateMOI(ArmConstants.armLength, ArmConstants.mass),

@@ -146,6 +146,7 @@ public class RobotContainer {
                     new ModuleIOHybridSim(3, driveSimulation.getModules()[3]));
 
         ElevatorIOSim elevatorIOSim = new ElevatorIOSim();
+        ArmIOSim armIOSim = new ArmIOSim();
         elevatorSubsystem =
                 new ElevatorSubsystem(elevatorIOSim, new ElevatorEncoderIOSim(elevatorIOSim.elevatorMotor1Sim));
         clawSubsystem =
@@ -155,7 +156,7 @@ public class RobotContainer {
         ledSubsystem =
                 new LEDSubsystem();
         armSubsystem =
-                new ArmSubsystem(new ArmIOSim(), new ArmEncoderIO() {});
+                new ArmSubsystem(armIOSim, new ArmEncoderIOSim(armIOSim.armMotorSim));
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose));
         break;
