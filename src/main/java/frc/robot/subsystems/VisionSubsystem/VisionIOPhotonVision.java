@@ -34,21 +34,29 @@ public class VisionIOPhotonVision implements VisionIO {
         this.camera =
                 new PhotonCamera(VisionConstants.camera1Name);
         photonPoseEstimator =
-                new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraToRobot);
+                new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.robotToCamera1);
 
     }
 
 
     public void updateInputs(VisionIOInputs inputs) {
         var visionResult = camera.getLatestResult();
-        boolean hasTargets =
-                visionResult.hasTargets();
-        boolean targetVisible = false;
-        if (!hasTargets){
-            targetVisible = true;}
 
         List<PhotonTrackedTarget> targets =
                 visionResult.getTargets();
+
+        boolean hasTargets =
+                visionResult.hasTargets();
+        boolean targetVisible = false;
+
+        if (visionResult.multitagResult.isPresent()) { //
+            var multitagResult =
+                    visionResult.multitagResult.get();
+
+        if (!hasTargets) {
+            targetVisible = true;
+        }
+
 
         if (!targets.isEmpty()) {
             PhotonTrackedTarget target =
@@ -64,6 +72,8 @@ public class VisionIOPhotonVision implements VisionIO {
                     VisionConstants.aprilTagFieldLayout.getTagPose(targetID).get();
         }
 
+        Transform3d fieldToCamera = multitagResult.estimatedPose.best;
+
         var optionalPose = photonPoseEstimator.update(visionResult);
         optionalPose.ifPresent(estimatedRobotPose -> inputs.estimatedRobotPose = estimatedRobotPose.estimatedPose);
         optionalPose.ifPresent(estimatedRobotPose -> inputs.timestampSeconds = estimatedRobotPose.timestampSeconds);
@@ -75,5 +85,6 @@ public class VisionIOPhotonVision implements VisionIO {
 
         SmartDashboard.putBoolean("Vision Target Visible", targetVisible);
 
+        }
     }
 }

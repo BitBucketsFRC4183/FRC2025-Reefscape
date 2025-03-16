@@ -52,9 +52,10 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
                 , cameraProp);
         camera = cameraSim.getCamera();
 
-        visionSim.addCamera(cameraSim, VisionConstants.cameraToRobot);
+        visionSim.addCamera(cameraSim,
+                VisionConstants.robotToCamera1);
         photonPoseEstimator =
-                new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraToRobot);
+                new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.robotToCamera1);
     }
 
 
