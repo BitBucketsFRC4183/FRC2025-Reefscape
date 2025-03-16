@@ -20,7 +20,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -98,6 +101,8 @@ public class RobotContainer {
   private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.slewX);
   private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.slewY);
   private final SlewRateLimiter slewTheta = new SlewRateLimiter(DriveConstants.slewTheta);
+
+  private final MechanismLigament2d elevatorArm2D;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -192,6 +197,10 @@ public class RobotContainer {
 
         break;
     }
+
+    this.elevatorArm2D = elevatorSubsystem.elevatorMech2d.append(new MechanismLigament2d("wrist", 0.5, 90 ,6, new Color8Bit(Color.kPurple)));
+    SmartDashboard.putData("ElevatorAndArm2d", elevatorSubsystem.elevator2D);
+
 
     this.autoSubsystem = new AutoSubsystem(driveSubsystem, elevatorSubsystem, armSubsystem);
     autoChooser = new AutoChooser();
@@ -334,11 +343,16 @@ public class RobotContainer {
     Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
   }
 
-  public void periodic() {
-    if (Constants.currentMode != Constants.Mode.SIM) return;
 
-    Pose3d[] coralPoses = SimulatedArena.getInstance()
-            .getGamePiecesArrayByType("Coral");
-    Logger.recordOutput("FieldSimulation/CoralPositions", coralPoses);
+  public void periodic() {
+    if (Constants.currentMode == Constants.Mode.SIM) {
+      Pose3d[] coralPoses = SimulatedArena.getInstance()
+              .getGamePiecesArrayByType("Coral");
+      Logger.recordOutput("FieldSimulation/CoralPositions", coralPoses);
+    };
+
+    elevatorSubsystem.elevatorMech2d.setLength(ElevatorConstants.minHeight + elevatorSubsystem.getLoadHeight());
+    elevatorArm2D.setLength(armSubsystem.getCurrentAngle());
   }
+
 }
