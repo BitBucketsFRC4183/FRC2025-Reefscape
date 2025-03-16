@@ -22,7 +22,8 @@ public class BendTimedCommand extends Command {
     public void initialize() {
         double velocity = targetAngle / timeToCompleteSeconds;
         armSubsystem.armFeedback.reset(armSubsystem.getCurrentAngle());
-        armSubsystem.armFeedback.setGoal(new TrapezoidProfile.State(targetAngle, velocity));
+        this.armSubsystem.armFeedback.setConstraints(new TrapezoidProfile.Constraints(velocity, 1));
+        armSubsystem.armFeedback.setGoal(new TrapezoidProfile.State(targetAngle, 0));
 
         Logger.recordOutput("ArmSubsystem/target_Angle", targetAngle);
         Logger.recordOutput("ArmSubsystem/target_velocity", velocity);
