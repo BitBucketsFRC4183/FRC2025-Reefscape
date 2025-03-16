@@ -5,8 +5,6 @@ import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import choreo.trajectory.SwerveSample;
-import choreo.trajectory.Trajectory;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.ArmCommands.ArmToSetpoint;
@@ -57,7 +55,7 @@ public class AutoSubsystem extends SubsystemBase {
         return new ArmToSetpoint(arm, Units.degreesToRadians(50));
     }
 
-    public Command intakecoral() {
+    public Command intakeCoral() {
         return new ArmToSetpoint(arm, Units.degreesToRadians(MIN_ANGLE_RADS));
     }
 
@@ -103,24 +101,22 @@ public class AutoSubsystem extends SubsystemBase {
         );
 
 
-        StarttoR11.atTime("StarttoR11").onTrue(raiseArmElevatorToL4());
+        StarttoR11.active().onTrue(raiseArmElevatorToL4());
         StarttoR11.done().onTrue(score().andThen(R11toSource.cmd()));
 
-        R11toSource.atTime("R11toSource").onTrue(lowerArmElevatorToOrigin());
-        R11toSource.done().onTrue(intakecoral().andThen(SourcetoR12.cmd()));
+        R11toSource.active().onTrue(lowerArmElevatorToOrigin());
+        R11toSource.done().onTrue(intakeCoral().andThen(SourcetoR12.cmd()));
 
 
-        SourcetoR12.atTime("SourcetoR12").onTrue(raiseArmElevatorToL4());
+        SourcetoR12.active().onTrue(raiseArmElevatorToL4());
         SourcetoR12.done().onTrue(score().andThen(R12toSource.cmd()));
 
-        R12toSource.atTime("R12toSource").onTrue(lowerArmElevatorToOrigin());
-        R12toSource.done().onTrue(intakecoral().andThen(SourcetoR1.cmd()));
+        R12toSource.active().onTrue(lowerArmElevatorToOrigin());
+        R12toSource.done().onTrue(intakeCoral().andThen(SourcetoR1.cmd()));
 
-        SourcetoR1.atTime("SourcetoR1").onTrue(raiseArmElevatorToL4());
+        SourcetoR1.active().onTrue(raiseArmElevatorToL4());
         SourcetoR1.done().onTrue(score());
-
-       System.out.println(StarttoR11.getInitialPose().get());
-
+        
 
         return ThreeL4CoralTopRoutine;
     }
