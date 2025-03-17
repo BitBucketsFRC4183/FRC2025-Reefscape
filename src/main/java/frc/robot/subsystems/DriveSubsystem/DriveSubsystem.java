@@ -297,9 +297,7 @@ public class DriveSubsystem extends SubsystemBase {
     ChassisSpeeds newSpeeds;
     holoXController.setSetpoint(samplePose.getX());
     holoYController.setSetpoint(samplePose.getY());
-    //holoTController.setGoal(samplePose.getRotation().getRadians());
     holoTController.setSetpoint(samplePose.getRotation().getRadians());
-
 
     double addedX = holoXController.calculate(pose.getX());
     double addedY = holoYController.calculate(pose.getY());

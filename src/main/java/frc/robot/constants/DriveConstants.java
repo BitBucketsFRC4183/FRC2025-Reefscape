@@ -195,8 +195,8 @@ public class DriveConstants {
     public static final double kTHoloISim = 0;
     public static final double kTHoloDSim = 0.0;
 
-    public static final double kHoloXTolerance = 0.01;
-    public static final double kHoloYTolerance = 0.02;
+    public static final double kHoloXTolerance = 0.03;
+    public static final double kHoloYTolerance = 0.03;
     public static final double kHoloTTolerance = Units.degreesToRadians(5);
     public static final double maxAngularSpeedRadPerSecAuto = 6.826;
     public static final double maxAngularAccelRadPerSecSquareAuto = 38.523;
