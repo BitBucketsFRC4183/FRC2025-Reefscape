@@ -5,11 +5,11 @@ import edu.wpi.first.math.util.Units;
 
 public class ArmConstants {
 
-    public static final double kPSim = 3;
-    public static final double kDSim = 2;
+    public static final double kPSim = 0;
+    public static final double kDSim = 0;
     public static final double kISim = 0;
-    public static final double kVSim= 0.39;
-    public static final double kGSim = 0;
+    public static final double kVSim= 0;
+    public static final double kGSim = 0.18;
     public static final double kSSim = 0;
     public static double kASim = 0;
 

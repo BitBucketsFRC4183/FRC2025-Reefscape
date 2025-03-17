@@ -229,21 +229,20 @@ public class RobotContainer {
     autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiForward);
     autoChooser.addRoutine("CircleTest", autoSubsystem::TestingFR);
 
-    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addCmd("DriveSysIDDynamicReverse", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-     autoChooser.addCmd("WheelBaseCharacterization", () -> new WheelBaseCharacterizationRoutineCommand(driveSubsystem));
+//    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+//    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+//    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+//    autoChooser.addCmd("DriveSysIDDynamicReverse", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+//     autoChooser.addCmd("WheelBaseCharacterization", () -> new WheelBaseCharacterizationRoutineCommand(driveSubsystem));
 
-//    autoChooser.addCmd("ElevatorSysIDQuasistaticForward", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-//    autoChooser.addCmd("ElevatorSysIDQuasistaticReverse", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-//    autoChooser.addCmd("ElevatorSysIDDynamicForward", () -> elevatorSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-//    autoChooser.addCmd("ElevatorSysIDDynamicReverse", () -> elevatorSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    //autoChooser.addCmd("ElevatorSysIDQuasistaticForward", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    //autoChooser.addCmd("ElevatorSysIDQuasistaticReverse", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    //autoChooser.addCmd("ElevatorSysIDDynamicForward", () -> elevatorSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    //autoChooser.addCmd("ElevatorSysIDDynamicReverse", () -> elevatorSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 //
-//    autoChooser.addCmd("ArmSysIDQuasistaticForward", () -> armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-//    autoChooser.addCmd("ArmSysIDQuasistaticReverse", () -> armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-//    autoChooser.addCmd("ArmSysIDDynamicForward", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-//    autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addCmd("ArmSysIDQuasistaticForward", () -> armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    autoChooser.addCmd("ArmSysIDQuasistaticReverse", () -> armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));autoChooser.addCmd("ArmSysIDDynamicForward", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     autoChooser.select("CircleTest");
     SmartDashboard.putData("autochooser", autoChooser);
 

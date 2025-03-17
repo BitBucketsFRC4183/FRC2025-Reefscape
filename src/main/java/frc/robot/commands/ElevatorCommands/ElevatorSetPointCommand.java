@@ -36,7 +36,7 @@ public class ElevatorSetPointCommand extends Command {
     public void execute(){
 
         double voltsPID = elevator.elevatorPID.calculate(elevator.getLoadHeight());
-        double calculatedVolts = elevator.elevatorFF.calculate(elevator.elevatorPID.getSetpoint().velocity) + voltsPID;
+        double calculatedVolts = elevator.elevatorFF.calculateWithVelocities(elevator.getElevatorHeightSpeed(),  elevator.elevatorPID.getSetpoint().velocity) + voltsPID;
         // timestampAverageBuffer.addValue(elevator.getLoadHeight(), Timer.getFPGATimestamp());
 
 
