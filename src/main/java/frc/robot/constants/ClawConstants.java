@@ -9,8 +9,8 @@ public class ClawConstants {
     public static double kP = 0.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
-    public static double mainVoltageTarget = 2.0;
-    public static double grippersVoltageTarget = 1.0;
+    public static double mainVoltageTarget = 3.0;
+    public static double grippersVoltageTarget = 2.0;
     public static final int centralID = 29;
     public static final int wheelID = 32;
     public static final double centralSparkEncoderPositionFactor = 1.0;
