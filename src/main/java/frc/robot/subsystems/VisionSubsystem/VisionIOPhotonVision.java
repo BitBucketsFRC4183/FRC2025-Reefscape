@@ -55,7 +55,8 @@ public class VisionIOPhotonVision implements VisionIO {
         List<PoseObservation> poseObservations = new LinkedList<>();
 
         for (var result : camera.getAllUnreadResults()) {
-
+            List<PhotonTrackedTarget> visionTargets =
+                    result.getTargets();
             if (result.hasTargets()) {
                 inputs.latestTargetObservation =
                         new TargetObservation(
@@ -68,6 +69,13 @@ public class VisionIOPhotonVision implements VisionIO {
             // Add pose observation
             if (result.multitagResult.isPresent()) { // Multitag result
                 var multitagResult = result.multitagResult.get();
+
+                PhotonTrackedTarget targets =
+                        result.getBestTarget();
+
+                var tagPose =
+                        aprilTagFieldLayout.getTagPose(targets.fiducialId);
+
 
                 // Calculate robot pose
                 Transform3d fieldToCamera = multitagResult.estimatedPose.best;
@@ -123,6 +131,16 @@ public class VisionIOPhotonVision implements VisionIO {
                                     )); // Observation type
                 }
             }
+
+            var optionalPose =
+                    photonPoseEstimator.update(result);
+            optionalPose.ifPresent(estimatedRobotPose -> inputs.estimatedRobotPose = estimatedRobotPose.estimatedPose);
+            optionalPose.ifPresent(estimatedRobotPose -> inputs.timestampSeconds = estimatedRobotPose.timestampSeconds);
+
+            inputs.connected =
+                    camera.isConnected();
+            inputs.hasEstimate =
+                    optionalPose.isPresent();
         }
 
         // Save pose observations to inputs object
@@ -136,6 +154,9 @@ public class VisionIOPhotonVision implements VisionIO {
         int i = 0;
         for (int id : tagIds) {
             inputs.tagIds[i++] = id;
+
+
         }
+//        inputs.tagPose = aprilTagFieldLayout.getTagPose(tagIds).get();
     }
 }
