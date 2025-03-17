@@ -8,14 +8,16 @@ import org.littletonrobotics.junction.Logger;
 public class ClawIntakeCommand extends Command {
     public final ClawSubsystem clawSubsystem;
 
-    public ClawIntakeCommand(ClawSubsystem clawSubsystem, boolean isGrabbing) {
+    public ClawIntakeCommand(ClawSubsystem clawSubsystem) {
         this.clawSubsystem = clawSubsystem;
         addRequirements(clawSubsystem);
     }
 
-    public void initialize() {
+    @Override
+    public void execute() {
         this.clawSubsystem.setGrippersToVoltage(ClawConstants.grippersVoltageTarget);
     }
+
 
     public void end(boolean interrupted) {
         if (interrupted) {
