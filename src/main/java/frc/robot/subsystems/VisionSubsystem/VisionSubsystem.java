@@ -55,12 +55,11 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         visionIO.updateInputs(visionInputs);
+
         Logger.processInputs("VisionSubsystem", visionInputs);
         if (!visionInputs.connected) {
             new Alert("Vision camera " + VisionConstants.camera1Name +
                     "is disconnected.", Alert.AlertType.kWarning);
-
-
 
             Pose3d tagPose;
             tagPose = visionInputs.tagPose;
