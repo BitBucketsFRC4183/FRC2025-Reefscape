@@ -36,12 +36,11 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 
 public class VisionSubsystem extends SubsystemBase {
-    // Creates a new ExampleSubsystem
+
     public AprilTagFieldLayout aprilTagFieldLayout;
 
     private final VisionIO visionIO;
     private final VisionIOInputsAutoLogged visionInputs = new VisionIOInputsAutoLogged();
-
 
     public VisionSubsystem(VisionIO visionIO) {
         this.visionIO = visionIO;
@@ -56,9 +55,10 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         visionIO.updateInputs(visionInputs);
+
         Logger.processInputs("VisionSubsystem", visionInputs);
         if (!visionInputs.connected) {
-            new Alert("Vision camera " + VisionConstants.cameraName +
+            new Alert("Vision camera " + VisionConstants.camera1Name +
                     "is disconnected.", Alert.AlertType.kWarning);
 
             Pose3d tagPose;

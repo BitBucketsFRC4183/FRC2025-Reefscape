@@ -23,7 +23,16 @@ public interface VisionIO {
         public TargetObservation targetID() {
             return latestTargetObservation;
         }
+        public int[] tagIds = new int[0];
+        public PoseObservation[] poseObservations = new PoseObservation[0];
+
     }
+    public static record PoseObservation(
+            double timestamp,
+            Pose3d pose,
+            double ambiguity,
+            int tagCount,
+            double averageTagDistance) {}
 
     public static record TargetObservation(Rotation2d tx, Rotation2d ty) {}
     public default void updateInputs(VisionIOInputs inputs) {}
