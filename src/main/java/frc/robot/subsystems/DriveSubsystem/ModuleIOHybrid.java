@@ -45,6 +45,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.AnalogInput;
+import frc.robot.Robot;
 import frc.robot.constants.DriveConstants;
 import frc.robot.util.SparkUtil;
 import org.littletonrobotics.junction.Logger;
@@ -120,7 +121,9 @@ public class ModuleIOHybrid implements ModuleIO {
                 };
 
         // Configure drive motor
-        var driveConfig = new TalonFXConfiguration().withAudio(new AudioConfigs().withBeepOnBoot(true));
+        var driveConfig = new TalonFXConfiguration().withAudio(new AudioConfigs().withBeepOnBoot(false));
+        driveConfig.Audio.BeepOnConfig = false;
+        driveConfig.Audio.AllowMusicDurDisable = true;
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         driveConfig.Slot0 = new Slot0Configs().withKP(driveKp).withKD(driveKd).withKV(driveKv).withKA(driveKa).withKS(driveKs);
         driveConfig.CurrentLimits.StatorCurrentLimit = driveMotorStatorCurrentLimit;
@@ -228,6 +231,7 @@ public class ModuleIOHybrid implements ModuleIO {
         turnPositionQueue =
                 PhoenixOdometryThread.getInstance().registerSignal(turnEncoder::getPosition);
 
+        Robot.orchestra.addInstrument(driveTalon, id + 2);
     }
 
     @Override

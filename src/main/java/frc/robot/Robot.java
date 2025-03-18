@@ -15,6 +15,7 @@ package frc.robot;
 
 import au.grapplerobotics.LaserCan;
 import choreo.auto.AutoChooser;
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -55,20 +56,16 @@ import java.util.List;
  * project.
  */
 public class Robot extends LoggedRobot {
-  private Command autonomousCommand;
   private RobotContainer robotContainer;
 
-  private AutoChooser autoChooser;
-  private Trajectory m_trajectory;
   private Field2d m_field;
-
+  public static Orchestra orchestra;
   public Robot() {
 
     //SmartDashboard.putData(autoChooser);
     //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
     // Record metadata
 
-    CameraServer.startAutomaticCapture();
     PortForwarder.add(5800, "photonvision.local", 5800);
 
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -119,7 +116,9 @@ public class Robot extends LoggedRobot {
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
+    orchestra = new Orchestra();
     robotContainer = new RobotContainer();
+
   }
 
   private final Timer timer = new Timer();
@@ -127,22 +126,11 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotInit() {
     CameraServer.startAutomaticCapture();
-    
-    // Create the trajectory to follow in autonomous. It is best to initialize
-    // trajectories here to avoid wasting time in autonomous.
-    m_trajectory =
-            TrajectoryGenerator.generateTrajectory(
-                    new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-                    List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-                    new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
-                    new TrajectoryConfig(Units.feetToMeters(3.0), Units.feetToMeters(3.0)));
 
     // Create and push Field2d to SmartDashboard.
     m_field = new Field2d();
     SmartDashboard.putData(m_field);
 
-    // Push the trajectory to Field2d.
-    m_field.getObject("traj").setTrajectory(m_trajectory);
   }
 
   /**
@@ -186,41 +174,17 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledExit() {
+    orchestra.stop();
   }
 
 
   @Override
   public void autonomousInit() {
-
-//        System.out.println(Arrays.toString(Choreo.availableTrajectories()));
-//        var trajectory = loadTrajectory(
-//                "FourL4CoralBottom");
-//
-//        if (trajectory.isPresent()) {
-//          System.out.print("THANK");
-//          // Get the initial pose of the trajectory
-//          Optional<Pose2d> initialPose =
-//          trajectory.get().getInitialPose
-//          (isRedAlliance());
-//          Logger.recordOutput("monkey", true);
-//          if (initialPose.isPresent()) {
-//            // Reset odometry to the start of the trajectory
-//            robotContainer.drive.setPose(initialPose.get());
-//          }
-//        }
-////     Reset and start the timer when the autonomous period begins
-//        timer.restart();
-//    robotContainer.getAutonomousCommand().execute();
   }
 
   @Override
   public void autonomousPeriodic() {
-//    Optional<Trajectory<SwerveSample>> trajectory = loadTrajectory("FourL4CoralBottom");
-//    if (trajectory.isPresent()) {
-//      Optional<SwerveSample> sample = trajectory.get().sampleAt(timer.get(), isRedAlliance());
-//
-//      sample.ifPresent(swerveSample -> robotContainer.drive.followTrajectorySample(swerveSample));
-//    }
+
   }
 
   private boolean isRedAlliance() {
@@ -240,13 +204,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
-    }
+
   }
 
   /**

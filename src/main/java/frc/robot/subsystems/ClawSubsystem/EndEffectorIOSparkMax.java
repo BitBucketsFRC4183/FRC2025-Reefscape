@@ -21,7 +21,7 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
 //this should be fine? we'll see
     public EndEffectorIOSparkMax() {
         centralWheel = new SparkMax(ClawConstants.centralID, SparkLowLevel.MotorType.kBrushless); //big
-        gripperWheels = new SparkMax(ClawConstants.wheelID, SparkLowLevel.MotorType.kBrushless); //small
+        gripperWheels = new SparkMax(ClawConstants.wheelsID, SparkLowLevel.MotorType.kBrushless); //small
         this.centralEncoder = centralWheel.getEncoder();
         SparkMaxConfig clawConfig = new SparkMaxConfig();
         clawConfig

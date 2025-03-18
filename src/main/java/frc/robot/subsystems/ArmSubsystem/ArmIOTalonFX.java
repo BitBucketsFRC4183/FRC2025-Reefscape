@@ -13,6 +13,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.Robot;
 import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.DriveSubsystem.PhoenixOdometryThread;
 
@@ -60,6 +61,8 @@ public class ArmIOTalonFX implements ArmIO {
         TalonFXConfiguration arm1Config = new TalonFXConfiguration();
         TalonFXConfiguration arm2Config = new TalonFXConfiguration();
 
+        arm1Config.Audio.BeepOnConfig = false;
+        arm1Config.Audio.AllowMusicDurDisable = true;
         arm1Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         arm1Config.TorqueCurrent.PeakForwardTorqueCurrent = ArmConstants.arm1CurrentLimit;
         arm1Config.TorqueCurrent.PeakReverseTorqueCurrent = -ArmConstants.arm1CurrentLimit;
@@ -67,6 +70,8 @@ public class ArmIOTalonFX implements ArmIO {
         arm1Config.CurrentLimits.StatorCurrentLimitEnable = true;
         arm1Config.MotorOutput.Inverted = ArmConstants.arm1Inverted;
 
+        arm2Config.Audio.BeepOnConfig = false;
+        arm2Config.Audio.AllowMusicDurDisable = true;
         arm2Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         arm2Config.TorqueCurrent.PeakForwardTorqueCurrent = ArmConstants.arm2CurrentLimit;
         arm2Config.TorqueCurrent.PeakReverseTorqueCurrent = -ArmConstants.arm2CurrentLimit;
@@ -102,6 +107,9 @@ public class ArmIOTalonFX implements ArmIO {
                 arm2AppliedVolts,
                 arm2Current);
         ParentDevice.optimizeBusUtilizationForAll(armTalon1, armTalon2);
+
+        Robot.orchestra.addInstrument(armTalon1, 0);
+        Robot.orchestra.addInstrument(armTalon2, 1);
     }
 
     public void updateInputs(ArmIO.ArmIOInputs inputs) {
