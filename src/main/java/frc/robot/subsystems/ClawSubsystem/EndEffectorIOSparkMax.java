@@ -14,7 +14,6 @@ import static frc.robot.constants.DriveConstants.odometryFrequency;
 public class EndEffectorIOSparkMax implements EndEffectorIO {
     private final SparkMax gripperWheels; //hold object
     private final SparkMax centralWheel; //open and close claw
-    private final RelativeEncoder centralEncoder;
     private boolean hasAlgae = false;
     private boolean hasCoral = false;
     private boolean isOpen = false;
@@ -22,27 +21,11 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     public EndEffectorIOSparkMax() {
         centralWheel = new SparkMax(ClawConstants.centralID, SparkLowLevel.MotorType.kBrushless); //big
         gripperWheels = new SparkMax(ClawConstants.wheelsID, SparkLowLevel.MotorType.kBrushless); //small
-        this.centralEncoder = centralWheel.getEncoder();
         SparkMaxConfig clawConfig = new SparkMaxConfig();
         clawConfig
                 .idleMode(SparkBaseConfig.IdleMode.kBrake)
                 .smartCurrentLimit(ClawConstants.clawMotorCurrentLimit)
                 .voltageCompensation(12.0);
-        clawConfig
-                .encoder
-                .positionConversionFactor(ClawConstants.centralSparkEncoderPositionFactor)
-                .velocityConversionFactor(ClawConstants.centralSparkEncoderVelocityFactor)
-                .uvwMeasurementPeriod(10)
-                .uvwAverageDepth(2);
-        clawConfig
-                .signals
-                .primaryEncoderPositionAlwaysOn(true)
-                .primaryEncoderPositionPeriodMs((int) (1000.0 / odometryFrequency))
-                .primaryEncoderVelocityAlwaysOn(true)
-                .primaryEncoderVelocityPeriodMs(20)
-                .appliedOutputPeriodMs(20)
-                .busVoltagePeriodMs(20)
-                .outputCurrentPeriodMs(20);
     }
 
     public boolean getHasCoral() { return this.hasCoral; }
@@ -92,8 +75,6 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
         inputs.hasCoral = getHasCoral();
         inputs.hasAlgae = getHasAlgae();
         inputs.isOpen = getIsOpen();
-        inputs.centralPosition = centralEncoder.getPosition();
-        inputs.centralVelocity = centralEncoder.getVelocity();
     }
 
 }

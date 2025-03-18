@@ -39,6 +39,8 @@ import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.ArmElevatorToOrigin;
 import frc.robot.commands.ArmElevatorToSetpoint;
+import frc.robot.commands.ClawCommands.ClawIntakeCommand;
+import frc.robot.commands.ClawCommands.ClawOuttakeCommand;
 import frc.robot.commands.DriveCommands.FieldDriveElevatorLimitedCommand;
 import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
 import frc.robot.commands.DriveCommands.WheelBaseCharacterizationRoutineCommand;
@@ -279,8 +281,8 @@ public class RobotContainer {
     operatorInput.rollerPivotUp.whileTrue(new PivotUpCommand(intakeSubsystem));
 
     // claw stuff
-    // operatorInput.openClaw.onTrue(new OpenClawCommand(clawSubsystem));
-    // operatorInput.closeClaw.onTrue(new CloseClawCommand(clawSubsystem));
+    operatorInput.intakeClaw.whileTrue(new ClawIntakeCommand(clawSubsystem));
+    operatorInput.outtakeClaw.whileTrue(new ClawOuttakeCommand(clawSubsystem));
 
 
     // drive stuff

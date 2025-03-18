@@ -5,22 +5,19 @@ import frc.robot.constants.ClawConstants;
 import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class ClawSetGrippersCommand extends Command {
+public class ClawIntakeCommand extends Command {
     public final ClawSubsystem clawSubsystem;
-    boolean isGrabbing;
 
-    public ClawSetGrippersCommand(ClawSubsystem clawSubsystem, boolean isGrabbing) {
+    public ClawIntakeCommand(ClawSubsystem clawSubsystem) {
         this.clawSubsystem = clawSubsystem;
         addRequirements(clawSubsystem);
-        this.isGrabbing = isGrabbing;
     }
 
-    public void initialize() {
-        double invertedFactor = (isGrabbing && ClawConstants.grippersInverted) ? 1 : -1;
-        double calculatedVolts = ClawConstants.grippersVoltageTarget * invertedFactor;
-        Logger.recordOutput("ClawSubsystem/gripperVolts", calculatedVolts);
-        this.clawSubsystem.setGrippersToVoltage(calculatedVolts);
+    @Override
+    public void execute() {
+        this.clawSubsystem.setGrippersToVoltage(ClawConstants.grippersVoltageTarget);
     }
+
 
     public void end(boolean interrupted) {
         if (interrupted) {
