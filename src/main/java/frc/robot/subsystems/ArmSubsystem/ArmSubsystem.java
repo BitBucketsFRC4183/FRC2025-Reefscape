@@ -39,7 +39,8 @@ public class ArmSubsystem extends SubsystemBase {
             this.armFeedback = new ProfiledPIDController(ArmConstants.kPSim, ArmConstants.kISim, ArmConstants.kDSim, new TrapezoidProfile.Constraints(ArmConstants.maxVelocity, ArmConstants.maxAcceleration));
         } else {
             this.armFeedForward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
-            this.armFeedback = new ProfiledPIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD, new TrapezoidProfile.Constraints(ArmConstants.maxVelocity, ArmConstants.maxAcceleration));
+            this.armFeedback =
+                    new ProfiledPIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD, new TrapezoidProfile.Constraints(ArmConstants.maxVelocity, ArmConstants.maxAcceleration));
         }
 
         this.armIO = armIO;

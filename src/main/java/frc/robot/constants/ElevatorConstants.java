@@ -35,10 +35,11 @@ public class ElevatorConstants {
     public static double kDSim = 0;
 
     public static double kS = 0.35852;
-    public static double kV = 10.604;
-    public static double kG = 0;
-    public static double kA = 2.2017;
-    public static double kP = 125;
+    public static double kV = 5.52;
+    public static double kG = 0.27;
+    public static double kA = 0.02; // 2.2017;
+
+    public static double kP = 10;
     public static double kI = 0;
     public static double kD = 0;
 
@@ -56,7 +57,7 @@ public class ElevatorConstants {
     public static final int elevatorCanID = 10;
     public static final int elevatorSpark1CAN = 14;
     public static final int elevatorSpark2CAN = 15;
-    public static final int elevatorLaserCanID = 11;
+    public static final int elevatorLaserCanID = 30;
     public static final boolean elevatorSpark1Inverted = true;
     public static final boolean elevatorSpark2Inverted = false;
 

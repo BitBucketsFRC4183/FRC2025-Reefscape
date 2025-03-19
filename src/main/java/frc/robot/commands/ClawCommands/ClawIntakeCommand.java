@@ -15,15 +15,19 @@ public class ClawIntakeCommand extends Command {
 
     @Override
     public void execute() {
-        this.clawSubsystem.setGrippersToVoltage(ClawConstants.grippersVoltageTarget);
+        clawSubsystem.setGrippersToVoltage(5);
     }
+
+
 
 
     public void end(boolean interrupted) {
         if (interrupted) {
             Logger.recordOutput("ClawSubsystem/gripperVolts", 0);
-            this.clawSubsystem.setGrippersToVoltage(0);
+            clawSubsystem.setGrippersToVoltage(0);
         }
+
+
     }
 }
 

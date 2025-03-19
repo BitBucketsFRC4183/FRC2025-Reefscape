@@ -125,7 +125,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
 
     // Create and push Field2d to SmartDashboard.
     m_field = new Field2d();

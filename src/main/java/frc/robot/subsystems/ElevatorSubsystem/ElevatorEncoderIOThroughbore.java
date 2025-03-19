@@ -28,10 +28,11 @@ public class ElevatorEncoderIOThroughbore implements ElevatorEncoderIO {
         inputs.encoderPositionRads = Units.rotationsToRadians(inputs.encoderPositionRots);
 
         // 1:1 with the shaft, not really lol
-        inputs.unfilteredLoadHeight = inputs.encoderPositionRads / ElevatorConstants.encoderReduction;
-        inputs.unfiliteredHeightVelocity = inputs.encoderVelocityRads / ElevatorConstants.encoderReduction;
+        inputs.unfilteredHeight = inputs.encoderPositionRads / ElevatorConstants.encoderReduction;
+        inputs.unfiliteredVelocity = inputs.encoderVelocityRads / ElevatorConstants.encoderReduction;
 
-        inputs.loadHeight = inputs.unfilteredLoadHeight;
+        inputs.height = inputs.unfilteredHeight;
+        inputs.velocity = inputs.unfiliteredVelocity;
         // inputs.loadHeight = elevatorFilter.calculate(inputs.unfilteredLoadHeight);
 
     }

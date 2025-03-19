@@ -19,7 +19,7 @@ public class ManualArmCommand extends Command {
 
     @Override
     public void execute() {
-        double joystickY = yStickDistanceSupplier.getAsDouble() * -1;
+        double joystickY = yStickDistanceSupplier.getAsDouble() * 1;
         double calculatedVolts = armSubsystem.armFeedForward.calculate(armSubsystem.getCurrentAngle(), joystickY * ArmConstants.maxVelocity * 0.6);
         Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
         armSubsystem.hoverAngle = armSubsystem.getCurrentAngle();

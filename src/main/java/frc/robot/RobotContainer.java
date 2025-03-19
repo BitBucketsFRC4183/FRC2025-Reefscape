@@ -128,9 +128,9 @@ public class RobotContainer {
                         new ModuleIOHybrid(3));
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIOSparkMax(),
-                        new ElevatorEncoderIOThroughbore());
+                        new ElevatorEncoderIOLaserCAN());
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIO() {}); // NO HARDWARE LOL
+                new ClawSubsystem(new EndEffectorIOSparkMax() {}); // NO HARDWARE LOL
         intakeSubsystem =
                 new IntakeSubsystem(new IntakeIOSparkMax());
         ledSubsystem =
@@ -162,7 +162,7 @@ public class RobotContainer {
         elevatorSubsystem =
                 new ElevatorSubsystem(elevatorIOSim, new ElevatorEncoderIOSim(elevatorIOSim.elevatorMotor1Sim));
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIOSim());
+                new ClawSubsystem(new EndEffectorIOSparkMax());
         intakeSubsystem =
                 new IntakeSubsystem(new IntakeIOSim(driveSimulation));
         ledSubsystem =
@@ -191,7 +191,7 @@ public class RobotContainer {
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIO() {}, new ElevatorEncoderIO() {}); //TODO
         clawSubsystem =
-                new ClawSubsystem(new EndEffectorIO() {});
+                new ClawSubsystem(new EndEffectorIOSparkMax() {});
         intakeSubsystem =
                 new IntakeSubsystem(new IntakeIO() {});
         ledSubsystem =
@@ -262,7 +262,7 @@ public class RobotContainer {
     operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
     // operatorInput.armElevatorL4.whileTrue(new ElevatorSetPointCommand(elevatorSubsystem, ElevatorConstants.L3));
     //arm stuff
-    armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
+    // armSubsystem.setDefaultCommand(new ArmHoverCommand(armSubsystem));
     // operatorInput.armSetpointUp.whileTrue(new ArmToSetpoint(armSubsystem, 0));
     // operatorInput.armSetpointDown.whileTrue(new ArmToSetpoint(armSubsystem, ArmConstants.setpointDown));
 
