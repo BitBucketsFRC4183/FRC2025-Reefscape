@@ -20,8 +20,7 @@ import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
 import static frc.robot.constants.DriveConstants.odometryFrequency;
-import static frc.robot.constants.ElevatorConstants.kI;
-import static frc.robot.constants.ElevatorConstants.pulleyRadius;
+import static frc.robot.constants.ElevatorConstants.*;
 import static frc.robot.util.SparkUtil.*;
 public class ElevatorIOSparkMax implements ElevatorIO {
     private SparkMax elevatorSpark1;
@@ -43,7 +42,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         var elevatorConfig = new SparkMaxConfig();
         elevatorConfig
                 .idleMode(SparkBaseConfig.IdleMode.kBrake)
-                .smartCurrentLimit(ElevatorConstants.elevatorMotorCurrentLimit)
+                .smartCurrentLimit(ElevatorConstants.elevatorMotorStatorCurrentLimit, elevatorMotorSupplyCurrentLimit)
                 .voltageCompensation(12.0);
         elevatorConfig
                 .encoder
@@ -60,22 +59,24 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 .appliedOutputPeriodMs(20)
                 .busVoltagePeriodMs(20)
                 .outputCurrentPeriodMs(20);
+
+        var elevator1Config = elevatorConfig.inverted(elevatorSpark1Inverted);
         tryUntilOk(
                 elevatorSpark1,
                 5,
                 () ->
                         elevatorSpark1.configure(
-                                elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
+                                elevator1Config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
+
+        var elevator2Config = elevatorConfig.inverted(elevatorSpark2Inverted);
         tryUntilOk(
                 elevatorSpark2,
                 5,
                 () ->
                         elevatorSpark2.configure(
-                                elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
+                                elevator2Config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
 
 
-        elevatorSpark1.setInverted(ElevatorConstants.elevatorSpark1Inverted);
-        elevatorSpark2.setInverted(ElevatorConstants.elevatorSpark2Inverted);
         tryUntilOk(elevatorSpark1, 5, () -> elevatorMotor1Encoder.setPosition(0.0));
         tryUntilOk(elevatorSpark2, 5, () -> elevatorMotor2Encoder.setPosition(0.0));
 

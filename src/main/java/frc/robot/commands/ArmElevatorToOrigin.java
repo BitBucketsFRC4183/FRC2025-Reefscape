@@ -6,6 +6,7 @@ import frc.robot.commands.ArmCommands.ArmToSetpoint;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 
@@ -21,7 +22,7 @@ public class ArmElevatorToOrigin extends ParallelDeadlineGroup {
                         ,
                         Commands.parallel(
                                 new ArmToSetpoint(arm, ArmConstants.MIN_ANGLE_RADS),
-                                new ElevatorSetPointCommand(elevator, -0.01))
+                                new ElevatorSetPointCommand(elevator, ElevatorConstants.Origin))
                         )
 
                 )

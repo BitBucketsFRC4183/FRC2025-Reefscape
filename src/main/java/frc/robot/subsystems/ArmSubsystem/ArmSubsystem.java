@@ -39,7 +39,8 @@ public class ArmSubsystem extends SubsystemBase {
             this.armFeedback = new ProfiledPIDController(ArmConstants.kPSim, ArmConstants.kISim, ArmConstants.kDSim, new TrapezoidProfile.Constraints(ArmConstants.maxVelocity, ArmConstants.maxAcceleration));
         } else {
             this.armFeedForward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
-            this.armFeedback = new ProfiledPIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD, new TrapezoidProfile.Constraints(ArmConstants.maxVelocity, ArmConstants.maxAcceleration));
+            this.armFeedback =
+                    new ProfiledPIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD, new TrapezoidProfile.Constraints(ArmConstants.maxVelocity, ArmConstants.maxAcceleration));
         }
 
         this.armIO = armIO;
@@ -52,8 +53,8 @@ public class ArmSubsystem extends SubsystemBase {
         sysId =
                 new SysIdRoutine(
                         new SysIdRoutine.Config(
-                                Volts.of(0.5).per(Second),
-                                Volts.of(5),
+                                Volts.of(1).per(Second),
+                                Volts.of(3),
                                 null,
                                 (state) -> Logger.recordOutput("ArmSubsystem/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
@@ -79,7 +80,6 @@ public class ArmSubsystem extends SubsystemBase {
         double outputVoltage = volts;
         if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
             outputVoltage = volts;
-
 
         } else if ((getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS)) {
             // if mechanism exceeds limit basically set it to zero

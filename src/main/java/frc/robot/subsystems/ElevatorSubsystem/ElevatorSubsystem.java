@@ -3,8 +3,6 @@ package frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -13,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.OperatorInput;
-import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import org.littletonrobotics.junction.Logger;
@@ -52,15 +49,15 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
 
         elevatorPID.setTolerance(0);
-        //elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
-        setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
-
+        // elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
+        // setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
+        SmartDashboard.putData("ElevatorSubsystem/mechanism", elevator2D);
         // Configure SysId
         sysId =
                 new SysIdRoutine(
                         new SysIdRoutine.Config(
-                                Volts.of(0.1).per(Second),
-                                Volts.of(0.5),
+                                Volts.of(0.5).per(Second),
+                                Volts.of(4.5),
                                 null,
                                 (state) -> Logger.recordOutput("ElevatorSubsystem/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
@@ -72,21 +69,21 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic(){
         elevatorIO.updateInputs(elevatorIOInputs);
         elevatorEncoderIO.updateInputs(encoderIOInputs);
+
+        elevatorMech2d.setLength(encoderIOInputs.height);
         Logger.processInputs("ElevatorSubsystem", elevatorIOInputs);
         Logger.processInputs("ElevatorSubsystem/encoder", encoderIOInputs);
 
+        // elevatorIO.setElevatorMotorVoltage(ElevatorConstants.kG);
     }
 
     public void resetLoadHeightEncoderValue() {
         elevatorEncoderIO.resetEncoderPositionWithLoadHeight();
     }
     public double getLoadHeight() {
-        return encoderIOInputs.loadHeight;
+        return encoderIOInputs.height;
     }
-    public double getElevatorSpeedRads() {
-        return encoderIOInputs.encoderVelocityRads;
-    }
-    public double getElevatorHeightSpeed() { return encoderIOInputs.unfiliteredHeightVelocity;}
+    public double getElevatorHeightSpeed() { return encoderIOInputs.velocity;}
 
     public void setElevatorVoltage(double volts) {
         double outputVoltage = volts;

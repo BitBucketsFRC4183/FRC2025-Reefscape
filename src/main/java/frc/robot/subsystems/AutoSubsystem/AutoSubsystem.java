@@ -198,7 +198,7 @@ public AutoRoutine OneL4CoralMidRoutine() {
         AutoTrajectory circle = testing.trajectory("Circle");
 
         testing.active().onTrue(circle.resetOdometry().andThen(circle.cmd()));
-
+        circle.done().onTrue(Commands.run(drive::stop, drive));
         return testing;
     }
 }

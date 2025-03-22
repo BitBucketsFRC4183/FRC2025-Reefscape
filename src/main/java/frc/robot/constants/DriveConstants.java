@@ -29,9 +29,9 @@ import static edu.wpi.first.units.Units.*;
 
 public class DriveConstants {
     public static final double maxSpeedMetersPerSec = 4.2;
-    public static final double turboSpeed =  2.5;
-    public static final double normalSpeed = 1.5;
-    public static final double slowSpeed = 0.5;
+    public static final double turboSpeed =  3.5;
+    public static final double normalSpeed = 2;
+    public static final double slowSpeed = 1.5;
     public static final double alignmentSpeed = 0.2;
 
     public static final double odometryFrequency = 100.0; // Hz
@@ -81,7 +81,7 @@ public class DriveConstants {
     // stator is for peaks, neo 40A breakers can sustain 120 easily, and 70 for more than like 20seconds
     public static final int driveMotorStatorCurrentLimit = 120;
     public static final int driveMotorSupplyCurrentLimit = 70;
-    public static final double wheelRadiusMeters = 0.0508;
+    public static final double wheelRadiusMeters = 0.0504;
     public static final double driveMotorReduction = 6.75;
     public static final DCMotor driveGearbox = DCMotor.getKrakenX60(1);
 
@@ -132,9 +132,9 @@ public class DriveConstants {
     public static final double turnPIDMinInput = -Math.PI; // Radians
     public static final double turnPIDMaxInput = Math.PI; // Radians
 
-    public static final double slewX = 99;
-    public static final double slewY = 99;
-    public static final double slewTheta = 99;
+    public static final double slewX = 20;
+    public static final double slewY = 20;
+    public static final double slewTheta = 20;
 
     public static final double robotMassLb = 120.00;
     public static final double robotMOI = 6.883;
@@ -195,8 +195,8 @@ public class DriveConstants {
     public static final double kTHoloISim = 0;
     public static final double kTHoloDSim = 0.0;
 
-    public static final double kHoloXTolerance = 0.01;
-    public static final double kHoloYTolerance = 0.02;
+    public static final double kHoloXTolerance = 0.03;
+    public static final double kHoloYTolerance = 0.03;
     public static final double kHoloTTolerance = Units.degreesToRadians(5);
     public static final double maxAngularSpeedRadPerSecAuto = 6.826;
     public static final double maxAngularAccelRadPerSecSquareAuto = 38.523;

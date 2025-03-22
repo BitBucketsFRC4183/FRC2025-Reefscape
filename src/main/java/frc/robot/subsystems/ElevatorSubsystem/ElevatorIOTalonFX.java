@@ -67,9 +67,7 @@ public class ElevatorIOTalonFX implements ElevatorIO{
         TalonFXConfiguration elevatorConfig = new TalonFXConfiguration();
 
         elevatorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        elevatorConfig.TorqueCurrent.PeakForwardTorqueCurrent = ElevatorConstants.elevatorMotorCurrentLimit;
-        elevatorConfig.TorqueCurrent.PeakReverseTorqueCurrent = -ElevatorConstants.elevatorMotorCurrentLimit;
-        elevatorConfig.CurrentLimits.StatorCurrentLimit = ElevatorConstants.elevatorMotorCurrentLimit;
+        elevatorConfig.CurrentLimits.StatorCurrentLimit = ElevatorConstants.elevatorMotorStatorCurrentLimit;
         elevatorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
         elevatorTalon = new TalonFX(ElevatorConstants.elevatorCanID);
