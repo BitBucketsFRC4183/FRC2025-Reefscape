@@ -10,10 +10,14 @@ import frc.robot.constants.ElevatorConstants;
 
 public class ElevatorEncoderIOSim implements ElevatorEncoderIO {
     private ElevatorSim sim;
+    private double lastTime;
+    private double lastDistance;
     LinearFilter elevatorFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
 
     public ElevatorEncoderIOSim(ElevatorSim sim) {
         this.sim = sim;
+        this.lastTime = Timer.getFPGATimestamp();
+        this.lastDistance = sim.getPositionMeters();
     }
     @Override
     public void updateInputs(ElevatorEncoderIO.ElevatorEncoderIOInputs inputs) {
@@ -21,6 +25,10 @@ public class ElevatorEncoderIOSim implements ElevatorEncoderIO {
         // 1:1 with the shaft
         inputs.unfilteredLoadHeight = sim.getPositionMeters();
         inputs.loadHeight = elevatorFilter.calculate(inputs.unfilteredLoadHeight);
+        inputs.unfiliteredHeightVelocity = (sim.getPositionMeters() - lastDistance) / (Timer.getFPGATimestamp() - lastTime);
+
+        lastDistance = sim.getPositionMeters();
+        lastTime = Timer.getFPGATimestamp();
     }
 
     @Override

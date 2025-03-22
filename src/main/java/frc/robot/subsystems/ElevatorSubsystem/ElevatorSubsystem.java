@@ -59,8 +59,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         sysId =
                 new SysIdRoutine(
                         new SysIdRoutine.Config(
-                                Volts.of(1).per(Second),
-                                Volts.of(11),
+                                Volts.of(0.1).per(Second),
+                                Volts.of(0.5),
                                 null,
                                 (state) -> Logger.recordOutput("ElevatorSubsystem/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
@@ -109,14 +109,14 @@ public class ElevatorSubsystem extends SubsystemBase {
         double outputVoltage = volts;
         if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
             outputVoltage = volts;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
-            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
-        } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
-            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.01)) {
-            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
-        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.005) {
-            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
+//        } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
+//            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
+//        } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
+//            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
+//        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.01)) {
+//            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
+//        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.005) {
+//            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
 
         }
         elevatorIO.setElevatorMotorVoltage(outputVoltage);

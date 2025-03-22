@@ -21,7 +21,7 @@ public class ElevatorIOSim implements ElevatorIO {
             ElevatorConstants.maxHeight,
             false,
             0,
-            0.01,0);
+            0,0);
 
 
     @Override

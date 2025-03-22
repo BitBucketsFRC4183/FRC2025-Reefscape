@@ -53,7 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
                 new SysIdRoutine(
                         new SysIdRoutine.Config(
                                 Volts.of(0.5).per(Second),
-                                Volts.of(1.5),
+                                Volts.of(5),
                                 null,
                                 (state) -> Logger.recordOutput("ArmSubsystem/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
