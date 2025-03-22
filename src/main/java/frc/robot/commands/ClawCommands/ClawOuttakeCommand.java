@@ -15,7 +15,7 @@ public class ClawOuttakeCommand extends Command {
     }
 
     public void execute() {
-        clawSubsystem.setCentralToVoltage(ClawConstants.mainVoltageTarget);
+        clawSubsystem.setCentralToVoltage(-ClawConstants.mainVoltageTarget);
         clawSubsystem.setGrippersToVoltage(5);
     }
 

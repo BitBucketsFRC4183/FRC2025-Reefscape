@@ -15,7 +15,8 @@ public class ClawIntakeCommand extends Command {
 
     @Override
     public void execute() {
-        clawSubsystem.setGrippersToVoltage(5);
+        clawSubsystem.setCentralToVoltage(ClawConstants.mainVoltageTarget);
+        clawSubsystem.setGrippersToVoltage(-5);
     }
 
 
@@ -23,7 +24,7 @@ public class ClawIntakeCommand extends Command {
 
     public void end(boolean interrupted) {
         if (interrupted) {
-            Logger.recordOutput("ClawSubsystem/gripperVolts", 0);
+            clawSubsystem.setCentralToVoltage(0);
             clawSubsystem.setGrippersToVoltage(0);
         }
 

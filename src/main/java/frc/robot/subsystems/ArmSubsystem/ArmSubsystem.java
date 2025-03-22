@@ -54,7 +54,7 @@ public class ArmSubsystem extends SubsystemBase {
                 new SysIdRoutine(
                         new SysIdRoutine.Config(
                                 Volts.of(0.5).per(Second),
-                                Volts.of(1.5),
+                                Volts.of(2.5),
                                 null,
                                 (state) -> Logger.recordOutput("ArmSubsystem/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
@@ -78,7 +78,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void setArmVoltage(double volts){
         double outputVoltage = volts;
-        if (OperatorInput.mechanismLimitOverride.getAsBoolean() || true) {
+        if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
             outputVoltage = volts;
 
         } else if ((getCurrentAngle() <= ArmConstants.MIN_ANGLE_RADS)) {

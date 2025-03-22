@@ -77,6 +77,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         Logger.processInputs("ElevatorSubsystem", elevatorIOInputs);
         Logger.processInputs("ElevatorSubsystem/encoder", encoderIOInputs);
 
+        // elevatorIO.setElevatorMotorVoltage(ElevatorConstants.kG);
     }
 
     public void resetLoadHeightEncoderValue() {
