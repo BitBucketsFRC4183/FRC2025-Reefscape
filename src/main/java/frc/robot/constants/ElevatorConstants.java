@@ -25,7 +25,9 @@ public class ElevatorConstants {
 
     public static double pulleyRadius = Units.inchesToMeters(2);
 
-    public static final int elevatorMotorCurrentLimit = 50;
+    public static final int elevatorMotorStatorCurrentLimit = 60;
+    public static final int elevatorMotorSupplyCurrentLimit = 50;
+
     public static double kSSim = 0;
     public static double kVSim = 4.1;
     public static double kGSim = 0.92;
@@ -35,7 +37,7 @@ public class ElevatorConstants {
     public static double kDSim = 0;
 
     public static double kS = 0.35852;
-    public static double kV = 5.52;
+    public static double kV = 4.52;
     public static double kG = 0.27;
     public static double kA = 0.02; // 2.2017;
 
@@ -44,9 +46,10 @@ public class ElevatorConstants {
     public static double kD = 0;
 
 
+    public static double origin = 0.244;
     public static double L1 = 0;
-    public static double L2 = -0.244;
-    public static double L3 = 0.0885;
+    public static double L2 = 0.244;
+    public static double L3 = 0.332;
     public static double L4 = 0.610;
     public static double carriageMass = 20.0;
     public static double maxHeight = 0.617;
@@ -58,7 +61,7 @@ public class ElevatorConstants {
     public static final int elevatorSpark1CAN = 14;
     public static final int elevatorSpark2CAN = 15;
     public static final int elevatorLaserCanID = 30;
-    public static final boolean elevatorSpark1Inverted = true;
-    public static final boolean elevatorSpark2Inverted = false;
+    public static final boolean elevatorSpark1Inverted = false;
+    public static final boolean elevatorSpark2Inverted = true;
 
 }

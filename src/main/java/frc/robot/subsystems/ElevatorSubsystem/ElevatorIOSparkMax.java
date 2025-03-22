@@ -20,8 +20,7 @@ import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
 import static frc.robot.constants.DriveConstants.odometryFrequency;
-import static frc.robot.constants.ElevatorConstants.kI;
-import static frc.robot.constants.ElevatorConstants.pulleyRadius;
+import static frc.robot.constants.ElevatorConstants.*;
 import static frc.robot.util.SparkUtil.*;
 public class ElevatorIOSparkMax implements ElevatorIO {
     private SparkMax elevatorSpark1;
@@ -43,7 +42,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
         var elevatorConfig = new SparkMaxConfig();
         elevatorConfig
                 .idleMode(SparkBaseConfig.IdleMode.kBrake)
-                .smartCurrentLimit(ElevatorConstants.elevatorMotorCurrentLimit)
+                .smartCurrentLimit(ElevatorConstants.elevatorMotorStatorCurrentLimit, elevatorMotorSupplyCurrentLimit)
                 .voltageCompensation(12.0);
         elevatorConfig
                 .encoder

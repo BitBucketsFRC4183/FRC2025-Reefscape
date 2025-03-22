@@ -14,10 +14,10 @@ public class ArmConstants {
     public static double kASim = 0;
 
 
-    public static double kS = 0.3;
-    public static double kV = 7.17;
-    public static double kG = 0.2;
-    public static double kA = 0.02;
+    public static double kS = 0;
+    public static double kV = 2;
+    public static double kG = 0;
+    public static double kA = 0;
     public static double kP = 0;
     public static double kI = 0;
     public static double kD = 0;
@@ -44,9 +44,9 @@ public class ArmConstants {
     // 0 as a value should be parallel to the floor, think unit circle
     public static final int encoderChannel = 2;
 
-    // offset in rads, this will be subtracted from the offset reading
+    // offset in rots, this will be subtracted from the offset reading
     // so if encoder is 0.8, offset is 0.8 and not 0.8
-    public static final double encoderOffsetRots = 0.630;
+    public static final double encoderOffsetRots = -(1 - 0.952);
     public static boolean encoderInverted;
     public final static double armL1Angle = Units.degreesToRadians(25.5);
     public final static double armL2Angle = Units.degreesToRadians(25.5);
