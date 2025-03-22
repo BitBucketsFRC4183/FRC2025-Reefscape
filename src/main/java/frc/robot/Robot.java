@@ -27,9 +27,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -65,6 +63,19 @@ public class Robot extends LoggedRobot {
     //SmartDashboard.putData(autoChooser);
     //RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
     // Record metadata
+
+    // Create the buffer
+    AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(120);
+
+// Create the view for the section of the strip on the left side of the robot.
+// This section spans LEDs from index 0 through index 59, inclusive.
+    AddressableLEDBufferView m_left = m_buffer.createView(0, 59);
+
+// The section of the strip on the right side of the robot.
+// This section spans LEDs from index 60 through index 119, inclusive.
+// This view is reversed to cancel out the serpentine arrangement of the
+// physical LED strip on the robot.
+    AddressableLEDBufferView m_right = m_buffer.createView(60, 119).reversed();
 
     PortForwarder.add(5800, "photonvision.local", 5800);
 
