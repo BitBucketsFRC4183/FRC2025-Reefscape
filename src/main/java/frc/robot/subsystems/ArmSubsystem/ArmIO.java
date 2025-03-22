@@ -5,9 +5,8 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ArmIO {
     @AutoLog
     class ArmIOInputs {
-        public double armAngle;
         public double armAppliedVoltage = 0.0;
-        public double[] armCurrentAmps = new double[] {};
+        public double armCurrentAmps = 0;
         public boolean armConnected;
 
         public boolean arm1Connected;
@@ -25,7 +24,6 @@ public interface ArmIO {
         public double arm1CurrentAmps;
         public double arm2CurrentAmps;
 
-        public double armVelocity;
     }
 
     public default void disable(){}

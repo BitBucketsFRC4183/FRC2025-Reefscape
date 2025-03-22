@@ -8,10 +8,10 @@ public class ArmConstants {
     public static final double kPSim = 0;
     public static final double kDSim = 0;
     public static final double kISim = 0;
-    public static final double kVSim= 0;
-    public static final double kGSim = 0.18;
-    public static final double kSSim = 0;
-    public static double kASim = 0;
+    public static final double kVSim= 3.2981;
+    public static final double kGSim = 0.05932;
+    public static final double kSSim = 0.065489;
+    public static double kASim = 0.053023;
 
     public static double kS = 0.26427;
     public static double kV = 1.5096;
