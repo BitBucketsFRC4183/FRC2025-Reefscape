@@ -30,6 +30,7 @@ public class ManualArmCommand extends Command {
     public void end(boolean interrupted) {
         if (interrupted) {
             double calculatedVolts = ArmConstants.kG * Math.cos(armSubsystem.getCurrentAngle());
+            calculatedVolts = ArmConstants.kG;
             Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
             this.armSubsystem.setArmVoltage(calculatedVolts);
         }

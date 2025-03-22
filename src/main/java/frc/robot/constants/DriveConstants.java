@@ -29,9 +29,9 @@ import static edu.wpi.first.units.Units.*;
 
 public class DriveConstants {
     public static final double maxSpeedMetersPerSec = 4.2;
-    public static final double turboSpeed =  2.5;
-    public static final double normalSpeed = 1.5;
-    public static final double slowSpeed = 0.5;
+    public static final double turboSpeed =  3.5;
+    public static final double normalSpeed = 2;
+    public static final double slowSpeed = 1.5;
     public static final double alignmentSpeed = 0.2;
 
     public static final double odometryFrequency = 100.0; // Hz

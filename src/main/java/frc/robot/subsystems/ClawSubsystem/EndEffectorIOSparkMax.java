@@ -1,5 +1,6 @@
 package frc.robot.subsystems.ClawSubsystem;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -9,6 +10,7 @@ import frc.robot.constants.ClawConstants;
 import frc.robot.constants.IntakeConstants;
 
 import static frc.robot.constants.DriveConstants.odometryFrequency;
+import static frc.robot.util.SparkUtil.tryUntilOk;
 
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
@@ -26,6 +28,19 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
                 .idleMode(SparkBaseConfig.IdleMode.kBrake)
                 .smartCurrentLimit(ClawConstants.clawMotorCurrentLimit)
                 .voltageCompensation(12.0);
+
+        tryUntilOk(
+                gripperWheels,
+                5,
+                () ->
+                        gripperWheels.configure(
+                                clawConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
+        tryUntilOk(centralWheel
+                ,
+                5,
+                () ->
+                        gripperWheels.configure(
+                                clawConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters));
     }
 
     public boolean getHasCoral() { return this.hasCoral; }
@@ -70,8 +85,8 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
 
     @Override
     public void updateInputs(EndEffectorInputsAutoLogged inputs) {
-        inputs.centralVolts = centralWheel.getBusVoltage();
-        inputs.gripperVolts = gripperWheels.getBusVoltage();
+        inputs.centralVolts = centralWheel.getAppliedOutput();
+        inputs.gripperVolts = gripperWheels.getAppliedOutput();
         inputs.hasCoral = getHasCoral();
         inputs.hasAlgae = getHasAlgae();
         inputs.isOpen = getIsOpen();

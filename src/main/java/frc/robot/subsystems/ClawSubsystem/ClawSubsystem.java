@@ -5,10 +5,10 @@ import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 public class ClawSubsystem extends SubsystemBase {
-    private final EndEffectorIOSparkMax endEffector;
+    private final EndEffectorIO endEffector;
     private final EndEffectorIO.EndEffectorInputsAutoLogged inputs = new EndEffectorIO.EndEffectorInputsAutoLogged();
 
-    public ClawSubsystem(EndEffectorIOSparkMax endEffector) {
+    public ClawSubsystem(EndEffectorIO endEffector) {
         this.endEffector = endEffector;
     }
     public void open() {

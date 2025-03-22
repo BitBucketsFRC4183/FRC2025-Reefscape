@@ -51,16 +51,16 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
         this.elevatorMech2d = elevator2dRoot.append(new MechanismLigament2d("Elevator", ElevatorConstants.minHeight , 90));
         elevatorPID.setTolerance(0);
-        //elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
-        setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
+        // elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
+        // setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
         SmartDashboard.putData("ElevatorSubsystem/mechanism", elevator2D);
 
         // Configure SysId
         sysId =
                 new SysIdRoutine(
                         new SysIdRoutine.Config(
-                                Volts.of(1).per(Second),
-                                Volts.of(11),
+                                Volts.of(0.5).per(Second),
+                                Volts.of(4.5),
                                 null,
                                 (state) -> Logger.recordOutput("ElevatorSubsystem/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(

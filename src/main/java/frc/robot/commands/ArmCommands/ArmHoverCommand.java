@@ -28,7 +28,7 @@ public class ArmHoverCommand extends Command {
             armSubsystem.hoverAngle = armSubsystem.getCurrentAngle();
 
             appliedVolts = (Constants.currentMode == Constants.Mode.REAL) ? ArmConstants.kG : ArmConstants.kGSim;
-            appliedVolts = appliedVolts * Math.cos(armSubsystem.getCurrentAngle());
+            // appliedVolts = appliedVolts * Math.cos(armSubsystem.getCurrentAngle());
 
             Logger.recordOutput("ArmSubsystem/target_voltage", appliedVolts);
             Logger.recordOutput("ArmSubsystem/target_Angle", armSubsystem.hoverAngle);

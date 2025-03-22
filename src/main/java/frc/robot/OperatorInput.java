@@ -47,8 +47,8 @@ public class OperatorInput {
 
   final Trigger manualArm = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
   final Trigger manualPivot = operator.axisMagnitudeGreaterThan(XboxController.Axis.kRightY.value, 0.1);
-  final Trigger intakeClaw = driver.leftTrigger();
-  final Trigger outtakeClaw = driver.rightTrigger();
+  final Trigger intakeClaw = operator.leftTrigger();
+  final Trigger outtakeClaw = operator.rightTrigger();
   final Trigger armElevatorOrigin = operator.a();
   final Trigger armElevatorL2 = operator.x();
   final Trigger armElevatorL3 = operator.y();
