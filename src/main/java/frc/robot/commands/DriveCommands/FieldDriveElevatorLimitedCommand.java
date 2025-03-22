@@ -82,7 +82,6 @@ public class FieldDriveElevatorLimitedCommand extends Command {
         double rampFactor = speedRamp(elevator.getLoadHeight(),
                 ElevatorConstants.minHeight + 0.25, ElevatorConstants.maxHeight, 0.5, 1, true);
 
-        rampFactor = 1;
         speedFactor = speedFactor * rampFactor;
 
         ChassisSpeeds speeds_robotOriented =  new ChassisSpeeds(

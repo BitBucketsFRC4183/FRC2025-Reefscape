@@ -1,6 +1,7 @@
 package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
 import frc.robot.util.TimestampAverageBuffer;
 import org.littletonrobotics.junction.Logger;
@@ -46,4 +47,16 @@ public class ArmToSetpoint extends Command {
 //        }
         return armSubsystem.armFeedback.atGoal();
     };
+
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+//            double calculatedVolts = ArmConstants.kG * Math.cos(armSubsystem.getCurrentAngle());
+//            // calculatedVolts = ArmConstants.kG;
+//            Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
+//            this.armSubsystem.setArmVoltage(calculatedVolts);
+            new ArmHoverCommand(armSubsystem).execute();
+
+        }
+    }
 }

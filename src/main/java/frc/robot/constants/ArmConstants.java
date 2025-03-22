@@ -14,13 +14,13 @@ public class ArmConstants {
     public static double kASim = 0;
 
 
-    public static double kS = 0;
-    public static double kV = 2;
-    public static double kG = 0.25;
-    public static double kA = 0;
-    public static double kP = 0;
+    public static double kS = 0.2353;
+    public static double kV = 0.75614;
+    public static double kG = 0.28263;
+    public static double kA = 0.088;
+    public static double kP = 4;
     public static double kI = 0;
-    public static double kD = 0;
+    public static double kD = 0.5;
     public static final double kArmToleranceRPS = 0;
     public static final double MAX_ANGLE_RADS = Units.degreesToRadians(76);
     public static final double MIN_ANGLE_RADS = Units.degreesToRadians(-86);
@@ -51,7 +51,7 @@ public class ArmConstants {
     public final static double armL1Angle = Units.degreesToRadians(25.5);
     public final static double armL2Angle = Units.degreesToRadians(25.5);
     public final static double armL3Angle = Units.degreesToRadians(56.4);
-    public final static double armL4Angle = Units.degreesToRadians(77);
+    public final static double armL4Angle = Units.degreesToRadians(70);
     public static InvertedValue arm1Inverted = InvertedValue.Clockwise_Positive;
     public static InvertedValue arm2Inverted = InvertedValue.CounterClockwise_Positive;
 }

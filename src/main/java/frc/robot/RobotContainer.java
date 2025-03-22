@@ -218,7 +218,7 @@ public class RobotContainer {
 //    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
     autoChooser.addRoutine("OneL4CoralMid", autoSubsystem::OneL4CoralMidRoutine);
     autoChooser.addCmd("Score1L3Coral", autoSubsystem::OneL3Score);
-    autoChooser.addCmd("nothing", Commands::none);
+//    autoChooser.addCmd("nothing", Commands::none);
     autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiBack);
     autoChooser.addRoutine("CircleTest", autoSubsystem::TestingFR);
 
@@ -226,8 +226,12 @@ public class RobotContainer {
 //    autoChooser.addCmd("DriveSysIDQuasistaticReverse", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 //    autoChooser.addCmd("DriveSysIDDynamicForward", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
 //    autoChooser.addCmd("DriveSysIDDynamicReverse", () -> driveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-     autoChooser.addCmd("WheelBaseCharacterization", () -> new WheelBaseCharacterizationRoutineCommand(driveSubsystem));
+     //autoChooser.addCmd("WheelBaseCharacterization", () -> new WheelBaseCharacterizationRoutineCommand(driveSubsystem));
 
+     //    autoChooser.addCmd("ElevatorSysIDQuasistaticForward", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+//    autoChooser.addCmd("ElevatorSysIDQuasistaticReverse", () -> elevatorSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+//    autoChooser.addCmd("ElevatorSysIDDynamicForward", () -> elevatorSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+//    autoChooser.addCmd("ElevatorSysIDDynamicReverse", () -> elevatorSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
 
 //

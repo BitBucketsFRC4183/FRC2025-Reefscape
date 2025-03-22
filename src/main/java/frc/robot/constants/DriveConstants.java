@@ -81,7 +81,7 @@ public class DriveConstants {
     // stator is for peaks, neo 40A breakers can sustain 120 easily, and 70 for more than like 20seconds
     public static final int driveMotorStatorCurrentLimit = 120;
     public static final int driveMotorSupplyCurrentLimit = 70;
-    public static final double wheelRadiusMeters = 0.0508;
+    public static final double wheelRadiusMeters = 0.0504;
     public static final double driveMotorReduction = 6.75;
     public static final DCMotor driveGearbox = DCMotor.getKrakenX60(1);
 
@@ -132,9 +132,9 @@ public class DriveConstants {
     public static final double turnPIDMinInput = -Math.PI; // Radians
     public static final double turnPIDMaxInput = Math.PI; // Radians
 
-    public static final double slewX = 99;
-    public static final double slewY = 99;
-    public static final double slewTheta = 99;
+    public static final double slewX = 20;
+    public static final double slewY = 20;
+    public static final double slewTheta = 20;
 
     public static final double robotMassLb = 120.00;
     public static final double robotMOI = 6.883;

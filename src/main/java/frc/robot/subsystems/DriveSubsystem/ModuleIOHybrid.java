@@ -130,6 +130,7 @@ public class ModuleIOHybrid implements ModuleIO {
         driveConfig.CurrentLimits.SupplyCurrentLimit = driveMotorSupplyCurrentLimit;
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        driveConfig.Feedback.SensorToMechanismRatio = driveMotorReduction;
         driveConfig.MotorOutput.Inverted = driveInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
         tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));

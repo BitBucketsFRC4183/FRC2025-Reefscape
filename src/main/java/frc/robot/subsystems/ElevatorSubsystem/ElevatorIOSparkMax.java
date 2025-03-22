@@ -59,6 +59,7 @@ public class ElevatorIOSparkMax implements ElevatorIO {
                 .appliedOutputPeriodMs(20)
                 .busVoltagePeriodMs(20)
                 .outputCurrentPeriodMs(20);
+
         tryUntilOk(
                 elevatorSpark1,
                 5,
