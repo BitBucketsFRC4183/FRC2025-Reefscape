@@ -102,17 +102,17 @@ public class AutoSubsystem extends SubsystemBase {
 
 
         StarttoR11.active().onTrue(raiseArmElevatorToL4());
-        StarttoR11.done().onTrue(score().andThen(R11toSource.cmd()));
+        StarttoR11.done().onTrue(R11toSource.cmd());
 
         R11toSource.active().onTrue(lowerArmElevatorToOrigin());
-        R11toSource.done().onTrue(intakeCoral().andThen(SourcetoR12.cmd()));
+        R11toSource.done().onTrue(SourcetoR12.cmd());
 
 
         SourcetoR12.active().onTrue(raiseArmElevatorToL4());
-        SourcetoR12.done().onTrue(score().andThen(R12toSource.cmd()));
+        SourcetoR12.done().onTrue(R12toSource.cmd());
 
         R12toSource.active().onTrue(lowerArmElevatorToOrigin());
-        R12toSource.done().onTrue(intakeCoral().andThen(SourcetoR1.cmd()));
+        R12toSource.done().onTrue((SourcetoR1.cmd()));
 
         SourcetoR1.active().onTrue(raiseArmElevatorToL4());
         SourcetoR1.done().onTrue(score());
