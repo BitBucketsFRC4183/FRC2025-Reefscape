@@ -60,7 +60,7 @@ public class ElevatorConstants {
     public static final int elevatorSpark1CAN = 14;
     public static final int elevatorSpark2CAN = 15;
     public static final int elevatorLaserCanID = 30;
-    public static final boolean elevatorSpark1Inverted = false;
-    public static final boolean elevatorSpark2Inverted = true;
+    public static final boolean elevatorSpark1Inverted = true;
+    public static final boolean elevatorSpark2Inverted = false;
 
 }
