@@ -22,6 +22,15 @@ public class LEDSubsystem extends SubsystemBase {
         m_led.setLength(kLength);
         m_led.start();
 
+        // Create an LED pattern that sets the entire strip to solid red
+        LEDPattern red = LEDPattern.solid(Color.kRed);
+
+        // Apply the LED pattern to the data buffer
+        red.applyTo(m_buffer);
+
+        // Write the data to the LED strip
+        m_led.setData(m_buffer);
+
         // Set the default command to turn the strip off, otherwise the last colors written by
         // the last command to run will continue to be displayed.
         // Note: Other default patterns could be used instead!
