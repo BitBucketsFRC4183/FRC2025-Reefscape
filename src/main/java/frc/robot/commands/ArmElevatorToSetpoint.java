@@ -12,7 +12,7 @@ public class ArmElevatorToSetpoint extends ParallelDeadlineGroup {
     public ArmElevatorToSetpoint(ElevatorSubsystem elevator, ArmSubsystem arm, double elevatorSetpoint, double armSetpoint) {
         super(Commands.sequence(
                 Commands.deadline(
-                        Commands.waitSeconds(0.2),
+                        Commands.waitSeconds(0.25),
                         Commands.parallel(
                                 new ElevatorSetPointCommand(elevator, elevatorSetpoint))
                 ),
