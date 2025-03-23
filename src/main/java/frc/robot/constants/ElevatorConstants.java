@@ -62,4 +62,5 @@ public class ElevatorConstants {
     public static final boolean elevatorSpark1Inverted = true;
     public static final boolean elevatorSpark2Inverted = false;
 
+    public static double simMechanismDisplacement = 0.4;
 }

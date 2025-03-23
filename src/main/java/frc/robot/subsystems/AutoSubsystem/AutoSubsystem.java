@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import org.littletonrobotics.junction.Logger;
 
+import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.robot.constants.ArmConstants.MIN_ANGLE_RADS;
 
 
@@ -45,21 +46,19 @@ public class AutoSubsystem extends SubsystemBase {
     }
 
     public Command raiseArmElevatorToL4() {
-        return Commands.deadline(Commands.waitSeconds(1.0), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4, ArmConstants.armL4Angle));
+        return deadline(waitSeconds(1.25), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4, ArmConstants.armL4Angle));
     }
     public Command lowerArmElevatorToOrigin() {
-        return new ArmElevatorToOrigin(elevator,arm);
+        return deadline(waitSeconds(1.5), new ArmElevatorToOrigin(elevator,arm));
     }
     public Command stop() {
-        return Commands.run(drive::stop, drive);
+        return Commands.runOnce(drive::stop);
     }
     public Command score() {
-        return new ArmToSetpoint(arm, Units.degreesToRadians(15));
+        return Commands.deadline(waitSeconds(0.8), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L3, Units.degreesToRadians(-20)));
     }
 
-    public Command intakeCoral() {
-        return new ArmToSetpoint(arm, Units.degreesToRadians(MIN_ANGLE_RADS));
-    }
+
 
 
 //----------------------------------------------------------------------------
@@ -92,7 +91,7 @@ public class AutoSubsystem extends SubsystemBase {
                 ThreeL4CoralTopRoutine.trajectory("SourcetoR1");
 
         ThreeL4CoralTopRoutine.active().onTrue(
-                Commands.sequence(
+                sequence(
                         Commands.print("Started" +
                                 "ThreeL4CoralTopRoutine" +
                                 " the routine!"),
@@ -102,21 +101,15 @@ public class AutoSubsystem extends SubsystemBase {
                 )
         );
 
+        StarttoR11.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), score(),
+                parallel(R11toSource.cmd(), lowerArmElevatorToOrigin())));
 
-        StarttoR11.active();
-        StarttoR11.done().onTrue(stop().andThen(raiseArmElevatorToL4()).andThen(score()).andThen(R11toSource.cmd()));
-
-        R11toSource.active().onTrue(lowerArmElevatorToOrigin());
-        R11toSource.done().onTrue((Commands.waitSeconds(0.5).andThen(SourcetoR12.cmd())));
-
-        SourcetoR12.active();
+        R11toSource.done().onTrue(sequence(stop(), waitSeconds(0.5), parallel(SourcetoR12.cmd(), lowerArmElevatorToOrigin())));
         SourcetoR12.done().onTrue(stop().andThen(raiseArmElevatorToL4()).andThen(score()).andThen(R12toSource.cmd()));
 
-        R12toSource.active().onTrue(lowerArmElevatorToOrigin());
-        R12toSource.done().onTrue((Commands.waitSeconds(0.5).andThen(SourcetoR1.cmd())));
-
-        SourcetoR1.active();
+        R12toSource.done().onTrue(sequence(stop(), waitSeconds(0.5), parallel(SourcetoR12.cmd(), lowerArmElevatorToOrigin())));
         SourcetoR1.done().onTrue(stop().andThen(raiseArmElevatorToL4()).andThen(score()));
+
         
 
         return ThreeL4CoralTopRoutine;
@@ -142,7 +135,7 @@ public AutoRoutine OneL4CoralMidRoutine() {
 
 
     OneL4CoralMidRoutine.active().onTrue(
-            Commands.sequence(
+            sequence(
                     Commands.print("Started" +
                             "OneL4CoralMidRoutine" +
                             " the routine!"),
@@ -160,15 +153,15 @@ public AutoRoutine OneL4CoralMidRoutine() {
 
 
     public Command OneL3Score() {
-        return Commands.sequence(
-                Commands.deadline(Commands.waitSeconds(4), new RobotRelativeDriveCommand(drive, () -> 0.2, () -> 0, () -> 0)),
-                Commands.waitSeconds(1),
-                Commands.deadline(Commands.waitSeconds(0.2), new RobotRelativeDriveCommand(drive, () -> -0.2, () -> 0, () -> 0)),
-                Commands.deadline(Commands.waitSeconds(3), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L3 + 0.005, ArmConstants.armL4Angle + Units.degreesToRadians(1))),
-                Commands.deadline(Commands.waitSeconds(0.05), new RobotRelativeDriveCommand(drive, () -> 0.1, () -> 0, () -> 0)),
-                Commands.parallel(
+        return sequence(
+                Commands.deadline(waitSeconds(4), new RobotRelativeDriveCommand(drive, () -> 0.2, () -> 0, () -> 0)),
+                waitSeconds(1),
+                Commands.deadline(waitSeconds(0.2), new RobotRelativeDriveCommand(drive, () -> -0.2, () -> 0, () -> 0)),
+                Commands.deadline(waitSeconds(3), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L3 + 0.005, ArmConstants.armL4Angle + Units.degreesToRadians(1))),
+                Commands.deadline(waitSeconds(0.05), new RobotRelativeDriveCommand(drive, () -> 0.1, () -> 0, () -> 0)),
+                parallel(
                         new ArmElevatorToOrigin(elevator, arm),
-                        Commands.deadline(Commands.waitSeconds(0.2), new RobotRelativeDriveCommand(drive, () -> -0.1, () -> 0, () -> 0))
+                        Commands.deadline(waitSeconds(0.2), new RobotRelativeDriveCommand(drive, () -> -0.1, () -> 0, () -> 0))
                         )
 
 
@@ -176,20 +169,20 @@ public AutoRoutine OneL4CoralMidRoutine() {
     }
 
     public Command TaxiBack() {
-        return Commands.sequence(
-                Commands.waitSeconds(0),
+        return sequence(
+                waitSeconds(0),
                 Commands.deadline(
-                        Commands.waitSeconds(3),
+                        waitSeconds(3),
                         new RobotRelativeDriveCommand(drive, () -> -1, () -> 0, () -> 0)
                 )
         );
     };
 
     public Command TaxiForward() {
-        return Commands.sequence(
-                Commands.waitSeconds(0),
+        return sequence(
+                waitSeconds(0),
                 Commands.deadline(
-                        Commands.waitSeconds(3),
+                        waitSeconds(3),
                         new RobotRelativeDriveCommand(drive, () -> 1, () -> 0, () -> 0)
                 )
         );

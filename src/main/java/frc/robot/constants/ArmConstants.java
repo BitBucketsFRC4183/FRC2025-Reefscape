@@ -25,7 +25,7 @@ public class ArmConstants {
     public static final double MAX_ANGLE_RADS = Units.degreesToRadians(76);
     public static final double MIN_ANGLE_RADS = Units.degreesToRadians(-86);
     public static double gearingRatio = 180.0;
-    public static double armLength = 0.3;
+    public static double armLength = Units.inchesToMeters(22);
     public static DCMotor armGearbox = DCMotor.getKrakenX60(2);
 
 

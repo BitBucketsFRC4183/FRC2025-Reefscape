@@ -214,7 +214,7 @@ public class RobotContainer {
     this.mechanism2D = new Mechanism2d(3, 3);
     this.mechanismRoot2D = mechanism2D.getRoot("Elevator Root", 1.5, 0);
     this.elevatorMech2D =
-            mechanismRoot2D.append(new MechanismLigament2d("Elevator", ElevatorConstants.minHeight , 90));
+            mechanismRoot2D.append(new MechanismLigament2d("Elevator", ElevatorConstants.minHeight + ElevatorConstants.simMechanismDisplacement, 90));
     this.armMech2D =
             elevatorMech2D.append(new MechanismLigament2d("Arm", ArmConstants.armLength, Units.radiansToDegrees(armSubsystem.getCurrentAngle()) ,6, new Color8Bit(Color.kPurple)));
 
@@ -371,7 +371,7 @@ autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(Sys
       Logger.recordOutput("FieldSimulation/CoralPositions", coralPoses);
     };
 
-    elevatorMech2D.setLength(elevatorSubsystem.getLoadHeight());
+    elevatorMech2D.setLength(elevatorSubsystem.getLoadHeight() + ElevatorConstants.simMechanismDisplacement);
     armMech2D.setAngle(Units.radiansToDegrees(armSubsystem.getCurrentAngle()) - 90);
   }
 
