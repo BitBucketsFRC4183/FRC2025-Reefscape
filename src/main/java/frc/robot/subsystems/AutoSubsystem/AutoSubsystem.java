@@ -45,12 +45,14 @@ public class AutoSubsystem extends SubsystemBase {
     }
 
     public Command raiseArmElevatorToL4() {
-        return new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4, ArmConstants.armL4Angle);
+        return Commands.deadline(Commands.waitSeconds(1.0), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4, ArmConstants.armL4Angle));
     }
     public Command lowerArmElevatorToOrigin() {
         return new ArmElevatorToOrigin(elevator,arm);
     }
-
+    public Command stop() {
+        return Commands.run(drive::stop, drive);
+    }
     public Command score() {
         return new ArmToSetpoint(arm, Units.degreesToRadians(15));
     }
@@ -101,21 +103,20 @@ public class AutoSubsystem extends SubsystemBase {
         );
 
 
-        StarttoR11.active().onTrue(raiseArmElevatorToL4());
-        StarttoR11.done().onTrue(R11toSource.cmd());
+        StarttoR11.active();
+        StarttoR11.done().onTrue(stop().andThen(raiseArmElevatorToL4()).andThen(score()).andThen(R11toSource.cmd()));
 
         R11toSource.active().onTrue(lowerArmElevatorToOrigin());
-        R11toSource.done().onTrue(SourcetoR12.cmd());
+        R11toSource.done().onTrue((Commands.waitSeconds(0.5).andThen(SourcetoR12.cmd())));
 
-
-        SourcetoR12.active().onTrue(raiseArmElevatorToL4());
-        SourcetoR12.done().onTrue(R12toSource.cmd());
+        SourcetoR12.active();
+        SourcetoR12.done().onTrue(stop().andThen(raiseArmElevatorToL4()).andThen(score()).andThen(R12toSource.cmd()));
 
         R12toSource.active().onTrue(lowerArmElevatorToOrigin());
-        R12toSource.done().onTrue((SourcetoR1.cmd()));
+        R12toSource.done().onTrue((Commands.waitSeconds(0.5).andThen(SourcetoR1.cmd())));
 
-        SourcetoR1.active().onTrue(raiseArmElevatorToL4());
-        SourcetoR1.done().onTrue(score());
+        SourcetoR1.active();
+        SourcetoR1.done().onTrue(stop().andThen(raiseArmElevatorToL4()).andThen(score()));
         
 
         return ThreeL4CoralTopRoutine;
