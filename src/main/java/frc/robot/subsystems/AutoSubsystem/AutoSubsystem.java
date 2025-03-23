@@ -146,11 +146,12 @@ public AutoRoutine OneL4CoralMidRoutine() {
                             "OneL4CoralMidRoutine" +
                             " the routine!"),
                     StarttoR9.resetOdometry(),
-                    StarttoR9.cmd()
+                    StarttoR9.cmd().alongWith(raiseArmElevatorToL4())
             )
     );
 
-    StarttoR9.done().onTrue(R9toStart.cmd().alongWith(lowerArmElevatorToOrigin()));
+    StarttoR9.done().onTrue(Commands.run(drive::stop, drive));
+    //StarttoR9.done().onTrue(R9toStart.cmd().alongWith(lowerArmElevatorToOrigin()));
     R9toStart.done().onTrue(Commands.run(drive::stop, drive));
 
     return OneL4CoralMidRoutine;

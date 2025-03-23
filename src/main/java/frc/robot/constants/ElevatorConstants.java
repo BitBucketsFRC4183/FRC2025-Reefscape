@@ -45,7 +45,7 @@ public class ElevatorConstants {
     public static double kI = 0;
     public static double kD = 2;
 
-    public static double Origin = 0.444;
+    public static double Origin = 0.574;
     public static double L1 = 0;
     public static double L2 = 0.244;
     public static double L3 = 0.532;

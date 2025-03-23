@@ -16,7 +16,7 @@ public class ArmElevatorToOrigin extends ParallelDeadlineGroup {
                 Commands.waitSeconds(Constants.commandTimeout + 1),
                 Commands.sequence(
                         Commands.deadline(
-                                Commands.waitSeconds(0.3),
+                                Commands.waitSeconds(0.1),
                                 new ArmToSetpoint(arm, ArmConstants.MIN_ANGLE_RADS)
                         )
                         ,

@@ -31,8 +31,8 @@ public class ArmConstants {
 
     public static double armSparkEncoderPositionFactor;
     public static double armSparkEncoderVelocityFactor;
-    public static double maxVelocity = 3;
-    public static double maxAcceleration = 2;
+    public static double maxVelocity = 6;
+    public static double maxAcceleration = 6;
     public static double mass = 5;
 
     public static int arm1CurrentLimit = 50;
