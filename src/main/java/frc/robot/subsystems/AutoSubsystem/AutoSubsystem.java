@@ -146,7 +146,7 @@ public AutoRoutine OneL4CoralMidRoutine() {
                             "OneL4CoralMidRoutine" +
                             " the routine!"),
                     StarttoR9.resetOdometry(),
-                    StarttoR9.cmd().alongWith(raiseArmElevatorToL4())
+                    StarttoR9.cmd()
             )
     );
 
