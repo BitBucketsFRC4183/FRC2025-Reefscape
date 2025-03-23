@@ -54,7 +54,7 @@ public class AutoSubsystem extends SubsystemBase {
         return Commands.run(drive::stop, drive);
     }
     public Command score() {
-        return new ArmToSetpoint(arm, Units.degreesToRadians(50));
+        return new ArmToSetpoint(arm, Units.degreesToRadians(15));
     }
 
     public Command intakeCoral() {
@@ -147,12 +147,13 @@ public AutoRoutine OneL4CoralMidRoutine() {
                             "OneL4CoralMidRoutine" +
                             " the routine!"),
                     StarttoR9.resetOdometry(),
-                    StarttoR9.cmd()
+                    StarttoR9.cmd().alongWith(raiseArmElevatorToL4())
             )
     );
 
-    StarttoR9.done().onTrue(R9toStart.cmd().alongWith(lowerArmElevatorToOrigin()));
-    R9toStart.done().onTrue(stop());
+    StarttoR9.done().onTrue(Commands.run(drive::stop, drive).andThen(raiseArmElevatorToL4().andThen(score().andThen(lowerArmElevatorToOrigin()))));
+    //StarttoR9.done().onTrue(R9toStart.cmd().alongWith(lowerArmElevatorToOrigin()));
+    R9toStart.done().onTrue(Commands.run(drive::stop, drive));
 
     return OneL4CoralMidRoutine;
     }
@@ -199,7 +200,7 @@ public AutoRoutine OneL4CoralMidRoutine() {
         AutoTrajectory circle = testing.trajectory("Circle");
 
         testing.active().onTrue(circle.resetOdometry().andThen(circle.cmd()));
-
+        circle.done().onTrue(Commands.run(drive::stop, drive));
         return testing;
     }
 }

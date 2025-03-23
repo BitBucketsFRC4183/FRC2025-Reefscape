@@ -1,10 +1,15 @@
 package frc.robot.subsystems.VisionSubsystem;
 
 
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.robot.constants.VisionConstants;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.simulation.PhotonCameraSim;
@@ -15,16 +20,76 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static frc.robot.constants.VisionConstants.camera1Name;
+import static frc.robot.constants.VisionConstants.robotToCamera1;
+
+//public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
+//    private static VisionSystemSim visionSim;
+//    private final PhotonCameraSim cameraSim;
+//    private final PhotonCamera camera;
+//    private final Supplier<Pose2d> poseSupplier;
+//
+//    public VisionIOPhotonVisionSim(Supplier<Pose2d> poseSupplier) {
+//        super();
+//
+//        // initial
+//        this.poseSupplier = poseSupplier;
+//        if (visionSim == null) {
+//            visionSim = new VisionSystemSim(
+//                    "VisionSubsystem");
+//            visionSim.addAprilTags(VisionConstants.aprilTagFieldLayout);
+//        }
+//
+//
+//        // Add sim camera
+//        //properties
+//
+//        var cameraProp = new SimCameraProperties();
+//        cameraProp.setCalibration(640, 480, Rotation2d.fromDegrees(100));
+//        cameraProp.setCalibError(0.25, 0.08);
+//        cameraProp.setFPS(20);
+//        cameraProp.setAvgLatencyMs(35);
+//        cameraProp.setLatencyStdDevMs(5);
+//
+//
+//        cameraSim = new PhotonCameraSim(new PhotonCamera("simCamera")
+//                        , cameraProp);
+//        cameraSim.enableRawStream(true);
+//        cameraSim.enableProcessedStream(true);
+//        cameraSim.enableDrawWireframe(true);
+//
+//        camera = cameraSim.getCamera();
+//
+//        visionSim.addCamera(cameraSim, VisionConstants.robotToCamera1);
+//        photonPoseEstimator = new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.robotToCamera1);
+//
+//        var debugField = visionSim.getDebugField();
+//        visionSim.getDebugField();
+//
+//    }
+//
+//
+//    @Override
+//    public void updateInputs(VisionIOInputs inputs) {
+//        visionSim.update(poseSupplier.get());
+//        super.updateInputs(inputs);
+//        }
+//    }
+
+
 public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
     private static VisionSystemSim visionSim;
-    private final PhotonCameraSim cameraSim;
-    private final PhotonCamera camera;
-    private final Supplier<Pose2d> poseSupplier;
 
-    public VisionIOPhotonVisionSim(Supplier<Pose2d> poseSupplier) {
+    private final Supplier<Pose2d> poseSupplier;
+    private final PhotonCameraSim cameraSim;
+
+
+    public VisionIOPhotonVisionSim(
+            Supplier<Pose2d> poseSupplier) {
         super();
-        // Initialize vision sim
         this.poseSupplier = poseSupplier;
+
+        // Initialize vision sim
         if (visionSim == null) {
             visionSim = new VisionSystemSim("main");
             visionSim.addAprilTags(VisionConstants.aprilTagFieldLayout);
@@ -32,69 +97,27 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
 
         // Add sim camera
         var cameraProp = new SimCameraProperties();
-        // A 640 x 480 camera with a 100 degree diagonal FOV.
         cameraProp.setCalibration(640, 480, Rotation2d.fromDegrees(100));
-// Approximate detection noise with average and standard deviation error in pixels.
         cameraProp.setCalibError(0.25, 0.08);
-// Set the camera image capture framerate (Note: this is limited by robot loop rate).
         cameraProp.setFPS(20);
-// The average and standard deviation in milliseconds of image data latency.
         cameraProp.setAvgLatencyMs(35);
         cameraProp.setLatencyStdDevMs(5);
 
-        cameraSim =
-                new PhotonCameraSim(new PhotonCamera("simCamera")
-                , cameraProp);
-        camera = cameraSim.getCamera();
 
-        visionSim.addCamera(cameraSim, VisionConstants.cameraToRobot);
-        photonPoseEstimator =
-                new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraToRobot);
+        cameraSim = new PhotonCameraSim(camera
+        );
+
+        cameraSim.enableRawStream(true);
+        cameraSim.enableProcessedStream(true);
+        cameraSim.enableDrawWireframe(true);
+
+        visionSim.addCamera(cameraSim,
+                robotToCamera1);
     }
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
         visionSim.update(poseSupplier.get());
         super.updateInputs(inputs);
-
-        var visionResult =
-                camera.getLatestResult();
-        boolean hasTargets =
-                visionResult.hasTargets();
-
-        List<PhotonTrackedTarget> targets =
-                visionResult.getTargets();
-
-        if (!targets.isEmpty()) {
-            PhotonTrackedTarget target =
-                    visionResult.getBestTarget();
-
-            //apriltag
-            int targetID = target.getFiducialId();
-            Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-            Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
-
-            inputs.latestTargetObservation = new TargetObservation(Rotation2d.fromDegrees(target.getYaw()), Rotation2d.fromDegrees(target.getPitch()));
-            inputs.tagPose =
-                    VisionConstants.aprilTagFieldLayout.getTagPose(targetID).get();
-        }
-
-        var optionalPose = photonPoseEstimator.update(visionResult);
-        optionalPose.ifPresent(estimatedRobotPose -> inputs.estimatedRobotPose = estimatedRobotPose.estimatedPose);
-        optionalPose.ifPresent(estimatedRobotPose -> inputs.timestampSeconds = estimatedRobotPose.timestampSeconds);
-
-        inputs.connected =
-                camera.isConnected();
-        inputs.hasEstimate =
-                optionalPose.isPresent();
-
-        //sim field construct
-        visionSim.getDebugField();
-        cameraSim.enableRawStream(true);
-        cameraSim.enableProcessedStream(true);
-        cameraSim.enableDrawWireframe(true);
-
-
     }
-
 }

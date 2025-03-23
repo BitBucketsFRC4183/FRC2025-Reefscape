@@ -2,6 +2,7 @@ package frc.robot.commands.ElevatorCommands;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +22,8 @@ public class ElevatorGoToOriginTimedCommand extends Command {
     @Override
     public void initialize() {
         double velocity = elevator.getLoadHeight() / timeToCompleteSeconds;
-        this.elevator.elevatorPID.setGoal(new TrapezoidProfile.State(0, velocity));
+        this.elevator.elevatorPID.setConstraints(new TrapezoidProfile.Constraints(velocity, 1));
+        this.elevator.elevatorPID.setGoal(new TrapezoidProfile.State(ElevatorConstants.Origin, 0));
     }
 
     @Override

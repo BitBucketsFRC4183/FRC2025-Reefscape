@@ -75,8 +75,6 @@ public class EndEffectorIOSim implements EndEffectorIO {
 
     @Override
     public void updateInputs(EndEffectorInputsAutoLogged inputs) {
-        inputs.centralVolts = centralWheel.getInputVoltage();
-        inputs.gripperVolts = gripperWheels.getInputVoltage();
         inputs.hasCoral = getHasAlgae();
         inputs.hasAlgae = getHasCoral();
         inputs.isOpen = getIsOpen();

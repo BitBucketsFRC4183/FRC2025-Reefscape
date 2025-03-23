@@ -152,8 +152,8 @@ public class DriveSubsystem extends SubsystemBase {
     sysId =
             new SysIdRoutine(
                     new SysIdRoutine.Config(
-                            null,
-                            null,
+                            Volts.of(1).per(Second),
+                            Volts.of(11),
                             null,
                             (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
                     new SysIdRoutine.Mechanism(
@@ -173,7 +173,7 @@ public class DriveSubsystem extends SubsystemBase {
             this.holoXController = new PIDController(kXHoloP, kXHoloI, kXHoloD);
             this.holoYController = new PIDController(kYHoloP,kYHoloI,kYHoloD);
             // this.holoTController = new ProfiledPIDController(kTHoloP, kTHoloI, kTHoloD, new TrapezoidProfile.Constraints(Math.PI, Math.PI/2));
-            this.holoTController =  new PIDController(kTHoloPSim, kTHoloISim, kTHoloDSim);
+            this.holoTController =  new PIDController(kTHoloP, kTHoloI, kTHoloD);
 
       }
 
@@ -297,9 +297,7 @@ public class DriveSubsystem extends SubsystemBase {
     ChassisSpeeds newSpeeds;
     holoXController.setSetpoint(samplePose.getX());
     holoYController.setSetpoint(samplePose.getY());
-    //holoTController.setGoal(samplePose.getRotation().getRadians());
     holoTController.setSetpoint(samplePose.getRotation().getRadians());
-
 
     double addedX = holoXController.calculate(pose.getX());
     double addedY = holoYController.calculate(pose.getY());

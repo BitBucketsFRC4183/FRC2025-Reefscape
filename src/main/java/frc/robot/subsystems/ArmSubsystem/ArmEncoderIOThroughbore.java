@@ -1,5 +1,6 @@
 package frc.robot.subsystems.ArmSubsystem;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -24,7 +25,7 @@ public class ArmEncoderIOThroughbore implements ArmEncoderIO{
     public void updateInputs(ArmEncoderIO.ArmEncoderIOInputs inputs) {
         inputs.encoderPositionRotsNoOffset = armDCEncoder.get();
         inputs.encoderPositionRotsOffset = armDCEncoder.get() - ArmConstants.encoderOffsetRots;
-        inputs.encoderPositionRadsOffset =  Units.rotationsToRadians(inputs.encoderPositionRotsOffset);
+        inputs.encoderPositionRadsOffset = MathUtil.angleModulus(Units.rotationsToRadians(inputs.encoderPositionRotsOffset));
 
 
         inputs.unfilteredArmAngle = inputs.encoderPositionRadsOffset;

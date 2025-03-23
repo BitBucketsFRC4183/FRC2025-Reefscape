@@ -2,6 +2,7 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -29,9 +30,11 @@ public class ManualArmCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            double calculatedVolts = ArmConstants.kG * Math.cos(armSubsystem.getCurrentAngle());
-            Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
-            this.armSubsystem.setArmVoltage(calculatedVolts);
+//            double calculatedVolts = ArmConstants.kG * Math.cos(armSubsystem.getCurrentAngle());
+//            // calculatedVolts = ArmConstants.kG;
+//            Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
+//            this.armSubsystem.setArmVoltage(calculatedVolts);
+            new ArmHoverCommand(armSubsystem).execute();
         }
     }
 }

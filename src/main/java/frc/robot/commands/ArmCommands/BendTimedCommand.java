@@ -2,6 +2,7 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -22,7 +23,8 @@ public class BendTimedCommand extends Command {
     public void initialize() {
         double velocity = targetAngle / timeToCompleteSeconds;
         armSubsystem.armFeedback.reset(armSubsystem.getCurrentAngle());
-        armSubsystem.armFeedback.setGoal(new TrapezoidProfile.State(targetAngle, velocity));
+        this.armSubsystem.armFeedback.setConstraints(new TrapezoidProfile.Constraints(velocity, 1));
+        armSubsystem.armFeedback.setGoal(new TrapezoidProfile.State(targetAngle, 0));
 
         Logger.recordOutput("ArmSubsystem/target_Angle", targetAngle);
         Logger.recordOutput("ArmSubsystem/target_velocity", velocity);
@@ -40,4 +42,15 @@ public class BendTimedCommand extends Command {
         this.armSubsystem.setArmVoltage(calculatedVolts);
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+//            double calculatedVolts = ArmConstants.kG * Math.cos(armSubsystem.getCurrentAngle());
+//            // calculatedVolts = ArmConstants.kG;
+//            Logger.recordOutput("ArmSubsystem/target_voltage", calculatedVolts);
+//            this.armSubsystem.setArmVoltage(calculatedVolts);
+            new ArmHoverCommand(armSubsystem).execute();
+
+        }
+    }
 }
