@@ -80,7 +80,7 @@ public class FieldDriveElevatorLimitedCommand extends Command {
         }
 
         double rampFactor = speedRamp(elevator.getLoadHeight(),
-                ElevatorConstants.minHeight + 0.25, ElevatorConstants.maxHeight, 0.25, 1, true);
+                ElevatorConstants.minHeight + 0.25, ElevatorConstants.maxHeight, 0.15, 1, true);
 
         speedFactor = speedFactor * rampFactor;
 

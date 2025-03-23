@@ -88,10 +88,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
             outputVoltage = volts;
         } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
-            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : ElevatorConstants.kG - 0.1;
         } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
-            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.05)) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : ElevatorConstants.kG - 0.05;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.10)) {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
         } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.06) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
@@ -104,14 +104,14 @@ public class ElevatorSubsystem extends SubsystemBase {
         double outputVoltage = volts;
         if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
             outputVoltage = volts;
-//        } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
-//            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
-//        } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
-//            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
-//        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.01)) {
-//            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
-//        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.005) {
-//            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : ElevatorConstants.kG - 0.1;
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : ElevatorConstants.kG - 0.05;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.03)) {
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
+        } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.005) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
 
         }
         elevatorIO.setElevatorMotorVoltage(outputVoltage);

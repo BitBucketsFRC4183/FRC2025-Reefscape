@@ -17,11 +17,11 @@ public class ArmElevatorToOrigin extends ParallelDeadlineGroup {
                 Commands.sequence(
                         Commands.deadline(
                                 Commands.waitSeconds(0.1),
-                                new ArmToSetpoint(arm, ArmConstants.MIN_ANGLE_RADS)
+                                new ArmToSetpoint(arm, ArmConstants.armOriginAngle)
                         )
                         ,
                         Commands.parallel(
-                                new ArmToSetpoint(arm, ArmConstants.MIN_ANGLE_RADS),
+                                new ArmToSetpoint(arm, ArmConstants.armOriginAngle),
                                 new ElevatorSetPointCommand(elevator, ElevatorConstants.Origin))
                         )
 

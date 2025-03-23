@@ -52,7 +52,7 @@ public class AutoSubsystem extends SubsystemBase {
     }
 
     public Command score() {
-        return new ArmToSetpoint(arm, Units.degreesToRadians(50));
+        return new ArmToSetpoint(arm, Units.degreesToRadians(15));
     }
 
     public Command intakeCoral() {
@@ -150,7 +150,7 @@ public AutoRoutine OneL4CoralMidRoutine() {
             )
     );
 
-    StarttoR9.done().onTrue(Commands.run(drive::stop, drive));
+    StarttoR9.done().onTrue(Commands.run(drive::stop, drive).andThen(raiseArmElevatorToL4().andThen(score().andThen(lowerArmElevatorToOrigin()))));
     //StarttoR9.done().onTrue(R9toStart.cmd().alongWith(lowerArmElevatorToOrigin()));
     R9toStart.done().onTrue(Commands.run(drive::stop, drive));
 

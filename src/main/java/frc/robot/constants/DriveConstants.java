@@ -29,10 +29,10 @@ import static edu.wpi.first.units.Units.*;
 
 public class DriveConstants {
     public static final double maxSpeedMetersPerSec = 4.2;
-    public static final double turboSpeed =  3.5;
+    public static final double turboSpeed =  3;
     public static final double normalSpeed = 2;
     public static final double slowSpeed = 1.5;
-    public static final double alignmentSpeed = 0.2;
+    public static final double alignmentSpeed = 0.35;
 
     public static final double odometryFrequency = 100.0; // Hz
 
@@ -96,7 +96,7 @@ public class DriveConstants {
     public static final double driveKd = 0.0;
     public static final double driveKa = 0.0038184;
     public static final double driveKs = 0.1884;
-    public static final double driveKv = 0.77595;
+    public static final double driveKv = 0.78595;
 
     // tune kV till perfect
     // kS measured through sysid, + a lil extra
@@ -132,9 +132,9 @@ public class DriveConstants {
     public static final double turnPIDMinInput = -Math.PI; // Radians
     public static final double turnPIDMaxInput = Math.PI; // Radians
 
-    public static final double slewX = 20;
-    public static final double slewY = 20;
-    public static final double slewTheta = 20;
+    public static final double slewX = 15;
+    public static final double slewY = 15;
+    public static final double slewTheta = 15;
 
     public static final double robotMassLb = 120.00;
     public static final double robotMOI = 6.883;
