@@ -5,8 +5,6 @@ import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import choreo.trajectory.SwerveSample;
-import choreo.trajectory.Trajectory;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.ArmCommands.ArmToSetpoint;
@@ -20,6 +18,8 @@ import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import org.littletonrobotics.junction.Logger;
+
+import static frc.robot.constants.ArmConstants.MIN_ANGLE_RADS;
 
 
 public class AutoSubsystem extends SubsystemBase {
@@ -52,7 +52,11 @@ public class AutoSubsystem extends SubsystemBase {
     }
 
     public Command score() {
-        return new ArmToSetpoint(arm, Units.degreesToRadians(50));
+        return new ArmToSetpoint(arm, Units.degreesToRadians(15));
+    }
+
+    public Command intakeCoral() {
+        return new ArmToSetpoint(arm, Units.degreesToRadians(MIN_ANGLE_RADS));
     }
 
 
@@ -97,24 +101,22 @@ public class AutoSubsystem extends SubsystemBase {
         );
 
 
-//        StarttoR11.atTime("StarttoR11").onTrue(drive());
-//        StarttoR11.done().onTrue(drive().andThen(R11toSource.cmd(), LowerElevator()));
-//
-//        R11toSource.atTime("R11toSource").onTrue(deposit());
-//        R11toSource.done().onTrue(drive().andThen(SourcetoR12.cmd(), raiseElevator()));
-//
-//
-//        SourcetoR12.atTime("SourcetoR12").onTrue(claw());
-//        SourcetoR12.done().onTrue(drive().andThen(R12toSource.cmd(), LowerElevator()));
-//
-//        R12toSource.atTime("R12toSource").onTrue(deposit());
-//        R12toSource.done().onTrue(drive().andThen(SourcetoR1.cmd(), raiseElevator()));
-//
-//        SourcetoR1.atTime("SourcetoR1").onTrue(claw());
-//        SourcetoR1.done();
-//
-//        System.out.println(StarttoR11.getInitialPose().get());
+        StarttoR11.active().onTrue(raiseArmElevatorToL4());
+        StarttoR11.done().onTrue(R11toSource.cmd());
 
+        R11toSource.active().onTrue(lowerArmElevatorToOrigin());
+        R11toSource.done().onTrue(SourcetoR12.cmd());
+
+
+        SourcetoR12.active().onTrue(raiseArmElevatorToL4());
+        SourcetoR12.done().onTrue(R12toSource.cmd());
+
+        R12toSource.active().onTrue(lowerArmElevatorToOrigin());
+        R12toSource.done().onTrue((SourcetoR1.cmd()));
+
+        SourcetoR1.active().onTrue(raiseArmElevatorToL4());
+        SourcetoR1.done().onTrue(score());
+        
 
         return ThreeL4CoralTopRoutine;
     }
@@ -144,11 +146,12 @@ public AutoRoutine OneL4CoralMidRoutine() {
                             "OneL4CoralMidRoutine" +
                             " the routine!"),
                     StarttoR9.resetOdometry(),
-                    StarttoR9.cmd()
+                    StarttoR9.cmd().alongWith(raiseArmElevatorToL4())
             )
     );
 
-    StarttoR9.done().onTrue(R9toStart.cmd().alongWith(lowerArmElevatorToOrigin()));
+    StarttoR9.done().onTrue(Commands.run(drive::stop, drive).andThen(raiseArmElevatorToL4().andThen(score().andThen(lowerArmElevatorToOrigin()))));
+    //StarttoR9.done().onTrue(R9toStart.cmd().alongWith(lowerArmElevatorToOrigin()));
     R9toStart.done().onTrue(Commands.run(drive::stop, drive));
 
     return OneL4CoralMidRoutine;

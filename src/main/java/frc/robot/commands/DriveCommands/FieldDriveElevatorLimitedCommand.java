@@ -72,15 +72,15 @@ public class FieldDriveElevatorLimitedCommand extends Command {
 
         double radFactor;
         if (OperatorInput.slowModeHold.getAsBoolean()) {
-            radFactor = 0.75;
+            radFactor = 0.333;
         } else if (OperatorInput.turboModeHold.getAsBoolean()) {
-            radFactor = 1;
+            radFactor = 0.75;
         } else {
-            radFactor = 1.25;
+            radFactor = 0.5;
         }
 
         double rampFactor = speedRamp(elevator.getLoadHeight(),
-                ElevatorConstants.minHeight + 0.25, ElevatorConstants.maxHeight, 0.5, 1, true);
+                ElevatorConstants.minHeight + 0.25, ElevatorConstants.maxHeight, 0.15, 1, true);
 
         speedFactor = speedFactor * rampFactor;
 

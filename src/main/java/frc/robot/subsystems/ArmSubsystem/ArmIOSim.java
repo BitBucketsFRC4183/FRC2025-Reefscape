@@ -18,17 +18,12 @@ public class ArmIOSim implements ArmIO {
     @Override
     public void updateInputs(ArmIO.ArmIOInputs inputs) {
         armMotorSim.update(LOOP_PERIOD_SECS);
-        inputs.armAngle = armMotorSim.getAngleRads();
-        inputs.armCurrentAmps = new double[]{Math.abs(armMotorSim.getCurrentDrawAmps())};
-        inputs.armVelocity = armMotorSim.getVelocityRadPerSec();
-        Logger.recordOutput("ArmSubsystem/armAngle", inputs.armAngle);
-        Logger.recordOutput("ArmSubsystem/armCurrentAmps", inputs.armCurrentAmps);
-
+        inputs.arm1CurrentAmps = Math.abs(armMotorSim.getCurrentDrawAmps());
+        inputs.arm1AppliedVolts = armMotorSim.getInput(0);
     }
     @Override
     public void setArmMotorVoltage(double volts) {
         armMotorSim.setInputVoltage(volts);
-        Logger.recordOutput("ArmSubsystem/appliedVolts", volts);
     }
 
 }

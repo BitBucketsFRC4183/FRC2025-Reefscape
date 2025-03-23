@@ -5,6 +5,7 @@ import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.ElevatorConstants;
 
@@ -14,7 +15,7 @@ public class ElevatorEncoderIOLaserCAN implements ElevatorEncoderIO{
     private double lastTime;
     private double lastDistance;
     private double lastUnfilteredDistance;
-    LinearFilter elevatorFilter = LinearFilter.movingAverage(10);
+    MedianFilter elevatorFilter = new MedianFilter(4);
 
 
     public ElevatorEncoderIOLaserCAN() {

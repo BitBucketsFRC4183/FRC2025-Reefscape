@@ -173,7 +173,7 @@ public class DriveSubsystem extends SubsystemBase {
             this.holoXController = new PIDController(kXHoloP, kXHoloI, kXHoloD);
             this.holoYController = new PIDController(kYHoloP,kYHoloI,kYHoloD);
             // this.holoTController = new ProfiledPIDController(kTHoloP, kTHoloI, kTHoloD, new TrapezoidProfile.Constraints(Math.PI, Math.PI/2));
-            this.holoTController =  new PIDController(kTHoloPSim, kTHoloISim, kTHoloDSim);
+            this.holoTController =  new PIDController(kTHoloP, kTHoloI, kTHoloD);
 
       }
 

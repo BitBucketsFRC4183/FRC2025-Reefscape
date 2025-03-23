@@ -10,12 +10,18 @@ import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 
 public class ArmElevatorToSetpoint extends ParallelDeadlineGroup {
     public ArmElevatorToSetpoint(ElevatorSubsystem elevator, ArmSubsystem arm, double elevatorSetpoint, double armSetpoint) {
-        super(Commands.deadline(
+        super(Commands.sequence(
+                Commands.deadline(
+                        Commands.waitSeconds(0.2),
+                        Commands.parallel(
+                                new ElevatorSetPointCommand(elevator, elevatorSetpoint))
+                ),
+                Commands.deadline(
                 Commands.waitSeconds(Constants.commandTimeout + 1),
                 Commands.parallel(
                         new ArmToSetpoint(arm, armSetpoint),
                         new ElevatorSetPointCommand(elevator, elevatorSetpoint))
                         )
-                );
+                ));
     }
 }

@@ -40,7 +40,7 @@ public class ElevatorSetpointTimedCommand extends Command {
         Logger.recordOutput("ElevatorSubsystem/target_voltage", calculatedVolts);
         Logger.recordOutput("ElevatorSubsystem/desired_position", elevator.elevatorPID.getSetpoint().position);
 
-        this.elevator.setElevatorVoltage(calculatedVolts);
+        this.elevator.setElevatorVoltageCommandBypass(calculatedVolts);
 
     }
 

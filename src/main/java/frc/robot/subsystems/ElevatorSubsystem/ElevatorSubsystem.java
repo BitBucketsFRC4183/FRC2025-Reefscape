@@ -29,9 +29,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final ElevatorIOInputsAutoLogged elevatorIOInputs;
     private final ElevatorEncoderIOInputsAutoLogged encoderIOInputs;
 
-    public final Mechanism2d elevator2D = new Mechanism2d(3, 3);
-    private final MechanismRoot2d elevator2dRoot = elevator2D.getRoot("Elevator Root", 2, 0);
-    public final MechanismLigament2d elevatorMech2d;
+
     private final SysIdRoutine sysId;
     // add a method to get profileGoal = new TrapezoidProfile.State(5, 0); based on where you want the robot to switch setpoints to
     //after that, add a method to setpoint = m_profile.calculate(kDt, elevator Heights (L1,L2,etc), profile);
@@ -49,11 +47,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.elevatorEncoderIO = elevatorEncoderIO;
         this.elevatorIOInputs = new ElevatorIOInputsAutoLogged();
         this.encoderIOInputs =  new ElevatorEncoderIOInputsAutoLogged();
-        this.elevatorMech2d = elevator2dRoot.append(new MechanismLigament2d("Elevator", ElevatorConstants.minHeight , 90));
+
         elevatorPID.setTolerance(0);
         // elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
         // setDefaultCommand(runOnce(elevatorIO::disable).andThen(run(() -> {})).withName("Idle"));
-        SmartDashboard.putData("ElevatorSubsystem/mechanism", elevator2D);
         // Configure SysId
         sysId =
                 new SysIdRoutine(
@@ -72,7 +69,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorIO.updateInputs(elevatorIOInputs);
         elevatorEncoderIO.updateInputs(encoderIOInputs);
 
-        elevatorMech2d.setLength(encoderIOInputs.height);
         Logger.processInputs("ElevatorSubsystem", elevatorIOInputs);
         Logger.processInputs("ElevatorSubsystem/encoder", encoderIOInputs);
 
@@ -92,10 +88,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
             outputVoltage = volts;
         } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
-            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : ElevatorConstants.kG - 0.1;
         } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
-            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.05)) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : ElevatorConstants.kG - 0.05;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.10)) {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
         } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.06) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
@@ -109,10 +105,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (OperatorInput.mechanismLimitOverride.getAsBoolean()) {
             outputVoltage = volts;
         } else if ((getLoadHeight() <= ElevatorConstants.minHeight)) {
-            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : 0;
+            outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : ElevatorConstants.kG - 0.1;
         } else if (getLoadHeight() >= ElevatorConstants.maxHeight) {
-            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : 0;
-        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.01)) {
+            outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : ElevatorConstants.kG - 0.05;
+        } else if ((getLoadHeight() <= ElevatorConstants.minHeight + 0.03)) {
             outputVoltage = Math.signum(outputVoltage) == 1 ? outputVoltage : outputVoltage * 0.333;
         } else if (getLoadHeight() >= ElevatorConstants.maxHeight - 0.005) {
             outputVoltage = Math.signum(outputVoltage) == -1 ? outputVoltage : outputVoltage * 0.333;
