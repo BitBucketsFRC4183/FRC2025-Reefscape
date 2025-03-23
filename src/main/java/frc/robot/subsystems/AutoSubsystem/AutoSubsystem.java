@@ -56,7 +56,6 @@ public class AutoSubsystem extends SubsystemBase {
     public Command score() {
         return new ArmToSetpoint(arm, Units.degreesToRadians(15));
     }
-
     public Command intakeCoral() {
         return new ArmToSetpoint(arm, Units.degreesToRadians(MIN_ANGLE_RADS));
     }
