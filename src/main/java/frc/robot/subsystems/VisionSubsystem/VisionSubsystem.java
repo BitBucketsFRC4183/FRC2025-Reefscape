@@ -6,6 +6,8 @@ package frc.robot.subsystems.VisionSubsystem;
 
 import edu.wpi.first.apriltag.AprilTagDetection;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.*;
 //calculate the positions
@@ -54,7 +56,13 @@ public class VisionSubsystem extends SubsystemBase {
     List<Pose3d> robotPosesAccepted = new LinkedList<>();
     List<Pose3d> robotPosesRejected = new LinkedList<>();
 
-    public UsbCamera camera = CameraServer.startAutomaticCapture();
+
+
+    public UsbCamera camera =
+            CameraServer.startAutomaticCapture();{
+            CvSink cvSink = CameraServer.getVideo();
+    CvSource outputStream = CameraServer.putVideo("Blur", 640, 480);
+    }
 
 
     @Override
