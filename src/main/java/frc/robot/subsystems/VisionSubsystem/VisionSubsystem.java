@@ -52,6 +52,10 @@ public class VisionSubsystem extends SubsystemBase {
     List<Pose3d> robotPosesAccepted = new LinkedList<>();
     List<Pose3d> robotPosesRejected = new LinkedList<>();
 
+    public class OnTrueDriverStation {
+
+    }
+
     @Override
     public void periodic() {
         visionIO.updateInputs(visionInputs);
@@ -60,15 +64,9 @@ public class VisionSubsystem extends SubsystemBase {
         if (!visionInputs.connected) {
             new Alert("Vision camera " + VisionConstants.camera1Name +
                     "is disconnected.", Alert.AlertType.kWarning);
-
             Pose3d tagPose;
             tagPose = visionInputs.tagPose;
-
-
         }
-
-
-        ;
     }
 
     public Pose3d getEstimatedRobotPose () {

@@ -4,6 +4,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.VisionConstants;
 import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.MultiTargetPNPResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.util.HashSet;
@@ -33,7 +34,6 @@ import static frc.robot.constants.VisionConstants.robotToCamera1;
 
 
 
-
 public class VisionIOPhotonVision implements VisionIO {
     public final PhotonCamera camera;
     public PhotonPoseEstimator photonPoseEstimator;
@@ -49,7 +49,6 @@ public class VisionIOPhotonVision implements VisionIO {
 
     public void updateInputs(VisionIOInputs inputs) {
         inputs.connected = camera.isConnected();
-
 
         Set<Short> tagIds = new HashSet<>();
         List<PoseObservation> poseObservations = new LinkedList<>();
