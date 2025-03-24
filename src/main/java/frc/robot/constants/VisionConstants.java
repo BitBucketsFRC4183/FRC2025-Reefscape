@@ -13,15 +13,15 @@ public class VisionConstants {
             "BitbucketDriver'sCamera";
     public static String camera1Name =
             "BitbucketPhotonVision'sCamera";
-   //Robot Dimentions: (w=68.55) cm
+   //Robot Dimentions: (w=68.55, l=68.58) cm
     // camera to edge of width of the robot: 5.45
     // camera to center of the robot: 28.825cm
     // ->0.28825 m
-    //length: 68.58cm
-// ----------camera--
+   // ----------camera--
 
     public static Transform3d robotToCamera1 =
-            new Transform3d(0.28825, 0.0, 0.0, new Rotation3d(0.0, 0.0, 0.0));
+            new Transform3d(-0.28825, 0.0, 0.4,
+                    new Rotation3d(0.0, 0.0, 0.0));
 
 
 
