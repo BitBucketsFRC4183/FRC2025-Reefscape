@@ -5,6 +5,8 @@ package frc.robot.subsystems.VisionSubsystem;
 // import ntcore
 
 import edu.wpi.first.apriltag.AprilTagDetection;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.*;
 //calculate the positions
 
@@ -52,11 +54,12 @@ public class VisionSubsystem extends SubsystemBase {
     List<Pose3d> robotPosesAccepted = new LinkedList<>();
     List<Pose3d> robotPosesRejected = new LinkedList<>();
 
+    public UsbCamera camera = CameraServer.startAutomaticCapture();
+
 
     @Override
     public void periodic() {
         visionIO.updateInputs(visionInputs);
-
         Logger.processInputs("VisionSubsystem", visionInputs);
         if (!visionInputs.connected) {
             new Alert("Vision camera " + VisionConstants.camera1Name +
