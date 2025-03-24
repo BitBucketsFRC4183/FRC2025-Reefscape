@@ -52,9 +52,6 @@ public class VisionSubsystem extends SubsystemBase {
     List<Pose3d> robotPosesAccepted = new LinkedList<>();
     List<Pose3d> robotPosesRejected = new LinkedList<>();
 
-    public class OnTrueDriverStation {
-
-    }
 
     @Override
     public void periodic() {
