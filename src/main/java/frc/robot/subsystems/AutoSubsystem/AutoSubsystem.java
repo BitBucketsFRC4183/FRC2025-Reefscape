@@ -137,8 +137,8 @@ public AutoRoutine OneL4CoralMidRoutine() {
     AutoTrajectory StarttoR9 =
             OneL4CoralMidRoutine.trajectory("StarttoR9");
     //2
-    AutoTrajectory R9toStart =
-            OneL4CoralMidRoutine.trajectory("R9toStart");
+    AutoTrajectory R9Forward =
+            OneL4CoralMidRoutine.trajectory("R9Forward");
 
 
     OneL4CoralMidRoutine.active().onTrue(
@@ -150,10 +150,10 @@ public AutoRoutine OneL4CoralMidRoutine() {
                     StarttoR9.cmd()
             )
     );
-
-    StarttoR9.done().onTrue(Commands.run(drive::stop, drive).andThen(raiseArmElevatorToL4().andThen(score().andThen(lowerArmElevatorToOrigin()))));
-    //StarttoR9.done().onTrue(R9toStart.cmd().alongWith(lowerArmElevatorToOrigin()));
-    R9toStart.done().onTrue(Commands.run(drive::stop, drive));
+    StarttoR9.active();
+    StarttoR9.done().onTrue(Commands.run(drive::stop, drive).andThen(raiseArmElevatorToL4().andThen(R9Forward.cmd())));
+    R9Forward.active();
+    R9Forward.done().onTrue(Commands.run(drive::stop, drive).andThen(score()));
 
     return OneL4CoralMidRoutine;
     }
