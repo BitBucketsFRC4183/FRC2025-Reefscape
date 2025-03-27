@@ -41,7 +41,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands.ArmHoverCommand;
 import frc.robot.commands.ArmCommands.ManualArmCommand;
 import frc.robot.commands.ArmElevatorToOrigin;
+import frc.robot.commands.ArmElevatorToOriginTimed;
 import frc.robot.commands.ArmElevatorToSetpoint;
+import frc.robot.commands.ArmElevatorToSetpointTimed;
 import frc.robot.commands.ClawCommands.ClawIntakeCommand;
 import frc.robot.commands.ClawCommands.ClawOuttakeCommand;
 import frc.robot.commands.DriveCommands.FieldDriveElevatorLimitedCommand;
@@ -269,8 +271,8 @@ autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(Sys
 
 
     // elevator stuff
-    operatorInput.armElevatorOrigin.whileTrue(new ArmElevatorToOrigin(elevatorSubsystem, armSubsystem));
-    operatorInput.armElevatorL2.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L2, ArmConstants.armL2Angle));
+    operatorInput.armElevatorOrigin.whileTrue(new ArmElevatorToOriginTimed(elevatorSubsystem, armSubsystem, 5.0));
+    operatorInput.armElevatorL2.whileTrue(new ArmElevatorToSetpointTimed(elevatorSubsystem, armSubsystem, ElevatorConstants.L2, ArmConstants.armL2Angle, 4.0));
     operatorInput.armElevatorL3.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L3, ArmConstants.armL3Angle));
     operatorInput.armElevatorL4.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L4, ArmConstants.armL4Angle));
     operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
@@ -349,14 +351,14 @@ autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(Sys
     driveSubsystem.setPose(new Pose2d(3, 3, new Rotation2d()));
     SimulatedArena.getInstance().resetFieldForAuto();
   }
-
+/*
   public void addCoral() {
     if (Constants.currentMode != Constants.Mode.SIM) return;
 
     SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
     Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
   }
-
+*/
   public void displaySimFieldToAdvantageScope() {
     if (Constants.currentMode != Constants.Mode.SIM) return;
 
