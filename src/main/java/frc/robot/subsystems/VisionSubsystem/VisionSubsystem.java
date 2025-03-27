@@ -5,6 +5,10 @@ package frc.robot.subsystems.VisionSubsystem;
 // import ntcore
 
 import edu.wpi.first.apriltag.AprilTagDetection;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.*;
 //calculate the positions
 
@@ -47,33 +51,36 @@ public class VisionSubsystem extends SubsystemBase {
 
     }
 
-    List<Pose3d> tagPoses = new LinkedList<>();
-    List<Pose3d> robotPoses = new LinkedList<>();
-    List<Pose3d> robotPosesAccepted = new LinkedList<>();
-    List<Pose3d> robotPosesRejected = new LinkedList<>();
+
 
     @Override
     public void periodic() {
         visionIO.updateInputs(visionInputs);
-
         Logger.processInputs("VisionSubsystem", visionInputs);
         if (!visionInputs.connected) {
             new Alert("Vision camera " + VisionConstants.camera1Name +
                     "is disconnected.", Alert.AlertType.kWarning);
-
             Pose3d tagPose;
             tagPose = visionInputs.tagPose;
-
-
         }
-
-
-        ;
     }
 
-    public Pose3d getEstimatedRobotPose () {
+    public void setDriverCameraModeOn() {
+        visionIO.setDriverMode(true);
+    }
+
+    public Pose3d getEstimatedRobotPose() {
         return visionInputs.estimatedRobotPose;
     }
+
+    public boolean hasEstimatedRobotPose() {
+        return visionInputs.hasEstimate;
+    }
+
+    public double getPoseTimestamp() {
+        return  visionInputs.timestampSeconds;
+    }
+
 
 }
 //** .......................,,-~*~,,

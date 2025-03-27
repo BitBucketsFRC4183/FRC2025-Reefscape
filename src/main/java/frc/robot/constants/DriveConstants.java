@@ -92,7 +92,7 @@ public class DriveConstants {
             (2 * Math.PI) / 60.0 / driveMotorReduction; // Rotor RPM -> Wheel Rad/Sec
 
     // Drive Velocity firmware PID gains
-    public static final double driveKp = 0.17423;
+    public static final double driveKp = 0.47423;
     public static final double driveKd = 0.0;
     public static final double driveKa = 0.0038184;
     public static final double driveKs = 0.1884;
@@ -132,9 +132,9 @@ public class DriveConstants {
     public static final double turnPIDMinInput = -Math.PI; // Radians
     public static final double turnPIDMaxInput = Math.PI; // Radians
 
-    public static final double slewX = 15;
-    public static final double slewY = 15;
-    public static final double slewTheta = 15;
+    public static final double slewX = 10;
+    public static final double slewY = 10;
+    public static final double slewTheta = 10;
 
     public static final double robotMassLb = 120.00;
     public static final double robotMOI = 6.883;
@@ -170,17 +170,17 @@ public class DriveConstants {
     public static SwerveModuleConstants.ClosedLoopOutputType DriveMotorClosedLoopOutput = SwerveModuleConstants.ClosedLoopOutputType.Voltage;
 
     // HolonomicDrivePID
-    public static final double kXHoloP = 0;
+    public static final double kXHoloP = 8;
     public static final double kXHoloI = 0;
-    public static final double kXHoloD = 0;
+    public static final double kXHoloD = 0.1;
 
-    public static final double kYHoloP = 0;
+    public static final double kYHoloP = 8;
     public static final double kYHoloI = 0;
-    public static final double kYHoloD = 0;
+    public static final double kYHoloD = 0.1;
 
-    public static final double kTHoloP = 0;
+    public static final double kTHoloP = 3;
     public static final double kTHoloI = 0;
-    public static final double kTHoloD = 0;
+    public static final double kTHoloD = 0.1;
 
 
     public static final double kXHoloPSim = 8;
