@@ -51,18 +51,6 @@ public class VisionSubsystem extends SubsystemBase {
 
     }
 
-    List<Pose3d> tagPoses = new LinkedList<>();
-    List<Pose3d> robotPoses = new LinkedList<>();
-    List<Pose3d> robotPosesAccepted = new LinkedList<>();
-    List<Pose3d> robotPosesRejected = new LinkedList<>();
-
-
-
-    public UsbCamera camera =
-            CameraServer.startAutomaticCapture();{
-            CvSink cvSink = CameraServer.getVideo();
-    CvSource outputStream = CameraServer.putVideo("Blur", 640, 480);
-    }
 
 
     @Override
@@ -77,9 +65,18 @@ public class VisionSubsystem extends SubsystemBase {
         }
     }
 
-    public Pose3d getEstimatedRobotPose () {
+    public void setDriverCameraModeOn() {
+        visionIO.setDriverMode(true);
+    }
+
+    public Pose3d getEstimatedRobotPose() {
         return visionInputs.estimatedRobotPose;
     }
+
+    public boolean hasEstimatedRobotPose() {
+        return visionInputs.hasEstimate;
+    }
+
 
 }
 //** .......................,,-~*~,,

@@ -21,18 +21,16 @@ import java.util.List;
 
 
 public class VisionStreamAfterAuto extends Command {
-    public VisionSubsystem camera;
+    public VisionSubsystem visionSubsystem;
 
-    public VisionStreamAfterAuto(VisionSubsystem camera){
-        this.camera = camera;
-    }
-    public void updateInputs(VisionIO.VisionIOInputs inputs) {
-        inputs.setDriverMode = true;
+    public VisionStreamAfterAuto(VisionSubsystem visionSubsystem){
+        this.visionSubsystem = visionSubsystem;
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
+        visionSubsystem.setDriverCameraModeOn();
     }
 
-// Will that really work?
+
 }

@@ -53,6 +53,7 @@ import frc.robot.commands.IntakeCommands.IntakeSetRollersCommand;
 import frc.robot.commands.DriveCommands.ResetHeadingCommand;
 import frc.robot.commands.IntakeCommands.PivotDownCommand;
 import frc.robot.commands.IntakeCommands.PivotUpCommand;
+import frc.robot.commands.VisionStreamAfterAuto;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
@@ -331,6 +332,8 @@ autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(Sys
                     driveSubsystem,dPadX, dPadY,() -> 0
             )
     );
+
+    RobotModeTriggers.teleop().onTrue((new VisionStreamAfterAuto(visionSubsystem)));
   }
 
 

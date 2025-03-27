@@ -61,10 +61,6 @@ public class AutoSubsystem extends SubsystemBase {
         return new ArmToSetpoint(arm, Units.degreesToRadians(MIN_ANGLE_RADS));
     }
 
-    public Command VisionStreamAfterAuto(){
-        return VisionStreamAfterAuto();
-    }
-
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
