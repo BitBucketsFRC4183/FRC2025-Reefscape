@@ -101,14 +101,15 @@ public class AutoSubsystem extends SubsystemBase {
                 )
         );
 
-        StarttoR11.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), score(),
-                parallel(R11toSource.cmd(), lowerArmElevatorToOrigin())));
+        StarttoR11.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), score(), parallel(R11toSource.cmd(), lowerArmElevatorToOrigin())));
 
-        R11toSource.done().onTrue(sequence(stop(), waitSeconds(0.5), parallel(SourcetoR12.cmd(), lowerArmElevatorToOrigin())));
-        SourcetoR12.done().onTrue(stop().andThen(raiseArmElevatorToL4()).andThen(score()).andThen(R12toSource.cmd()));
+        R11toSource.done().onTrue(sequence(stop(), waitSeconds(0.5), SourcetoR12.cmd()));
 
-        R12toSource.done().onTrue(sequence(stop(), waitSeconds(0.5), parallel(SourcetoR12.cmd(), lowerArmElevatorToOrigin())));
-        SourcetoR1.done().onTrue(stop().andThen(raiseArmElevatorToL4()).andThen(score()));
+        SourcetoR12.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), score() , parallel(R12toSource.cmd(), lowerArmElevatorToOrigin())));
+
+        R12toSource.done().onTrue(sequence(stop(), waitSeconds(0.5), SourcetoR1.cmd()));
+
+        SourcetoR1.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (score())));
 
         
 
