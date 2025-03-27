@@ -183,6 +183,7 @@ public class DriveSubsystem extends SubsystemBase {
     this.holoXController.setTolerance(kHoloXTolerance);
     this.holoYController.setTolerance(kHoloYTolerance);
     this.holoTController.setTolerance(kHoloTTolerance);
+    this.holoTController.enableContinuousInput(-Math.PI, Math.PI);
     this.visionSubsystem = visionSubsystem;
   }
 
