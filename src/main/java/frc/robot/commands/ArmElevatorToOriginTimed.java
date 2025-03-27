@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.commands.ArmCommands.ArmToSetpoint;
+import frc.robot.commands.ArmCommands.ArmToSetpointTimed;
 import frc.robot.commands.ElevatorCommands.ElevatorSetPointCommand;
 import frc.robot.commands.ElevatorCommands.ElevatorSetpointTimedCommand;
 import frc.robot.constants.ArmConstants;
@@ -22,7 +23,7 @@ public class ArmElevatorToOriginTimed extends ParallelDeadlineGroup {
                                 )
                                 ,
                                 Commands.parallel(
-                                        new ArmToSetpoint(arm, ArmConstants.armOriginAngle),
+                                        new ArmToSetpointTimed(arm, ArmConstants.armOriginAngle, timeToComplete),
                                         new ElevatorSetpointTimedCommand(elevator, ElevatorConstants.Origin, timeToComplete))
                         )
 
