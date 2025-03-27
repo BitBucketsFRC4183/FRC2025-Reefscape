@@ -21,6 +21,7 @@ import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static edu.wpi.first.wpilibj2.command.Commands.parallel;
 import static frc.robot.constants.ArmConstants.MIN_ANGLE_RADS;
 
 
@@ -132,8 +133,13 @@ public AutoRoutine OneL4CoralMidRoutine() {
     AutoTrajectory StarttoR9 =
             OneL4CoralMidRoutine.trajectory("StarttoR9");
     //2
-    AutoTrajectory R9toStart =
-            OneL4CoralMidRoutine.trajectory("R9toStart");
+    AutoTrajectory R9Backup =
+            OneL4CoralMidRoutine.trajectory("R9Backup");
+    //3
+    AutoTrajectory R9Forward =
+            OneL4CoralMidRoutine.trajectory("R9Forward");
+    //4
+
 
 
     OneL4CoralMidRoutine.active().onTrue(
@@ -146,9 +152,10 @@ public AutoRoutine OneL4CoralMidRoutine() {
             )
     );
 
-    StarttoR9.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), score(), lowerArmElevatorToOrigin()));
-    //StarttoR9.done().onTrue(R9toStart.cmd().alongWith(lowerArmElevatorToOrigin()));
-
+    StarttoR9.done().onTrue(sequence(stop(), parallel(R9Backup.cmd())));
+    //Go against R9, then backup a lil bit
+    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), parallel(R9Forward.cmd())));
+    R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
 
     return OneL4CoralMidRoutine;
     }
