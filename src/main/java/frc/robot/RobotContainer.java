@@ -53,6 +53,7 @@ import frc.robot.commands.IntakeCommands.IntakeSetRollersCommand;
 import frc.robot.commands.DriveCommands.ResetHeadingCommand;
 import frc.robot.commands.IntakeCommands.PivotDownCommand;
 import frc.robot.commands.IntakeCommands.PivotUpCommand;
+import frc.robot.commands.VisionStreamAfterAuto;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
@@ -79,7 +80,6 @@ import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnField;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
 import org.littletonrobotics.junction.Logger;
 
@@ -126,13 +126,7 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
-        driveSubsystem =
-                new DriveSubsystem(
-                        new GyroIOPigeon2(),
-                        new ModuleIOHybrid(0),
-                        new ModuleIOHybrid(1),
-                        new ModuleIOHybrid(2),
-                        new ModuleIOHybrid(3));
+
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIOSparkMax(),
                         new ElevatorEncoderIOLaserCAN());
@@ -146,7 +140,14 @@ public class RobotContainer {
                 new ArmSubsystem(new ArmIOTalonFX(), new ArmEncoderIOThroughbore());
         visionSubsystem =
                 new VisionSubsystem(new VisionIO() {});
-
+        driveSubsystem =
+                new DriveSubsystem(
+                        new GyroIOPigeon2(),
+                        new ModuleIOHybrid(0),
+                        new ModuleIOHybrid(1),
+                        new ModuleIOHybrid(2),
+                        new ModuleIOHybrid(3),
+                        visionSubsystem);
         Robot.orchestra.loadMusic("sounds/bootup.chrp");
         Robot.orchestra.play();
 
@@ -156,13 +157,7 @@ public class RobotContainer {
         // Sim robot, instantiate physics sim IO implementations
         driveSimulation = new SwerveDriveSimulation(DriveConstants.mapleSimConfig, new Pose2d());
         SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
-        driveSubsystem =
-            new DriveSubsystem(
-                    new GyroIOSim(driveSimulation.getGyroSimulation()),
-                    new ModuleIOHybridSim(0, driveSimulation.getModules()[0]),
-                    new ModuleIOHybridSim(1, driveSimulation.getModules()[1]),
-                    new ModuleIOHybridSim(2, driveSimulation.getModules()[2]),
-                    new ModuleIOHybridSim(3, driveSimulation.getModules()[3]));
+
 
         ElevatorIOSim elevatorIOSim = new ElevatorIOSim();
         ArmIOSim armIOSim = new ArmIOSim();
@@ -178,23 +173,20 @@ public class RobotContainer {
                 new ArmSubsystem(armIOSim, new ArmEncoderIOSim(armIOSim.armMotorSim));
         visionSubsystem =
                 new VisionSubsystem(new VisionIOPhotonVisionSim(driveSimulation::getSimulatedDriveTrainPose));
+        driveSubsystem =
+                new DriveSubsystem(
+                        new GyroIOSim(driveSimulation.getGyroSimulation()),
+                        new ModuleIOHybridSim(0, driveSimulation.getModules()[0]),
+                        new ModuleIOHybridSim(1, driveSimulation.getModules()[1]),
+                        new ModuleIOHybridSim(2, driveSimulation.getModules()[2]),
+                        new ModuleIOHybridSim(3, driveSimulation.getModules()[3]),
+                        visionSubsystem);
         break;
 
 
       default:
         // Replayed robot, disable IO implementations
-        driveSubsystem =
-                new DriveSubsystem(
-                        new GyroIO() {
-                        },
-                        new ModuleIO() {
-                        },
-                        new ModuleIO() {
-                        },
-                        new ModuleIO() {
-                        },
-                        new ModuleIO() {
-                        });
+
         elevatorSubsystem =
                 new ElevatorSubsystem(new ElevatorIO() {}, new ElevatorEncoderIO() {}); //TODO
         clawSubsystem =
@@ -209,6 +201,18 @@ public class RobotContainer {
                 new VisionSubsystem(new VisionIO() {
                 }); //TODO
 
+        driveSubsystem =
+                new DriveSubsystem(
+                        new GyroIO() {
+                        },
+                        new ModuleIO() {
+                        },
+                        new ModuleIO() {
+                        },
+                        new ModuleIO() {
+                        },
+                        new ModuleIO() {
+                        }, visionSubsystem);
         break;
     }
     this.mechanism2D = new Mechanism2d(3, 3);
@@ -250,7 +254,7 @@ public class RobotContainer {
 //
     autoChooser.addCmd("ArmSysIDQuasistaticForward", () -> armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     autoChooser.addCmd("ArmSysIDQuasistaticReverse", () -> armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));autoChooser.addCmd("ArmSysIDDynamicForward", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     autoChooser.select("CircleTest");
     SmartDashboard.putData("autochooser", autoChooser);
 
@@ -332,6 +336,8 @@ autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(Sys
                     driveSubsystem,dPadX, dPadY,() -> 0
             )
     );
+
+    RobotModeTriggers.teleop().onTrue((new VisionStreamAfterAuto(visionSubsystem)));
   }
 
 
