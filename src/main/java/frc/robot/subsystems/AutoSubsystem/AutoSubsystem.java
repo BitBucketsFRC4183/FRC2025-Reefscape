@@ -152,9 +152,9 @@ public AutoRoutine OneL4CoralMidRoutine() {
             )
     );
 
-    StarttoR9.done().onTrue(sequence(stop(), parallel(R9Backup.cmd())));
+    StarttoR9.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
     //Go against R9, then backup a lil bit
-    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), parallel(R9Forward.cmd())));
+    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
     R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
 
     return OneL4CoralMidRoutine;
@@ -192,9 +192,9 @@ public AutoRoutine OneL4CoralMidRoutine() {
                 )
         );
 
-        StarttoR9Top.done().onTrue(sequence(stop(), parallel(R9Backup.cmd())));
+        StarttoR9Top.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
         //Go against R9, then backup a lil bit
-        R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), parallel(R9Forward.cmd())));
+        R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
         R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
 
         return OneL4CoralMidRoutineTopStart;
@@ -233,9 +233,9 @@ public AutoRoutine OneL4CoralMidRoutineBottomStart() {
             )
     );
 
-    StarttoR9Bottom.done().onTrue(sequence(stop(), parallel(R9Backup.cmd())));
+    StarttoR9Bottom.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
     //Go against R9, then backup a lil bit
-    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), parallel(R9Forward.cmd())));
+    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
     //Pull forward then score
     R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
 
