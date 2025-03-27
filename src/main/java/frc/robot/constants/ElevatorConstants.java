@@ -45,15 +45,15 @@ public class ElevatorConstants {
     public static double kI = 0;
     public static double kD = 0;
 
-    public static double Origin = 0.390 - Units.inchesToMeters(2);
+    public static double Origin = 0.355;
     public static double L1 = 0;
-    public static double L2 = 0.157- Units.inchesToMeters(2);
-    public static double L3 = 0.612- Units.inchesToMeters(2);
-    public static double L4 = 1.180- Units.inchesToMeters(2);
-    public static double maxHeight = 1.22- Units.inchesToMeters(2);
-    public static double minHeight = 0.12- Units.inchesToMeters(2);
-    public static double maxVelocity = 1;
-    public static double maxAcceleration = 0.85;
+    public static double L2 = 0.235;
+    public static double L3 = 0.644;
+    public static double L4 = 1.233;
+    public static double maxHeight = 1.233;
+    public static double minHeight = 0.12;
+    public static double maxVelocity = 1.4;
+    public static double maxAcceleration = 1.3;
     public static double carriageMass = Units.lbsToKilograms(20);
     public static final int elevatorCanID = 10;
     public static final int elevatorSpark1CAN = 14;
