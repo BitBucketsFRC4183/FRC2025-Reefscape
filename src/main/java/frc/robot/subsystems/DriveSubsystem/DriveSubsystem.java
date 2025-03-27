@@ -58,6 +58,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AutoSubsystem.AutoSubsystem;
+import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -105,6 +106,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final PIDController holoYController;
   // private final ProfiledPIDController holoTController;
   private final PIDController holoTController;
+  private final VisionSubsystem visionSubsystem;
 
 
   public DriveSubsystem(
@@ -112,7 +114,8 @@ public class DriveSubsystem extends SubsystemBase {
           ModuleIO flModuleIO,
           ModuleIO frModuleIO,
           ModuleIO blModuleIO,
-          ModuleIO brModuleIO) {
+          ModuleIO brModuleIO,
+          VisionSubsystem visionSubsystem) {
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0);
     modules[1] = new Module(frModuleIO, 1);
@@ -180,6 +183,7 @@ public class DriveSubsystem extends SubsystemBase {
     this.holoXController.setTolerance(kHoloXTolerance);
     this.holoYController.setTolerance(kHoloYTolerance);
     this.holoTController.setTolerance(kHoloTTolerance);
+    this.visionSubsystem = visionSubsystem;
   }
 
   @Override
@@ -234,6 +238,10 @@ public class DriveSubsystem extends SubsystemBase {
 
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
+      if (visionSubsystem.hasEstimatedRobotPose()) {
+        poseEstimator.addVisionMeasurement(visionSubsystem.getEstimatedRobotPose().toPose2d(), visionSubsystem.getPoseTimestamp());
+      }
+
     }
 
     // Update gyro alert

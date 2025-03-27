@@ -77,6 +77,10 @@ public class VisionSubsystem extends SubsystemBase {
         return visionInputs.hasEstimate;
     }
 
+    public double getPoseTimestamp() {
+        return  visionInputs.timestampSeconds;
+    }
+
 
 }
 //** .......................,,-~*~,,

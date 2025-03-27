@@ -172,15 +172,15 @@ public class DriveConstants {
     // HolonomicDrivePID
     public static final double kXHoloP = 8;
     public static final double kXHoloI = 0;
-    public static final double kXHoloD = 0;
+    public static final double kXHoloD = 0.1;
 
     public static final double kYHoloP = 8;
     public static final double kYHoloI = 0;
-    public static final double kYHoloD = 0;
+    public static final double kYHoloD = 0.1;
 
-    public static final double kTHoloP = 1;
+    public static final double kTHoloP = 3;
     public static final double kTHoloI = 0;
-    public static final double kTHoloD = 0;
+    public static final double kTHoloD = 0.1;
 
 
     public static final double kXHoloPSim = 8;
