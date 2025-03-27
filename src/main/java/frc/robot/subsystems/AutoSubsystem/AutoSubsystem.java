@@ -152,9 +152,9 @@ public AutoRoutine OneL4CoralMidRoutine() {
             )
     );
 
-    StarttoR9.done().onTrue(sequence(stop(), parallel(R9Backup.cmd())));
+    StarttoR9.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
     //Go against R9, then backup a lil bit
-    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), parallel(R9Forward.cmd())));
+    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
     R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
 
     return OneL4CoralMidRoutine;
@@ -192,9 +192,9 @@ public AutoRoutine OneL4CoralMidRoutine() {
                 )
         );
 
-        StarttoR9Top.done().onTrue(sequence(stop(), parallel(R9Backup.cmd())));
+        StarttoR9Top.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
         //Go against R9, then backup a lil bit
-        R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), parallel(R9Forward.cmd())));
+        R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
         R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
 
         return OneL4CoralMidRoutineTopStart;
@@ -233,14 +233,94 @@ public AutoRoutine OneL4CoralMidRoutineBottomStart() {
             )
     );
 
-    StarttoR9Bottom.done().onTrue(sequence(stop(), parallel(R9Backup.cmd())));
+    StarttoR9Bottom.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
     //Go against R9, then backup a lil bit
-    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), parallel(R9Forward.cmd())));
+    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
     //Pull forward then score
     R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
 
     return OneL4CoralMidRoutineBottomStart;
 }
+
+    public AutoRoutine OneL4CoralTopRoutine() {
+
+        //        var trajectory = loadTrajectory(
+        //                "FourL4CoralBottom");
+
+        AutoRoutine OneL4CoralTopRoutine =
+                autoFactory.newRoutine(
+                        "OneL4CoralTopRoutine");
+        //Initialize
+        //1
+        AutoTrajectory StarttoR12 =
+                OneL4CoralTopRoutine.trajectory("StarttoR12");
+        //2
+        AutoTrajectory R12Backup =
+                OneL4CoralTopRoutine.trajectory("R12Backup");
+        //3
+        AutoTrajectory R12Forward =
+                OneL4CoralTopRoutine.trajectory("R12Forward");
+        //4
+
+
+
+        OneL4CoralTopRoutine.active().onTrue(
+                sequence(
+                        Commands.print("Started" +
+                                "OneL4CoralTopRoutine" +
+                                " the routine!"),
+                        StarttoR12.resetOdometry(),
+                        StarttoR12.cmd()
+                )
+        );
+
+        StarttoR12.done().onTrue(sequence(stop(), R12Backup.resetOdometry(), (R12Backup.cmd())));
+        //Go against R9, then backup a lil bit
+        R12Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R12Forward.cmd())));
+        R12Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
+
+        return OneL4CoralTopRoutine;
+    }
+
+    public AutoRoutine OneL4CoralBottomRoutine() {
+
+        //        var trajectory = loadTrajectory(
+        //                "FourL4CoralBottom");
+
+        AutoRoutine OneL4CoralBottomRoutine =
+                autoFactory.newRoutine(
+                        "OneL4CoralBottomRoutine");
+        //Initialize
+        //1
+        AutoTrajectory StarttoR7 =
+                OneL4CoralBottomRoutine.trajectory("StarttoR7");
+        //2
+        AutoTrajectory R7Backup =
+                OneL4CoralBottomRoutine.trajectory("R7Backup");
+        //3
+        AutoTrajectory R7Forward =
+                OneL4CoralBottomRoutine.trajectory("R7Forward");
+        //4
+
+
+
+        OneL4CoralBottomRoutine.active().onTrue(
+                sequence(
+                        Commands.print("Started" +
+                                "OneL4CoralBottomRoutine" +
+                                " the routine!"),
+                        StarttoR7.resetOdometry(),
+                        StarttoR7.cmd()
+                )
+        );
+
+        StarttoR7.done().onTrue(sequence(stop(), R7Backup.resetOdometry(), (R7Backup.cmd())));
+        //Go against R9, then backup a lil bit
+        R7Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R7Forward.cmd())));
+        R7Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
+
+        return OneL4CoralBottomRoutine;
+    }
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
