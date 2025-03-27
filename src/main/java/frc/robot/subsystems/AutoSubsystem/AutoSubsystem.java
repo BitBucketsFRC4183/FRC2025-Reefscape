@@ -160,6 +160,89 @@ public AutoRoutine OneL4CoralMidRoutine() {
     return OneL4CoralMidRoutine;
     }
 
+    public AutoRoutine OneL4CoralMidRoutineTopStart() {
+
+        //        var trajectory = loadTrajectory(
+        //                "FourL4CoralBottom");
+
+        AutoRoutine OneL4CoralMidRoutineTopStart =
+                autoFactory.newRoutine(
+                        "OneL4CoralMidRoutineTopStart");
+        //Initialize
+        //1
+        AutoTrajectory StarttoR9Top =
+                OneL4CoralMidRoutineTopStart.trajectory("StarttoR9Top");
+        //2
+        AutoTrajectory R9Backup =
+                OneL4CoralMidRoutineTopStart.trajectory("R9Backup");
+        //3
+        AutoTrajectory R9Forward =
+                OneL4CoralMidRoutineTopStart.trajectory("R9Forward");
+        //4
+
+
+
+        OneL4CoralMidRoutineTopStart.active().onTrue(
+                sequence(
+                        Commands.print("Started" +
+                                "OneL4CoralMidRoutineTopStart" +
+                                " the routine!"),
+                        StarttoR9Top.resetOdometry(),
+                        StarttoR9Top.cmd()
+                )
+        );
+
+        StarttoR9Top.done().onTrue(sequence(stop(), parallel(R9Backup.cmd())));
+        //Go against R9, then backup a lil bit
+        R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), parallel(R9Forward.cmd())));
+        R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
+
+        return OneL4CoralMidRoutineTopStart;
+    }
+//-------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------
+public AutoRoutine OneL4CoralMidRoutineBottomStart() {
+
+    //        var trajectory = loadTrajectory(
+    //                "FourL4CoralBottom");
+
+    AutoRoutine OneL4CoralMidRoutineBottomStart =
+            autoFactory.newRoutine(
+                    "OneL4CoralMidRoutineBottomStart");
+    //Initialize
+    //1
+    AutoTrajectory StarttoR9Bottom =
+            OneL4CoralMidRoutineBottomStart.trajectory("StarttoR9Bottom");
+    //2
+    AutoTrajectory R9Backup =
+            OneL4CoralMidRoutineBottomStart.trajectory("R9Backup");
+    //3
+    AutoTrajectory R9Forward =
+            OneL4CoralMidRoutineBottomStart.trajectory("R9Forward");
+    //4
+
+
+
+    OneL4CoralMidRoutineBottomStart.active().onTrue(
+            sequence(
+                    Commands.print("Started" +
+                            "OneL4CoralMidRoutine" +
+                            " the routine!"),
+                    StarttoR9Bottom.resetOdometry(),
+                    StarttoR9Bottom.cmd()
+            )
+    );
+
+    StarttoR9Bottom.done().onTrue(sequence(stop(), parallel(R9Backup.cmd())));
+    //Go against R9, then backup a lil bit
+    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), parallel(R9Forward.cmd())));
+    //Pull forward then score
+    R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
+
+    return OneL4CoralMidRoutineBottomStart;
+}
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public Command OneL3Score() {
         return sequence(
