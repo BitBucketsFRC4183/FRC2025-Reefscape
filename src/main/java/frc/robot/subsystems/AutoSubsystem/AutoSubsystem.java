@@ -59,7 +59,7 @@ public class AutoSubsystem extends SubsystemBase {
         return Commands.runOnce(drive::stop);
     }
     public Command score() {
-        return Commands.deadline(waitSeconds(0.8), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4 - 0.25, Units.degreesToRadians(-20)));
+        return Commands.parallel(Commands.deadline(waitSeconds(0.8), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4 - 0.25, Units.degreesToRadians(-20)), waitSeconds(0.1)));
     }
 
 
@@ -81,17 +81,27 @@ public class AutoSubsystem extends SubsystemBase {
         AutoTrajectory StarttoR11 =
                 ThreeL4CoralTopRoutine.trajectory("StarttoR11");
         //2
+        AutoTrajectory R11Forward =
+                ThreeL4CoralTopRoutine.trajectory("R11Forward");
+        //3
         AutoTrajectory R11toSource =
                 ThreeL4CoralTopRoutine.trajectory("R11toSource");
-        //3
+        //4
         AutoTrajectory SourcetoR12 =
                 ThreeL4CoralTopRoutine.trajectory("SourcetoR12");
-        //4
+        //5
+        AutoTrajectory R12Forward =
+                ThreeL4CoralTopRoutine.trajectory("R12Forward");
+       //6
         AutoTrajectory R12toSource =
                 ThreeL4CoralTopRoutine.trajectory("R12toSource");
-        //5
+        //7
         AutoTrajectory SourcetoR1 =
                 ThreeL4CoralTopRoutine.trajectory("SourcetoR1");
+        //8
+        AutoTrajectory R1Forward =
+                ThreeL4CoralTopRoutine.trajectory("R1Forward");
+
 
         ThreeL4CoralTopRoutine.active().onTrue(
                 sequence(
@@ -104,15 +114,25 @@ public class AutoSubsystem extends SubsystemBase {
                 )
         );
 
-        StarttoR11.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), score(), parallel(R11toSource.cmd(), lowerArmElevatorToOrigin())));
+        StarttoR11.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), R11Forward.cmd()));
 
-        R11toSource.done().onTrue(sequence(stop(), waitSeconds(0.5), SourcetoR12.cmd()));
+        R11Forward.done().onTrue(sequence(stop(), score(), parallel(R11toSource.cmd(), lowerArmElevatorToOrigin())));
 
-        SourcetoR12.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), score() , parallel(R12toSource.cmd(), lowerArmElevatorToOrigin())));
+        R11toSource.done().onTrue(sequence(stop(), waitSeconds(0.7), SourcetoR12.cmd()));
 
-        R12toSource.done().onTrue(sequence(stop(), waitSeconds(0.5), SourcetoR1.cmd()));
+        SourcetoR12.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), R12Forward.cmd()));
 
-        SourcetoR1.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (score())));
+        R12Forward.done().onTrue(sequence(stop(), score(), parallel(R12toSource.cmd(), lowerArmElevatorToOrigin())));
+
+        R12toSource.done().onTrue(sequence(stop(), waitSeconds(0.7), SourcetoR1.cmd()));
+
+        SourcetoR1.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), R1Forward.cmd()));
+
+        R1Forward.done().onTrue(sequence(stop(), score(), lowerArmElevatorToOrigin()));
+
+
+
+
 
         
 
@@ -154,9 +174,8 @@ public AutoRoutine OneL4CoralMidRoutine() {
             )
     );
 
-    StarttoR9.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
+    StarttoR9.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), R9Forward.cmd()));
     //Go against R9, then backup a lil bit
-    R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
     R9Forward.done().onTrue(sequence(stop(), score(), parallel(R9Backup2.cmd(), lowerArmElevatorToOrigin())));
 
     return OneL4CoralMidRoutine;
