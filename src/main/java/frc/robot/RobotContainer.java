@@ -343,7 +343,7 @@ public class RobotContainer {
             )
     );
 
-    RobotModeTriggers.teleop().onTrue((new VisionStreamAfterAuto(visionSubsystem)));
+    // RobotModeTriggers.teleop().onTrue((new VisionStreamAfterAuto(visionSubsystem)));
   }
 
 

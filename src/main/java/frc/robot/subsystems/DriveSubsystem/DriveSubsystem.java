@@ -17,6 +17,7 @@ import static edu.wpi.first.units.Units.*;
 import static frc.robot.constants.DriveConstants.*;
 
 import choreo.trajectory.SwerveSample;
+import choreo.util.ChoreoAllianceFlipUtil;
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -34,10 +35,7 @@ import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -67,6 +65,7 @@ import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.PhotonUtils;
 
 public class DriveSubsystem extends SubsystemBase {
   static final double ODOMETRY_FREQUENCY =
@@ -240,7 +239,14 @@ public class DriveSubsystem extends SubsystemBase {
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
       if (visionSubsystem.hasEstimatedRobotPose()) {
-        // poseEstimator.addVisionMeasurement(visionSubsystem.getEstimatedRobotPose().toPose2d(), visionSubsystem.getPoseTimestamp());
+        if (DriverStation.getAlliance().get() == Alliance.Red) {
+          Pose2d flippedPose = ChoreoAllianceFlipUtil.flip(visionSubsystem.getEstimatedRobotPose().toPose2d());
+          poseEstimator.addVisionMeasurement(flippedPose, visionSubsystem.getPoseTimestamp());
+
+        } else {
+          poseEstimator.addVisionMeasurement(visionSubsystem.getEstimatedRobotPose().toPose2d(), visionSubsystem.getPoseTimestamp());
+
+        }
       }
 
     }
