@@ -48,7 +48,7 @@ public class AutoSubsystem extends SubsystemBase {
     }
 
     public Command raiseArmElevatorToL4() {
-        return deadline(waitSeconds(1.25), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4, ArmConstants.armL4Angle));
+        return deadline(waitSeconds(2.5), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4, ArmConstants.armL4Angle));
     }
     public Command lowerArmElevatorToOrigin() {
         return deadline(waitSeconds(1.5), new ArmElevatorToOrigin(elevator,arm));
