@@ -233,14 +233,14 @@ public class RobotContainer {
 //    autoChooser.addRoutine("FourL4CoralTop", AutoSubsystem::FourL4CoralTopRoutine);
 //    autoChooser.addRoutine("ThreeL4CoralBottom", AutoSubsystem::ThreeL4CoralBottomRoutine);
 //    autoChooser.addRoutine("ThreeL4CoralTop", AutoSubsystem::ThreeL4CoralTopRoutine);
-    autoChooser.addRoutine("OneL4CoralMid", autoSubsystem::OneL4CoralMidRoutine);
-    autoChooser.addRoutine("OneL4CoralMidTop", autoSubsystem::OneL4CoralMidRoutineTopStart);
-    autoChooser.addRoutine("OneL4CoralMidBottom", autoSubsystem::OneL4CoralMidRoutineBottomStart);
-    autoChooser.addRoutine("OneL4CoralTop", autoSubsystem::OneL4CoralTopRoutine);
-    autoChooser.addRoutine("OneL4CoralBottom", autoSubsystem::OneL4CoralBottomRoutine);
+    autoChooser.addRoutine("OneL4CoralMidToMid", autoSubsystem::OneL4CoralMidRoutine);
+    autoChooser.addRoutine("OneL4CoralTopToMid", autoSubsystem::OneL4CoralMidRoutineTopStart);
+    autoChooser.addRoutine("OneL4CoralBottomToMid", autoSubsystem::OneL4CoralMidRoutineBottomStart);
+    autoChooser.addRoutine("OneL4CoralToptoTop", autoSubsystem::OneL4CoralTopRoutine);
+    autoChooser.addRoutine("OneL4CoralBottomToBottom", autoSubsystem::OneL4CoralBottomRoutine);
     autoChooser.addRoutine("ThreeL4CoralTop", autoSubsystem::ThreeL4CoralTopRoutine);
 
-    autoChooser.addCmd("Score1L3Coral", autoSubsystem::OneL3Score);
+ //   autoChooser.addCmd("Score1L3Coral", autoSubsystem::OneL3Score);
 //    autoChooser.addCmd("nothing", Commands::none);
     autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiBack);
     autoChooser.addRoutine("CircleTest", autoSubsystem::TestingFR);

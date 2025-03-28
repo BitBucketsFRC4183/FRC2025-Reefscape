@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.ArmCommands.ArmToSetpoint;
 import frc.robot.commands.ArmElevatorToOrigin;
 import frc.robot.commands.ArmElevatorToSetpoint;
+import frc.robot.commands.ArmElevatorToSetpointAuto;
 import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
+import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
 import frc.robot.commands.VisionStreamAfterAuto;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
@@ -57,9 +59,8 @@ public class AutoSubsystem extends SubsystemBase {
         return Commands.runOnce(drive::stop);
     }
     public Command score() {
-        return Commands.deadline(waitSeconds(0.8), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L3, Units.degreesToRadians(-20)));
+        return Commands.deadline(waitSeconds(0.8), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4 - 0.25, Units.degreesToRadians(-20)));
     }
-
 
 
 
@@ -139,7 +140,8 @@ public AutoRoutine OneL4CoralMidRoutine() {
     AutoTrajectory R9Forward =
             OneL4CoralMidRoutine.trajectory("R9Forward");
     //4
-
+    AutoTrajectory R9Backup2 =
+            OneL4CoralMidRoutine.trajectory("R9Backup2");
 
 
     OneL4CoralMidRoutine.active().onTrue(
@@ -155,7 +157,7 @@ public AutoRoutine OneL4CoralMidRoutine() {
     StarttoR9.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
     //Go against R9, then backup a lil bit
     R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
-    R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
+    R9Forward.done().onTrue(sequence(stop(), score(), parallel(R9Backup2.cmd(), lowerArmElevatorToOrigin())));
 
     return OneL4CoralMidRoutine;
     }
@@ -179,7 +181,8 @@ public AutoRoutine OneL4CoralMidRoutine() {
         AutoTrajectory R9Forward =
                 OneL4CoralMidRoutineTopStart.trajectory("R9Forward");
         //4
-
+        AutoTrajectory R9BackupSecond =
+                OneL4CoralMidRoutineTopStart.trajectory("R9Backup2");
 
 
         OneL4CoralMidRoutineTopStart.active().onTrue(
@@ -195,8 +198,8 @@ public AutoRoutine OneL4CoralMidRoutine() {
         StarttoR9Top.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
         //Go against R9, then backup a lil bit
         R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
-        R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
-
+        R9Forward.done().onTrue(sequence(stop(), score(), R9BackupSecond.cmd()));
+        R9BackupSecond.active().onTrue(lowerArmElevatorToOrigin());
         return OneL4CoralMidRoutineTopStart;
     }
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -238,6 +241,7 @@ public AutoRoutine OneL4CoralMidRoutineBottomStart() {
     R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
     //Pull forward then score
     R9Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
+
 
     return OneL4CoralMidRoutineBottomStart;
 }
