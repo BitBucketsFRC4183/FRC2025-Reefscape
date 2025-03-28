@@ -271,8 +271,8 @@ autoChooser.addCmd("ArmSysIDDynamicReverse", () -> armSubsystem.sysIdDynamic(Sys
 
 
     // elevator stuff
-    operatorInput.armElevatorOrigin.whileTrue(new ArmElevatorToOriginTimed(elevatorSubsystem, armSubsystem, 5.0));
-    operatorInput.armElevatorL2.whileTrue(new ArmElevatorToSetpointTimed(elevatorSubsystem, armSubsystem, ElevatorConstants.L2, ArmConstants.armL2Angle, 4.0));
+    operatorInput.armElevatorOrigin.whileTrue(new ArmElevatorToOriginTimed(elevatorSubsystem, armSubsystem, 2.0));
+    operatorInput.armElevatorL2.whileTrue(new ArmElevatorToSetpointTimed(elevatorSubsystem, armSubsystem, ElevatorConstants.L2, ArmConstants.armL2Angle, 1.0));
     operatorInput.armElevatorL3.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L3, ArmConstants.armL3Angle));
     operatorInput.armElevatorL4.whileTrue(new ArmElevatorToSetpoint(elevatorSubsystem, armSubsystem, ElevatorConstants.L4, ArmConstants.armL4Angle));
     operatorInput.resetElevatorEncoder.onTrue(new ResetElevatorEncoderCommand(elevatorSubsystem));
