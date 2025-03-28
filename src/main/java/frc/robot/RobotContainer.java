@@ -76,6 +76,7 @@ import frc.robot.subsystems.IntakeSubsystem.IntakeIOSparkMax;
 import frc.robot.subsystems.LEDSubsytem.LEDSubsystem;
 import frc.robot.subsystems.ArmSubsystem.*;
 import frc.robot.subsystems.VisionSubsystem.VisionIO;
+import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
 import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.ironmaple.simulation.SimulatedArena;
@@ -139,7 +140,7 @@ public class RobotContainer {
         armSubsystem =
                 new ArmSubsystem(new ArmIOTalonFX(), new ArmEncoderIOThroughbore());
         visionSubsystem =
-                new VisionSubsystem(new VisionIO() {});
+                new VisionSubsystem(new VisionIOPhotonVision());
         driveSubsystem =
                 new DriveSubsystem(
                         new GyroIOPigeon2(),

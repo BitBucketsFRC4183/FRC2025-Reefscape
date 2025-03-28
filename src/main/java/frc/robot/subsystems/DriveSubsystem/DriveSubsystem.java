@@ -240,7 +240,7 @@ public class DriveSubsystem extends SubsystemBase {
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
       if (visionSubsystem.hasEstimatedRobotPose()) {
-        poseEstimator.addVisionMeasurement(visionSubsystem.getEstimatedRobotPose().toPose2d(), visionSubsystem.getPoseTimestamp());
+        // poseEstimator.addVisionMeasurement(visionSubsystem.getEstimatedRobotPose().toPose2d(), visionSubsystem.getPoseTimestamp());
       }
 
     }
