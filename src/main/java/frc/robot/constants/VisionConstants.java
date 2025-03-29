@@ -25,6 +25,6 @@ public class VisionConstants {
                     new Rotation3d(0.0, 0.0, 0.0));
 
 
-
+    public static double visionTrustFactor = 100;
 }
 
