@@ -7,16 +7,12 @@ import choreo.auto.AutoTrajectory;
 import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.commands.ArmCommands.ArmToSetpoint;
-import frc.robot.commands.ArmElevatorToOrigin;
-import frc.robot.commands.ArmElevatorToSetpoint;
-import frc.robot.commands.ArmElevatorToSetpointAuto;
+import frc.robot.commands.*;
 import frc.robot.commands.DriveCommands.RobotRelativeDriveCommand;
-import frc.robot.commands.ElevatorCommands.ElevatorGoToOriginCommand;
-import frc.robot.commands.VisionStreamAfterAuto;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.subsystems.ArmSubsystem.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
@@ -24,13 +20,13 @@ import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static edu.wpi.first.wpilibj2.command.Commands.parallel;
-import static frc.robot.constants.ArmConstants.MIN_ANGLE_RADS;
 
 
 public class AutoSubsystem extends SubsystemBase {
     private final DriveSubsystem drive;
     private final ElevatorSubsystem elevator;
     private final ArmSubsystem arm;
+    private final ClawSubsystem claw;
     private final AutoFactory autoFactory;
 
     private static Choreo.TrajectoryLogger<SwerveSample> trajectoryLogger() {
@@ -41,10 +37,11 @@ public class AutoSubsystem extends SubsystemBase {
             Logger.recordOutput("Odometry/TrajectoryGoal", swerveSampleTrajectory.getFinalPose(false).get());
         };
     }
-    public AutoSubsystem(DriveSubsystem drive, ElevatorSubsystem elevator, ArmSubsystem arm) {
+    public AutoSubsystem(DriveSubsystem drive, ElevatorSubsystem elevator, ArmSubsystem arm, ClawSubsystem claw) {
         this.drive = drive;
         this.elevator = elevator;
         this.arm = arm;
+        this.claw = claw;
         this.autoFactory = new AutoFactory(drive::getPose, drive::setPose, drive::followTrajectorySample, false, drive, trajectoryLogger());
 
     }
@@ -61,7 +58,9 @@ public class AutoSubsystem extends SubsystemBase {
     public Command score() {
         return Commands.parallel(Commands.deadline(waitSeconds(0.8), new ArmElevatorToSetpoint(elevator, arm, ElevatorConstants.L4 - 0.25, Units.degreesToRadians(-20)), waitSeconds(0.1)));
     }
-
+    public Command coralIntake() {
+        return deadline(waitSeconds(0.25), new CoralIntake(elevator, arm, claw));
+    }
 
 
 //----------------------------------------------------------------------------
@@ -118,13 +117,13 @@ public class AutoSubsystem extends SubsystemBase {
 
         R11Forward.done().onTrue(sequence(stop(), score(), parallel(R11toSource.cmd(), lowerArmElevatorToOrigin())));
 
-        R11toSource.done().onTrue(sequence(stop(), waitSeconds(0.7), SourcetoR12.cmd()));
+        R11toSource.done().onTrue(sequence(stop(), waitSeconds(1), coralIntake(), SourcetoR12.cmd()));
 
         SourcetoR12.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), R12Forward.cmd()));
 
         R12Forward.done().onTrue(sequence(stop(), score(), parallel(R12toSource.cmd(), lowerArmElevatorToOrigin())));
 
-        R12toSource.done().onTrue(sequence(stop(), waitSeconds(0.7), SourcetoR1.cmd()));
+        R12toSource.done().onTrue(sequence(stop(), waitSeconds(1), coralIntake(), SourcetoR1.cmd()));
 
         SourcetoR1.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), R1Forward.cmd()));
 

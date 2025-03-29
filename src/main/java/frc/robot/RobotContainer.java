@@ -226,7 +226,7 @@ public class RobotContainer {
     SmartDashboard.putData("ElevatorAndArm2d", this.mechanism2D);
 
 
-    this.autoSubsystem = new AutoSubsystem(driveSubsystem, elevatorSubsystem, armSubsystem);
+    this.autoSubsystem = new AutoSubsystem(driveSubsystem, elevatorSubsystem, armSubsystem, clawSubsystem);
     autoChooser = new AutoChooser();
 
 //    autoChooser.addRoutine("FourL4CoralBottom", AutoSubsystem::FourL4CoralBottomRoutine);
