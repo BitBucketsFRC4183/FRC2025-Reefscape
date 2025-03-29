@@ -243,7 +243,7 @@ public class DriveSubsystem extends SubsystemBase {
       }
 
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
-      if (visionSubsystem.hasEstimatedRobotPose() && visionSubsystem.getEstimatedRobotPose().isPresent() && RobotState.isAutonomous()) {
+      if (visionSubsystem.hasEstimatedRobotPose() && visionSubsystem.getEstimatedRobotPose().isPresent() && (RobotState.isAutonomous() || RobotState.isDisabled())) {
         if (DriverStation.getAlliance().get() == Alliance.Red) {
           Pose2d flippedPose = ChoreoAllianceFlipUtil.flip(visionSubsystem.getEstimatedRobotPose().get().toPose2d());
           poseEstimator.addVisionMeasurement(flippedPose, visionSubsystem.getPoseTimestamp(), visionSubsystem.getAdjustedStdDevs());
