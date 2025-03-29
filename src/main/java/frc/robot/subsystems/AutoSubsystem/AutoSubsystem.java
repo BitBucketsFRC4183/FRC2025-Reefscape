@@ -213,7 +213,7 @@ public AutoRoutine OneL4CoralMidRoutine() {
                 )
         );
 
-        StarttoR9Top.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
+        StarttoR9Top.done().onTrue(sequence(stop(), (R9Backup.cmd())));
         //Go against R9, then backup a lil bit
         R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
         R9Forward.done().onTrue(sequence(stop(), score(), R9BackupSecond.cmd()));
@@ -254,7 +254,7 @@ public AutoRoutine OneL4CoralMidRoutineBottomStart() {
             )
     );
 
-    StarttoR9Bottom.done().onTrue(sequence(stop(), R9Backup.resetOdometry(), (R9Backup.cmd())));
+    StarttoR9Bottom.done().onTrue(sequence(stop(), (R9Backup.cmd())));
     //Go against R9, then backup a lil bit
     R9Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R9Forward.cmd())));
     //Pull forward then score
@@ -296,9 +296,7 @@ public AutoRoutine OneL4CoralMidRoutineBottomStart() {
                 )
         );
 
-        StarttoR12.done().onTrue(sequence(stop(), R12Backup.resetOdometry(), (R12Backup.cmd())));
-        //Go against R9, then backup a lil bit
-        R12Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R12Forward.cmd())));
+        StarttoR12.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R12Forward.cmd())));
         R12Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
 
         return OneL4CoralTopRoutine;
@@ -336,9 +334,7 @@ public AutoRoutine OneL4CoralMidRoutineBottomStart() {
                 )
         );
 
-        StarttoR7.done().onTrue(sequence(stop(), R7Backup.resetOdometry(), (R7Backup.cmd())));
-        //Go against R9, then backup a lil bit
-        R7Backup.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), (R7Forward.cmd())));
+        StarttoR7.done().onTrue(sequence(stop(), raiseArmElevatorToL4(), R7Forward.cmd()));
         R7Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
 
         return OneL4CoralBottomRoutine;
