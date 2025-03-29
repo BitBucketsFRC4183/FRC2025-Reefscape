@@ -56,6 +56,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AutoSubsystem.AutoSubsystem;
+import frc.robot.subsystems.VisionSubsystem.VisionIOPhotonVision;
 import frc.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -236,15 +237,19 @@ public class DriveSubsystem extends SubsystemBase {
         rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
       }
 
-      // Apply update
+      // Apply update, turn off if not using photonvision
+      if(Constants.currentMode == Mode.REAL) {
+         VisionIOPhotonVision.photonPoseEstimator.addHeadingData(sampleTimestamps[i], rawGyroRotation);
+      }
+
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
-      if (visionSubsystem.hasEstimatedRobotPose()) {
+      if (visionSubsystem.hasEstimatedRobotPose() && visionSubsystem.getEstimatedRobotPose().isPresent() && RobotState.isAutonomous()) {
         if (DriverStation.getAlliance().get() == Alliance.Red) {
-          Pose2d flippedPose = ChoreoAllianceFlipUtil.flip(visionSubsystem.getEstimatedRobotPose().toPose2d());
-          poseEstimator.addVisionMeasurement(flippedPose, visionSubsystem.getPoseTimestamp());
+          Pose2d flippedPose = ChoreoAllianceFlipUtil.flip(visionSubsystem.getEstimatedRobotPose().get().toPose2d());
+          poseEstimator.addVisionMeasurement(flippedPose, visionSubsystem.getPoseTimestamp(), visionSubsystem.getAdjustedStdDevs());
 
         } else {
-          poseEstimator.addVisionMeasurement(visionSubsystem.getEstimatedRobotPose().toPose2d(), visionSubsystem.getPoseTimestamp());
+          poseEstimator.addVisionMeasurement(visionSubsystem.getEstimatedRobotPose().get().toPose2d(), visionSubsystem.getPoseTimestamp(), visionSubsystem.getAdjustedStdDevs());
 
         }
       }

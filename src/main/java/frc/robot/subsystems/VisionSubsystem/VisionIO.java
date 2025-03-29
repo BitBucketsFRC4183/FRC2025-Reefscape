@@ -8,7 +8,7 @@ public interface VisionIO {
     @AutoLog
     class VisionIOInputs {
         public boolean connected = false;
-        public Pose3d estimatedRobotPose;
+        public Pose3d estimatedRobotPose = new Pose3d();
         public boolean hasEstimate = false;
         public double timestampSeconds;
         public TargetObservation latestTargetObservation = new TargetObservation(new Rotation2d(), new Rotation2d());

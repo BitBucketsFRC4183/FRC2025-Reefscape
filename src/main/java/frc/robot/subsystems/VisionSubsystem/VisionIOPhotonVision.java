@@ -41,13 +41,11 @@ import static frc.robot.constants.VisionConstants.robotToCamera1;
 
 public class VisionIOPhotonVision implements VisionIO {
     public final PhotonCamera camera;
-    public PhotonPoseEstimator photonPoseEstimator;
+    public static final PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.CONSTRAINED_SOLVEPNP, VisionConstants.robotToCamera1);;
 
     public VisionIOPhotonVision() {
         this.camera =
                 new PhotonCamera(VisionConstants.camera1Name);
-        photonPoseEstimator =
-                new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.robotToCamera1);
 
     }
 
@@ -140,8 +138,17 @@ public class VisionIOPhotonVision implements VisionIO {
 
                 var optionalPose =
                         photonPoseEstimator.update(result);
-                optionalPose.ifPresent(estimatedRobotPose -> inputs.estimatedRobotPose = estimatedRobotPose.estimatedPose);
-                optionalPose.ifPresent(estimatedRobotPose -> inputs.timestampSeconds = estimatedRobotPose.timestampSeconds);
+
+                if (optionalPose.isPresent()) {
+                    inputs.estimatedRobotPose = optionalPose.get().estimatedPose;
+                    inputs.timestampSeconds = optionalPose.get().timestampSeconds;
+                } else {
+                    if (!poseObservations.isEmpty()) {
+                        inputs.estimatedRobotPose = poseObservations.get(0).pose();
+                        inputs.timestampSeconds = poseObservations.get(0).timestamp();
+                    }
+                }
+
 
                 inputs.connected =
                         camera.isConnected();
