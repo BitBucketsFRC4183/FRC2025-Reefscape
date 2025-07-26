@@ -239,6 +239,8 @@ public class RobotContainer {
     autoChooser.addRoutine("OneL4CoralToptoTop", autoSubsystem::OneL4CoralTopRoutine);
     autoChooser.addRoutine("[PLAYOFFS] OneL4CoralBottomToBottom", autoSubsystem::OneL4CoralBottomRoutine);
     autoChooser.addRoutine("ThreeL4CoralTop", autoSubsystem::ThreeL4CoralTopRoutine);
+    autoChooser.addRoutine("OneL3CoralTop", autoSubsystem::OneL3CoralTopRoutine);
+    autoChooser.addRoutine("OneL3CoralMid", autoSubsystem::OneL3CoralMidRoutine);
 
  //   autoChooser.addCmd("Score1L3Coral", autoSubsystem::OneL3Score);
 //    autoChooser.addCmd("nothing", Commands::none);

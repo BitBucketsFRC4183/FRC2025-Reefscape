@@ -49,6 +49,9 @@ public class AutoSubsystem extends SubsystemBase {
     public Command raiseArmElevatorToL4() {
         return deadline(waitSeconds(2.4), new ArmElevatorToSetpointAuto(elevator, arm, ElevatorConstants.L4, ArmConstants.armL4Angle));
     }
+    public Command raiseArmElevatorToL3() {
+        return deadline(waitSeconds(2.4), new ArmElevatorToSetpointAuto(elevator, arm, ElevatorConstants.L3, ArmConstants.armL3Angle));
+    }
     public Command lowerArmElevatorToOrigin() {
         return deadline(waitSeconds(1.5), new ArmElevatorToOrigin(elevator,arm));
     }
@@ -180,6 +183,47 @@ public AutoRoutine OneL4CoralMidRoutine() {
     return OneL4CoralMidRoutine;
     }
 
+    public AutoRoutine OneL3CoralMidRoutine() {
+
+        //        var trajectory = loadTrajectory(
+        //                "FourL4CoralBottom");
+
+        AutoRoutine OneL3CoralMidRoutine =
+                autoFactory.newRoutine(
+                        "OneL3CoralMidRoutine");
+        //Initialize
+        //1
+        AutoTrajectory StarttoR9 =
+                OneL3CoralMidRoutine.trajectory("StarttoR9");
+        //2
+        AutoTrajectory R9Backup =
+                OneL3CoralMidRoutine.trajectory("R9Backup");
+        //3
+        AutoTrajectory R9Forward =
+                OneL3CoralMidRoutine.trajectory("R9Forward");
+        //4
+        AutoTrajectory R9Backup2 =
+                OneL3CoralMidRoutine.trajectory("R9Backup2");
+
+
+        OneL3CoralMidRoutine.active().onTrue(
+                sequence(
+                        Commands.print("Started" +
+                                "OneL3CoralMidRoutine" +
+                                " the routine!"),
+                        StarttoR9.resetOdometry(),
+                        StarttoR9.cmd()
+                )
+        );
+
+        StarttoR9.done().onTrue(sequence(stop(), raiseArmElevatorToL3(), R9Forward.cmd()));
+        //Go against R9, then backup a lil bit
+        R9Forward.done().onTrue(sequence(stop(), score(), parallel(R9Backup2.cmd(), lowerArmElevatorToOrigin())));
+
+        return OneL3CoralMidRoutine;
+    }
+
+
     public AutoRoutine OneL4CoralMidRoutineTopStart() {
 
         //        var trajectory = loadTrajectory(
@@ -223,7 +267,7 @@ public AutoRoutine OneL4CoralMidRoutine() {
 //-------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------
 public AutoRoutine OneL4CoralMidRoutineBottomStart() {
-
+// Ik this name is freakin dogshit but it means that the Robot Starts at the Bottom of the field and then goes to the middle Reed facing towards it and scores
     //        var trajectory = loadTrajectory(
     //                "FourL4CoralBottom");
 
@@ -300,6 +344,41 @@ public AutoRoutine OneL4CoralMidRoutineBottomStart() {
         R12Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
 
         return OneL4CoralTopRoutine;
+    }
+
+    public AutoRoutine OneL3CoralTopRoutine() {
+
+        //        var trajectory = loadTrajectory(
+        //                "FourL4CoralBottom");
+
+        AutoRoutine OneL3CoralTopRoutine =
+                autoFactory.newRoutine(
+                        "OneL3CoralTopRoutine");
+        //Initialize
+        //1
+        AutoTrajectory StarttoR12 =
+                OneL3CoralTopRoutine.trajectory("StarttoR12");
+        //3
+        AutoTrajectory R12Forward =
+                OneL3CoralTopRoutine.trajectory("R12Forward");
+        //4
+
+
+
+        OneL3CoralTopRoutine.active().onTrue(
+                sequence(
+                        Commands.print("Started" +
+                                "OneL3CoralTopRoutine" +
+                                " the routine!"),
+                        StarttoR12.resetOdometry(),
+                        StarttoR12.cmd()
+                )
+        );
+
+        StarttoR12.done().onTrue(sequence(stop(), raiseArmElevatorToL3(), (R12Forward.cmd())));
+        R12Forward.done().onTrue(sequence(stop(), score() , lowerArmElevatorToOrigin()));
+
+        return OneL3CoralTopRoutine;
     }
 
     public AutoRoutine OneL4CoralBottomRoutine() {
@@ -392,10 +471,10 @@ public AutoRoutine OneL4CoralMidRoutineBottomStart() {
 
 //         │＼＿＿╭╭╭╭╭＿＿│
 //        │　　　　　　　　　 　│
-//        │　　　　　　　　　  　│
-//        │　＞　　　　　　　│
-//        │≡　  ╰┬┬┬╯　　≡    │
-//        │　　 　╰—╯  　　　  │
+//        │　　　　　　　　　 　│
+//        │　＞　　　　　　　  │
+//        │≡　  ╰┬┬┬╯　　≡   │
+//        │　　 　╰—╯  　　　 │
 //        ╰——┬   ——————┬—╯
 //        　　　│世界赛!│
 //　　　        ╰┬———┬ ╯
