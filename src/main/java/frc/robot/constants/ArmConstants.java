@@ -45,7 +45,7 @@ public class ArmConstants {
 
     // offset in rots, this will be subtracted from the offset reading
     // so if encoder is 0.8, offset is 0.8 and not 0.8
-    public static final double encoderOffsetRots = 0.960;
+    public static final double encoderOffsetRots = 0.133;
     public static boolean encoderInverted;
     public static final double armOriginAngle = Units.degreesToRadians(-86);
     public final static double armL1Angle = Units.degreesToRadians(25.5);
