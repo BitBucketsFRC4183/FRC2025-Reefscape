@@ -152,7 +152,6 @@ public AutoRoutine OneL4CoralMidRoutine() {
     );
     StarttoR9.active();
     StarttoR9.done().onTrue(Commands.run(drive::stop, drive).andThen(raiseArmElevatorToL4().andThen(R9Forward.cmd())));
-    R9Forward.active();
     R9Forward.done().onTrue(Commands.run(drive::stop, drive).andThen(score()));
 
     return OneL4CoralMidRoutine;
