@@ -185,15 +185,38 @@ public AutoRoutine OneL4CoralMidRoutine() {
         );
     };
 
-    public Command TaxiForward() {
-        return Commands.sequence(
-                Commands.waitSeconds(0),
-                Commands.deadline(
-                        Commands.waitSeconds(3),
-                        new RobotRelativeDriveCommand(drive, () -> 1, () -> 0, () -> 0)
+    public AutoRoutine TaxiForward() {
+
+        //        var trajectory = loadTrajectory(
+        //                "FourL4CoralBottom");
+
+        AutoRoutine TaxiForward =
+                autoFactory.newRoutine(
+                        "TaxiForward");
+        //Initialize
+        //1
+        AutoTrajectory StarttoR9 =
+                TaxiForward.trajectory("StarttoR9");
+        //2
+        AutoTrajectory R9Forward =
+                TaxiForward.trajectory("R9Forward");
+
+
+        TaxiForward.active().onTrue(
+                Commands.sequence(
+                        Commands.print("Started" +
+                                "OneL4CoralMidRoutine" +
+                                " the routine!"),
+                        StarttoR9.resetOdometry(),
+                        StarttoR9.cmd()
                 )
         );
-    };
+        StarttoR9.active();
+        StarttoR9.done().onTrue(Commands.run(drive::stop, drive));
+
+
+        return TaxiForward;
+    }
 
     public AutoRoutine TestingFR() {
         AutoRoutine testing = autoFactory.newRoutine("Testing");

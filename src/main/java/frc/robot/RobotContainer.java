@@ -237,6 +237,7 @@ public class RobotContainer {
     autoChooser.addCmd("Score1L3Coral", autoSubsystem::OneL3Score);
 //    autoChooser.addCmd("nothing", Commands::none);
     autoChooser.addCmd("TaxiBack", autoSubsystem::TaxiBack);
+    autoChooser.addRoutine("TaxiForward", autoSubsystem::TaxiForward);
     autoChooser.addRoutine("CircleTest", autoSubsystem::TestingFR);
 
 //    autoChooser.addCmd("DriveSysIDQuasistaticForward", () -> driveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
